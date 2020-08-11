@@ -49,12 +49,12 @@ public class MsgTypeComponent {
     public int msgTriger(String userId, String msg) {
         boolean userMsgStatus = this.getUserMsgStatus(userId);
 
-        if (userMsgStatus && isIntoServiceInstruction(msg)) {
+        if (!userMsgStatus && isIntoServiceInstruction(msg)) {
             setUserStatus(userId, "1", 5, TimeUnit.MINUTES);
             return 1;
         }
 
-        if (!userMsgStatus && isOutServiceInstruction(msg)) {
+        if (userMsgStatus && isOutServiceInstruction(msg)) {
             setUserStatus(userId, "0", 5, TimeUnit.MINUTES);
             return -1;
         }

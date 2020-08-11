@@ -33,6 +33,11 @@ public enum MsgTypeEnum {
         this.clazz = clazz;
     }
 
+    /**
+     * 通过传入的对象构造初始化一个ReqMsg
+     * @param msg
+     * @param reqMsg
+     */
     public static void createReqMsg(Object msg, ReqMsg reqMsg){
         reqMsg.setMessage(((MsgGet)msg).getMsg());
         reqMsg.setFont(((MsgGet)msg).getFont());
@@ -40,6 +45,8 @@ public enum MsgTypeEnum {
         reqMsg.setMessageId(((MsgGet)msg).getId());
         reqMsg.setNickname(((NicknameAble)msg).getNickname());
         reqMsg.setCard(((RemarkAble)msg).getRemark());
+        reqMsg.setSelfId(((MsgGet)msg).getThisCode());
+
         if(MsgTypeEnum.PRIVATE_MSG.clazz.isInstance(msg)){
             reqMsg.setMessageType("private");
             privateReqMsg((PrivateMsg)msg, reqMsg);

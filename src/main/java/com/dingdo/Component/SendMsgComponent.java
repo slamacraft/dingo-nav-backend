@@ -66,10 +66,10 @@ public class SendMsgComponent {
 
                     msgBuffer.append(poll.getMsg());
                     if ("private".equals(poll.getTargetType())) {
-                        privateMsgService.sendPrivateMsg(poll.getTargetId(), msgBuffer.toString());
+                        privateMsgService.sendPrivateMsg(poll.getSourceId(), poll.getTargetId(), msgBuffer.toString());
                     }
                     if ("group".equals(poll.getTargetType())) {
-                        groupMsgService.sendGroupMsg(poll.getTargetId(), msgBuffer.toString());
+                        groupMsgService.sendGroupMsg(poll.getSourceId(), poll.getTargetId(), msgBuffer.toString());
                     }
                 }
             }

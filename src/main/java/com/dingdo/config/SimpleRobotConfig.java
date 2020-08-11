@@ -1,7 +1,10 @@
 package com.dingdo.config;
 
 import com.forte.qqrobot.BaseApplication;
+import com.forte.qqrobot.BotRuntime;
 import com.forte.qqrobot.SimpleRobotContext;
+import com.forte.qqrobot.anno.depend.Beans;
+import com.forte.qqrobot.bot.BotManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,6 +34,11 @@ public class SimpleRobotConfig {
     @Bean
     public SimpleRobotContext simpleRobotContext () throws IOException {
         return simpleRobotContext;
+    }
+
+    @Bean
+    public BotManager botManager(){
+        return BotRuntime.getRuntime().getBotManager();
     }
 
 }

@@ -21,5 +21,5 @@ public interface PrivateMsgService extends MsgHandleService{
      * @param msg
      * @param userId
      */
-    void sendPrivateMsg(String userId, String msg);
+    void sendPrivateMsg(String robotId, String userId, String msg);
 }

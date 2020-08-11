@@ -9,6 +9,8 @@ import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.AbstractMsgService;
 import com.dingdo.service.PrivateMsgService;
+import com.forte.qqrobot.bot.BotManager;
+import com.forte.qqrobot.bot.BotSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,24 +31,13 @@ public class PrivateMsgServiceImpl extends AbstractMsgService implements Private
     private NaiveBayesComponent naiveBayesComponent;
     @Autowired
     private MsgTypeComponent msgTypeComponent;
+    @Autowired
+    private BotManager botManager;
 
     @Override
-    public void sendPrivateMsg(String userId, String msg) {
-        RestTemplate restTemplate = new RestTemplate();
-        JSONObject json = new JSONObject();
-        json.put("message", msg);
-        json.put("user_id", userId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        HttpEntity<JSONObject> request = new HttpEntity<>(json, headers);
-
-        try {
-            ResponseEntity<String> response = restTemplate
-                    .postForEntity(UrlEnum.URL + UrlEnum.SEND_PRIVATE_MSG.toString(), request, String.class);
-            System.out.println(response.getBody());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendPrivateMsg(String robotId, String userId, String msg) {
+        BotSender sender = botManager.getBot(robotId).getSender();
+        sender.SENDER.sendPrivateMsg(userId, msg);
     }
 
     @Override

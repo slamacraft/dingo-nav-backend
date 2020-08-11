@@ -20,5 +20,5 @@ public interface GroupMsgService extends MsgHandleService{
      * @param groupId
      * @param msg
      */
-    void sendGroupMsg(String groupId, String msg);
+    void sendGroupMsg(String robotId, String groupId, String msg);
 }

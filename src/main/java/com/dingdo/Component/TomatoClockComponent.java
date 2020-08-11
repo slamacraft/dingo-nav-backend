@@ -37,11 +37,11 @@ public class TomatoClockComponent {
     @Autowired
     private PrivateMsgService privateMsgService;
 
-    public void setTomatoCoreSize(int coreSize){
+    public void setTomatoCoreSize(int coreSize) {
         this.tomatoClockPool.setCorePoolSize(coreSize);
     }
 
-    public void setTomatoMaxSize(int maxSize){
+    public void setTomatoMaxSize(int maxSize) {
         this.tomatoClockPool.setMaximumPoolSize(maxSize);
     }
 
@@ -49,10 +49,12 @@ public class TomatoClockComponent {
      * 番茄类
      */
     private class Tomato implements Runnable {
+        private String robotId;
         private String userId;
         private Long tomatoCound = 0L;
 
-        public Tomato(String userId) {
+        public Tomato(String robotId, String userId) {
+            this.robotId = robotId;
             this.userId = userId;
         }
 
@@ -63,7 +65,7 @@ public class TomatoClockComponent {
         @SneakyThrows
         @Override
         public void run() {
-            privateMsgService.sendPrivateMsg(this.userId, "新的番茄时间开始啦！开始为你计时25分钟");
+            privateMsgService.sendPrivateMsg(this.robotId, this.userId, "新的番茄时间开始啦！开始为你计时25分钟");
             userStatusMap.put(userId, 1);
             synchronized (this) {
                 this.wait(1000 * 60 * 25);
@@ -78,12 +80,12 @@ public class TomatoClockComponent {
                     }
                 }
             }
-            privateMsgService.sendPrivateMsg(this.userId, "番茄时间结束啦！现在开始休息5分钟");
+            privateMsgService.sendPrivateMsg(this.robotId, this.userId, "番茄时间结束啦！现在开始休息5分钟");
             userStatusMap.put(userId, 3);
             synchronized (this) {
                 this.wait(1000 * 60 * 5);
             }
-            privateMsgService.sendPrivateMsg(this.userId, "获得一个番茄");
+            privateMsgService.sendPrivateMsg(this.robotId, this.userId, "获得一个番茄");
             this.tomatoCound += 1;
             userStatusMap.put(userId, 0);
         }
@@ -91,6 +93,7 @@ public class TomatoClockComponent {
 
     /**
      * 为当前用户新增一个番茄钟
+     *
      * @param reqMsg
      * @param params
      * @return
@@ -100,7 +103,7 @@ public class TomatoClockComponent {
         String userId = reqMsg.getUserId();
         Tomato userThread = tomatoMap.get(userId);
         if (userThread == null) {  // 还没有番茄钟时，创建一个
-            Tomato tomato = new Tomato(userId);
+            Tomato tomato = new Tomato(reqMsg.getSelfId(), userId);
             tomatoMap.put(userId, tomato);
             tomatoClockPool.execute(tomato);
         } else if (userStatusMap.get(userId) == 0) {  // 番茄钟还没有启动，将他启动
@@ -113,6 +116,7 @@ public class TomatoClockComponent {
 
     /**
      * 为当前用户暂停番茄钟
+     *
      * @param reqMsg
      * @param params
      * @return
@@ -127,6 +131,7 @@ public class TomatoClockComponent {
 
     /**
      * 为当前用户继续番茄钟
+     *
      * @param reqMsg
      * @param params
      * @return
@@ -139,6 +144,7 @@ public class TomatoClockComponent {
 
     /**
      * 获取当前用户的番茄数
+     *
      * @param reqMsg
      * @param params
      * @return

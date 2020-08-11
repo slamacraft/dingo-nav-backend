@@ -70,7 +70,7 @@ public class ReqMsg {
     /**
      * 上报的机器人QQ号
      */
-    private Long selfId;
+    private String selfId;
 
     /**
      * 昵称

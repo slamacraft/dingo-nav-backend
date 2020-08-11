@@ -18,21 +18,21 @@ public class InstructionUtils {
      * @return
      */
     public static boolean DFA(String instruction) {
-        int status = 0; // 有穷自动机状态
+        int status = 1; // 有穷自动机状态
         char[] chars = instruction.toCharArray();
 
-        if(StringUtils.isBlank(instruction) || chars[0] != '.'){
+        if(StringUtils.isBlank(instruction) || (chars[0] != '.' && chars[0] != '。' )){
             return false;
         }
 
         for (int i = 0; i < chars.length; i++) {
             switch (status) {
-                case 0: {    // 状态1
-                    if (chars[i] == '.') {
-                        status = 1;
-                    }
-                }
-                break;
+//                case 0: {    // 状态1
+//                    if (chars[i] == '.') {
+//                        status = 1;
+//                    }
+//                }
+//                break;
                 case 1: {
                     if (chars[i] != ' ' && chars[i] != '=') { // 数字/字符，转移到状态2
                         status = 2;
