@@ -24,8 +24,8 @@ public class ManagerServiceImpl implements ManagerService {
     private RedisTemplate redisTemplate;
 
     @Instruction(name = "login", descrption = "登录",
-        errorMsg = "登录，指令的参数格式为:\n" +
-                "密码=【字符】")
+            errorMsg = "登录，指令的参数格式为:\n" +
+                    "密码=【字符】")
     public String login(ReqMsg reqMsg, Map<String, String> params) {
         // 获取并用户id和密码
         String userId = InstructionUtils.getParamValue(params, "id", "qq号");
@@ -49,7 +49,7 @@ public class ManagerServiceImpl implements ManagerService {
         }
 
         // 登录成功！
-        redisTemplate.opsForValue().set(reqMsg.getUserId(), password, 30, TimeUnit.MINUTES);
+        setManagerStatus(reqMsg.getUserId(), password);
         return "登录成功！欢迎使用~";
     }
 
@@ -69,8 +69,8 @@ public class ManagerServiceImpl implements ManagerService {
 
     @VerifiAnnotation
     @Instruction(name = "register", descrption = "注册",
-        errorMsg = "设置错误，指令的参数格式为:\n" +
-            "qq号=【数字】 密码=【字符】")
+            errorMsg = "设置错误，指令的参数格式为:\n" +
+                    "qq号=【数字】 密码=【字符】")
     public String register(ReqMsg reqMsg, Map<String, String> params) {
         // 获取并用户id和密码
         String userId = InstructionUtils.getParamValue(params, "id", "qq号");
@@ -96,4 +96,7 @@ public class ManagerServiceImpl implements ManagerService {
         return "新增管理员成功！";
     }
 
+    public void setManagerStatus(String userId, String password) {
+        redisTemplate.opsForValue().set("ManagerServiceImpl$" + userId, password, 30, TimeUnit.MINUTES);
+    }
 }

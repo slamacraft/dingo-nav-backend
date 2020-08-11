@@ -16,7 +16,7 @@ public enum ClassicEnum {
     //========================================================================================================
     MUSIC_SRC("python/CQPython/static/question/musicQA/",
             null, 2, "点歌服务语料路径"),
-    MUSIC_FROM_QQ("MusicFromQQ.txt", "MusicServiceImpl", 2.1, "QQ音乐点歌"),
+//    MUSIC_FROM_QQ("MusicFromQQ.txt", "MusicServiceImpl", 2.1, "QQ音乐点歌"),
     RANDOM_MUSIC("RandomMusic.txt", "", 2.2, "网易云随机音乐"),
 
     //========================================================================================================

@@ -1,6 +1,7 @@
 package com.dingdo.Component;
 
 import com.dingdo.common.annotation.Instruction;
+import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.common.exception.CheckException;
 
 import com.dingdo.model.msgFromMirai.ReqMsg;
@@ -10,10 +11,13 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 指令方法容器
@@ -70,6 +74,23 @@ public class InstructionMethodContext {
             }
         }
         System.out.println("方法容器准备完毕");
+    }
+
+    @Instruction(name = "help", descrption = "帮助")
+    public String help(ReqMsg reqMsg, Map<String, String> params) {
+        StringBuffer result = new StringBuffer();
+        List<Method> methodList = methodMap.values().stream().distinct().collect(Collectors.toList());
+        for (int i = 0; i < methodList.size(); i++) {
+            Method method = methodList.get(i);
+            Instruction instruction = AnnotationUtils.findAnnotation(method, Instruction.class);
+            result.append((i + 1) + "、" + instruction.descrption());
+            VerifiAnnotation verifiAnnotation = AnnotationUtils.findAnnotation(method, VerifiAnnotation.class);
+            if (verifiAnnotation != null) {
+                result.append(" <-管理员指令");
+            }
+            result.append("\n");
+        }
+        return result.toString();
     }
 
     public Object getBeanByInstruction(String instruction) {
@@ -131,10 +152,10 @@ public class InstructionMethodContext {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.getCause().printStackTrace();
-            if(e.getCause() instanceof CheckException){
+            if (e.getCause() instanceof CheckException) {
                 returnValue = ((CheckException) e.getCause()).getmessage();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             returnValue = errorMsgMap.get(method);
         }

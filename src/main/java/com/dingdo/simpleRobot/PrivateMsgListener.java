@@ -28,7 +28,12 @@ public class PrivateMsgListener extends MsgListener{
      */
     @Listen(MsgGetTypes.privateMsg)
     public void privateMsgListen(PrivateMsg privateMsg, MsgSender sender) {
-        sender.SENDER.sendPrivateMsg(privateMsg, super.getReplyFromRobot(new ReqMsg(privateMsg)));
+        String reply = super.getReplyFromRobot(new ReqMsg(privateMsg));
+        while(reply.length() > 300){
+            sender.SENDER.sendPrivateMsg(privateMsg, reply.substring(0, 300));
+            reply = reply.substring(300);
+        }
+        sender.SENDER.sendPrivateMsg(privateMsg, reply);
         /*以下都是消息复读的方式*/
 //        sender.SENDER.sendPrivateMsg(msg.getQQ(), msg.getMsg());
 //        sender.SENDER.sendPrivateMsg(msg.getQQCode(), msg.getMsg());

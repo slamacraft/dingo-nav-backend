@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class SougoServiceImpl implements SougoService {
@@ -26,8 +28,6 @@ public class SougoServiceImpl implements SougoService {
 
     @Override
     public String sendReply(ReqMsg reqMsg) {
-        String String = new String();
-
         String rawMsg = reqMsg.getMessage();
         String resultMsg = getReplyFromSougo(rawMsg);
         if (resultMsg != null) {
@@ -47,12 +47,13 @@ public class SougoServiceImpl implements SougoService {
 
         try {   //对提问语句进行GBK编码
             String wordsGBK = java.net.URLEncoder.encode(words, "UTF-8");
-            String url = "https://www.sogou.com/sogou?query=" + wordsGBK + "&ie=utf8&insite=wenwen.sogou.com&pid=sogou-wsse-a9e18cb5dd9d3ab4&rcer=";
+            String url = "https://www.sogou.com/sogou?query=" + wordsGBK
+                    + "&ie=utf8&insite=wenwen.sogou.com&pid=sogou-wsse-a9e18cb5dd9d3ab4&rcer=";
 
             Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
             Logger.getLogger("org.apache.http.client").setLevel(Level.OFF);
 
-            System.out.println("Loading page now-----------------------------------------------:\n " + url);
+            System.out.println("Loading page now-----------------------:\n " + url);
 
             // HtmlUnit 模拟浏览器
             WebClient webClient = webClientComponent.getWebClient();
@@ -90,8 +91,8 @@ public class SougoServiceImpl implements SougoService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(resultMsg);
 
-        return resultMsg;
+        // 去除连续空行后返回
+        return resultMsg.replaceAll("(\n)(\n)+", "\n");
     }
 }

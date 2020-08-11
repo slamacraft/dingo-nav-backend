@@ -34,8 +34,8 @@ public class MsgTypeComponent {
      * @return
      */
     public boolean getUserMsgStatus(String userId) {
-        String userStatus = redisTemplate.opsForValue().get(userId);
-        setUserStatus(userId, "0", 5, TimeUnit.MINUTES);
+        String userStatus = redisTemplate.opsForValue().get("MsgTypeComponent$" + userId);
+//        setUserStatus(userId, "0", 5, TimeUnit.MINUTES);
         return "1".equals(userStatus) ? true : false;
     }
 
@@ -71,10 +71,10 @@ public class MsgTypeComponent {
      * @param timeUnit 时间单位
      */
     public void setUserStatus(String userId, String status, long time, TimeUnit timeUnit) {
-        if(status == null){
+        if (status == null) {
             status = "0";
         }
-        redisTemplate.opsForValue().set(userId, status, time, timeUnit);
+        redisTemplate.opsForValue().set("MsgTypeComponent$" + userId, status, time, timeUnit);
     }
 
     public boolean isIntoServiceInstruction(String msg) {

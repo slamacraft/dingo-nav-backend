@@ -32,12 +32,12 @@ public class VerifiAspect {
             if (item instanceof ReqMsg) {
                 ReqMsg reqMsg = (ReqMsg) item;
                 String userId = reqMsg.getUserId();
-                String password = (String) redisTemplate.opsForValue().get(userId);
+                String password = (String) redisTemplate.opsForValue().get("ManagerServiceImpl$" + userId);
                 if (StringUtils.isBlank(password)) {
                     throw new CheckException("该指令为管理员指令，请先登录");
                 }
                 // 刷新自动下线时间
-                redisTemplate.opsForValue().set(userId, password, 30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set("ManagerServiceImpl$" + userId, password, 30, TimeUnit.MINUTES);
             }
         }
     }
