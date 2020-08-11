@@ -4,7 +4,8 @@ import com.dingdo.Component.TaskRegister;
 import com.dingdo.Schedule.SchedulingRunnable;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.extendService.otherService.ScheduledService;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.InstructionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,13 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     /**
      * 添加定时提醒
-     * @param receiveMsg
+     * @param reqMsg
      * @param params
      * @return
      */
     @Override
     @Instruction(name = "addRemindTask", descrption = "设置提醒")
-    public String addRemindTask(ReceiveMsg receiveMsg, Map<String, String> params){
+    public String addRemindTask(ReqMsg reqMsg, Map<String, String> params){
         String cron = InstructionUtils.getParamValue(params, "cron", "表达式");
         if(StringUtils.isBlank(cron)){
             return "表达式不能为空哦";
@@ -38,7 +39,7 @@ public class ScheduledServiceImpl implements ScheduledService {
             message = "(｡･∀･)ﾉﾞ嗨，到点了";
         }
 
-        SchedulingRunnable task = this.getRemindRunnable(receiveMsg, message);
+        SchedulingRunnable task = this.getRemindRunnable(reqMsg, message);
 
         taskRegister.addCronTask(task, cron);
         return "设置成功！";
@@ -46,19 +47,19 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     /**
      * 移除定时提醒
-     * @param receiveMsg
+     * @param reqMsg
      * @param params
      * @return
      */
     @Override
     @Instruction(name = "removeRemindTask", descrption = "移除提醒")
-    public String removeRemindTask(ReceiveMsg receiveMsg, Map<String, String> params){
+    public String removeRemindTask(ReqMsg reqMsg, Map<String, String> params){
         String message = InstructionUtils.getParamValue(params, "message", "提醒消息");
         if(StringUtils.isBlank(message)){
             message = "(｡･∀･)ﾉﾞ嗨，到点了";
         }
 
-        SchedulingRunnable task = this.getRemindRunnable(receiveMsg, message);
+        SchedulingRunnable task = this.getRemindRunnable(reqMsg, message);
         boolean flag = taskRegister.removeCronTask(task);
         if(flag){
             return "移除定时提醒成功";
@@ -69,20 +70,20 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     /**
      * 获取定时消息提醒的任务实例
-     * @param receiveMsg
+     * @param reqMsg
      * @param message
      * @return
      */
-    private SchedulingRunnable getRemindRunnable(ReceiveMsg receiveMsg, String message){
+    private SchedulingRunnable getRemindRunnable(ReqMsg reqMsg, String message){
         SchedulingRunnable task = null;
-        if(receiveMsg.getMessage_type().equals("private")){
+        if(reqMsg.getMessage().equals("private")){
             task = new SchedulingRunnable("privateMsgSeriveImpl",
                     "sendPrivateMsg",
-                    receiveMsg.getUser_id(), message);
-        } else if(receiveMsg.getMessage_type().equals("group")){
+                    reqMsg.getUserId(), message);
+        } else if(reqMsg.getMessage().equals("group")){
             task = new SchedulingRunnable("groupMsgServiceImpl",
                     "sendGroupMsg",
-                    receiveMsg.getGroup_id(), message);
+                    reqMsg.getGroupId(), message);
         }
 
         return task;

@@ -3,6 +3,7 @@ package com.dingdo.model.msgFromCQ;
 /**
  * 搜索内容的实体类
  */
+@Deprecated
 public class SearchMsg {
     /**
      * 搜索的关键字

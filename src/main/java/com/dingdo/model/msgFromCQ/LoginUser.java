@@ -5,6 +5,7 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@Deprecated
 public class LoginUser {
 
     private LoginerUserData data;

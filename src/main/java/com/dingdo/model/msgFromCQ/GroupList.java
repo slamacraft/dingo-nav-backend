@@ -8,6 +8,7 @@ import java.util.List;
 //例子{"data":[{"group_id":215660727,"group_name":"人工智障实验组","max_member_count":0,"member_count":0},{"group_id":799200346,"group_name":"big bob、slamacraft","max_member_count":0,"member_count":0}],"retcode":0,"status":"ok"}
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@Deprecated
 public class GroupList {
 
     private List<GroupListData> data;

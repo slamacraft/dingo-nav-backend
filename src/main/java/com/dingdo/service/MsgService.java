@@ -1,6 +1,7 @@
 package com.dingdo.service;
 
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,5 +15,7 @@ public interface MsgService {
      * @param httpServletRequest
      * @return
      */
-    ReplyMsg receive(HttpServletRequest httpServletRequest);
+    String receive(HttpServletRequest httpServletRequest);
+
+    String handleMsg(ReqMsg reqMsg);
 }

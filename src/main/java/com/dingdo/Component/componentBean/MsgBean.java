@@ -8,7 +8,7 @@ public class MsgBean {
     /**
      * 消息来源的qq号
      */
-    private Long sourceId;
+    private String sourceId;
 
     /**
      * 消息来源的类型
@@ -25,7 +25,7 @@ public class MsgBean {
     /**
      * 消息发送的目标qq号
      */
-    private Long targetId;
+    private String targetId;
 
     /**
      * 消息发送的目标类型

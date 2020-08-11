@@ -1,6 +1,6 @@
 package com.dingdo.controller;
 
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.MsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +21,8 @@ public class MsgController {
      * @param request
      */
     @RequestMapping("/receive")
-    public ReplyMsg receive(HttpServletRequest request) {
-        ReplyMsg receive = msgService.receive(request);
+    public String receive(HttpServletRequest request) {
+        String receive = msgService.receive(request);
         System.out.println(receive);
         return receive;
     }

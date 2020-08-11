@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class RobotManagerEntity {
     @TableField("id")
-    private long id;
+    private String id;
 
     @TableField("nick_name")
     private String nickName;

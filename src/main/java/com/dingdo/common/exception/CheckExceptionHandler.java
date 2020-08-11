@@ -1,6 +1,6 @@
 package com.dingdo.common.exception;
 
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CheckExceptionHandler {
 
     @ExceptionHandler(CheckException.class)
-    public ReplyMsg handleBusinessException(CheckException e) {
-        ReplyMsg replyMsg = new ReplyMsg();
-        replyMsg.setReply(e.getmessage());
-        return replyMsg;
+    public String handleBusinessException(CheckException e) {
+        return e.getmessage();
     }
 }

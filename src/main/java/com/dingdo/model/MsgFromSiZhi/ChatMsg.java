@@ -1,12 +1,19 @@
-package com.dingdo.model.msgFromCQ;
+package com.dingdo.model.MsgFromSiZhi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
+/**
+ * 一些声明信息
+ *
+ * @author slamacraft
+ * @Description:
+ * @date: 2020/8/11 9:49
+ * @since JDK 1.8
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Deprecated
-class API_String {
+public class ChatMsg {
     /**
      * success表示请求正确，error表示请求错误
      */
@@ -14,7 +21,7 @@ class API_String {
     /**
      * 返回的数据
      */
-    private Data data;
+    private ChatMsg.Data data;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class Data{
@@ -25,7 +32,7 @@ class API_String {
         /**
          * 返回的信息体
          */
-        private Info info;
+        private ChatMsg.Data.Info info;
 
         @JsonIgnoreProperties(ignoreUnknown = true)
         public class Info{
@@ -59,11 +66,11 @@ class API_String {
             this.type = type;
         }
 
-        public Info getInfo() {
+        public ChatMsg.Data.Info getInfo() {
             return info;
         }
 
-        public void setInfo(Info info) {
+        public void setInfo(ChatMsg.Data.Info info) {
             this.info = info;
         }
     }
@@ -76,11 +83,11 @@ class API_String {
         this.message = message;
     }
 
-    public Data getData() {
+    public ChatMsg.Data getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(ChatMsg.Data data) {
         this.data = data;
     }
 }

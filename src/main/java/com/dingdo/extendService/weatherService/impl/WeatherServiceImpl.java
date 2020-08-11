@@ -2,8 +2,9 @@ package com.dingdo.extendService.weatherService.impl;
 
 import com.dingdo.extendService.weatherService.AbstractWeatherService;
 import com.dingdo.extendService.weatherService.WeatherService;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.model.weather.Weather;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,11 @@ import java.util.List;
 public class WeatherServiceImpl extends AbstractWeatherService implements WeatherService {
 
     @Override
-    public ReplyMsg sendReply(ReceiveMsg receiveMsg) {
-        ReplyMsg replyMsg = new ReplyMsg();
-
+    public String sendReply(ReqMsg reqMsg) {
         StringBuffer reply = new StringBuffer();
-        List<String> loactionList = getLoaction(receiveMsg.getRaw_message());
+        List<String> loactionList = getLoaction(reqMsg.getMessage());
         if (CollectionUtils.isEmpty(loactionList)){
-            replyMsg.setReply("至少告诉我是哪个地方吧啊喂！");
-            return replyMsg;
+            return "至少告诉我是哪个地方吧啊喂！";
         }
         for (String location:loactionList){
             Weather weatherInfoFromApi = getWeatherInfoFromApi(location, "now");
@@ -29,12 +27,11 @@ public class WeatherServiceImpl extends AbstractWeatherService implements Weathe
             reply.append(weatherInfoFromApi.getHeWeather6().get(0).getNow().toString());
         }
 
-        replyMsg.setReply(reply.toString());
-        return replyMsg;
+        return reply.toString();
     }
 
     @Override
-    public String getReply(ReceiveMsg receiveMsg) {
+    public String getReply(ReqMsg reqMsg) {
         return null;
     }
 }

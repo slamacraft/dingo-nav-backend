@@ -2,8 +2,9 @@ package com.dingdo.extendService.weatherService.impl;
 
 import com.dingdo.extendService.weatherService.AbstractWeatherService;
 import com.dingdo.extendService.weatherService.WeatherLifestyleService;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.model.weather.Weather;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -14,27 +15,22 @@ import java.util.List;
 public class WeatherLifestyleServiceImpl extends AbstractWeatherService implements WeatherLifestyleService {
 
     @Override
-    public ReplyMsg sendReply(ReceiveMsg receiveMsg) {
-        ReplyMsg replyMsg = new ReplyMsg();
-
+    public String sendReply(ReqMsg reqMsg) {
         StringBuffer reply = new StringBuffer();
-        List<String> loactionList = getLoaction(receiveMsg.getRaw_message());
+        List<String> loactionList = getLoaction(reqMsg.getMessage());
         if (CollectionUtils.isEmpty(loactionList)) {
-            replyMsg.setReply("请问你要查询哪个地方呢");
-            return replyMsg;
+            return "请问你要查询哪个地方呢";
         }
         for (String location : loactionList) {
             Weather weatherInfoFromApi = getWeatherInfoFromApi(location, "lifestyle");
             reply.append(location);
             reply.append(weatherInfoFromApi.getHeWeather6().get(0).getLifeStyleInfo());
         }
-
-        replyMsg.setReply(reply.toString());
-        return replyMsg;
+        return reply.toString();
     }
 
     @Override
-    public String getReply(ReceiveMsg receiveMsg) {
+    public String getReply(ReqMsg reqMsg) {
         return null;
     }
 }

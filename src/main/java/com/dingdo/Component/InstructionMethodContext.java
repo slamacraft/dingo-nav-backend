@@ -2,7 +2,8 @@ package com.dingdo.Component;
 
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.exception.CheckException;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.InstructionUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -82,14 +83,14 @@ public class InstructionMethodContext {
     /**
      * 通过消息包含的指令执行对应的方法
      *
-     * @param receiveMsg
+     * @param reqMsg
      * @return
      */
-    public Object invokeMethodByMsg(ReceiveMsg receiveMsg) {
-        String rawMsg = receiveMsg.getRaw_message();
+    public Object invokeMethodByMsg(ReqMsg reqMsg) {
+        String rawMsg = reqMsg.getMessage();
         String instruction = rawMsg.split(" ")[0].split("\\.")[1];
         Map<String, String> params = InstructionUtils.analysisInstruction(rawMsg.split("\\.")[1].split(" "));
-        return this.invokeMethodByInstruction(instruction, receiveMsg, params);
+        return this.invokeMethodByInstruction(instruction, reqMsg, params);
     }
 
     /**

@@ -25,7 +25,7 @@ import java.util.List;
 @Component
 public class VarComponent implements ApplicationRunner {
 
-    private Long userId = 2270374713L;
+    private String userId = "2270374713";
 
     private String robotName = "人工小天才";
 
@@ -43,6 +43,7 @@ public class VarComponent implements ApplicationRunner {
     /**
      * 初始化登录用户信息
      */
+    @Deprecated
     private void getUserInfo() {
         JSONObject json = new JSONObject();
 
@@ -53,30 +54,30 @@ public class VarComponent implements ApplicationRunner {
 
         try {
             // 获取机器人信息
-            System.out.println("向地址：" + UrlEnum.URL + "获取机器人QQ信息");
-            String getUserInfoUrl = UrlEnum.URL + UrlEnum.GET_LOGIN_INFO.toString();
-            ResponseEntity<LoginUser> responseOfInfo = restTemplate.postForEntity(getUserInfoUrl, request, LoginUser.class);
-            this.userId = responseOfInfo.getBody().getData().getUser_id();
-            this.robotName = responseOfInfo.getBody().getData().getNickname();
-
-            // 获取群列表
-            String getGroupListUrl = UrlEnum.URL + UrlEnum.GET_GROUP_LIST.toString();
-            ResponseEntity<String> responseEntity = restTemplate.postForEntity(getGroupListUrl, request, String.class);
-            GroupList groupList = JSONObject.parseObject(responseEntity.getBody(), GroupList.class);
-            this.groupList = groupList.getData();
-
-            // 获取好友列表
-            String getFriendListUrl = UrlEnum.URL + UrlEnum.GET_FRIEND_LIST.toString();
-            responseEntity = restTemplate.postForEntity(getFriendListUrl, request, String.class);
-            FriendList friendList = JSONObject.parseObject(responseEntity.getBody(), FriendList.class);
-            this.friendList = friendList.getData();
-
-            // 番茄钟的核心线程数等于好友或者群数量较小的哪一个
-            // 最大线程数等于群数量与好友数量之和
-            int coreSize = this.groupList.size() < this.friendList.size() ? this.groupList.size() : this.friendList.size();
-            int maxSize = this.groupList.size() + this.friendList.size();
-            tomatoClockComponent.setTomatoCoreSize(coreSize);
-            tomatoClockComponent.setTomatoMaxSize(maxSize);
+//            System.out.println("向地址：" + UrlEnum.URL + "获取机器人QQ信息");
+//            String getUserInfoUrl = UrlEnum.URL + UrlEnum.GET_LOGIN_INFO.toString();
+//            ResponseEntity<LoginUser> responseOfInfo = restTemplate.postForEntity(getUserInfoUrl, request, LoginUser.class);
+//            this.userId = responseOfInfo.getBody().getData().getUser_id();
+//            this.robotName = responseOfInfo.getBody().getData().getNickname();
+//
+//            // 获取群列表
+//            String getGroupListUrl = UrlEnum.URL + UrlEnum.GET_GROUP_LIST.toString();
+//            ResponseEntity<String> responseEntity = restTemplate.postForEntity(getGroupListUrl, request, String.class);
+//            GroupList groupList = JSONObject.parseObject(responseEntity.getBody(), GroupList.class);
+//            this.groupList = groupList.getData();
+//
+//            // 获取好友列表
+//            String getFriendListUrl = UrlEnum.URL + UrlEnum.GET_FRIEND_LIST.toString();
+//            responseEntity = restTemplate.postForEntity(getFriendListUrl, request, String.class);
+//            FriendList friendList = JSONObject.parseObject(responseEntity.getBody(), FriendList.class);
+//            this.friendList = friendList.getData();
+//
+//            // 番茄钟的核心线程数等于好友或者群数量较小的哪一个
+//            // 最大线程数等于群数量与好友数量之和
+//            int coreSize = this.groupList.size() < this.friendList.size() ? this.groupList.size() : this.friendList.size();
+//            int maxSize = this.groupList.size() + this.friendList.size();
+//            tomatoClockComponent.setTomatoCoreSize(coreSize);
+//            tomatoClockComponent.setTomatoMaxSize(maxSize);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,11 +112,11 @@ public class VarComponent implements ApplicationRunner {
 //        initShengmuList();
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

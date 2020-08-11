@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * 回复消息的实体类
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReplyMsg {
     /**
@@ -106,7 +107,7 @@ public class ReplyMsg {
 
     @Override
     public String toString() {
-        return "ReplyMsg{" +
+        return "String{" +
                 "reply='" + reply + '\'' +
                 ", auto_escape=" + auto_escape +
                 ", at_sender=" + at_sender +

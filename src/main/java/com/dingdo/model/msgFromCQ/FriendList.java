@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class FriendList {

@@ -4,7 +4,8 @@ import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.dao.RobotManagerDao;
 import com.dingdo.entities.RobotManagerEntity;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.ManagerService;
 import com.dingdo.util.InstructionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,11 @@ public class ManagerServiceImpl implements ManagerService {
     @Instruction(name = "login", descrption = "登录",
         errorMsg = "登录，指令的参数格式为:\n" +
                 "密码=【字符】")
-    public String login(ReceiveMsg receiveMsg, Map<String, String> params) {
+    public String login(ReqMsg reqMsg, Map<String, String> params) {
         // 获取并用户id和密码
-        Long userId = InstructionUtils.getParamValueOfLong(params, "id", "qq号");
+        String userId = InstructionUtils.getParamValue(params, "id", "qq号");
         if (userId == null) {
-            userId = receiveMsg.getSender().getUser_id();
+            userId = reqMsg.getUserId();
         }
         String password = InstructionUtils.getParamValue(params, "password", "密码");
         if (password == null) {
@@ -48,17 +49,17 @@ public class ManagerServiceImpl implements ManagerService {
         }
 
         // 登录成功！
-        redisTemplate.opsForValue().set(Long.toString(receiveMsg.getSender().getUser_id()), password, 30, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(reqMsg.getUserId(), password, 30, TimeUnit.MINUTES);
         return "登录成功！欢迎使用~";
     }
 
 
     @Instruction(name = "cancel", descrption = "注销")
     @VerifiAnnotation
-    public String cancel(ReceiveMsg receiveMsg, Map<String, String> params) {
+    public String cancel(ReqMsg reqMsg, Map<String, String> params) {
         String resultMsg = "注销成功！";
         try {
-            redisTemplate.delete(Long.toString(receiveMsg.getSender().getUser_id()));
+            redisTemplate.delete(reqMsg.getUserId());
         } catch (Exception e) {
             resultMsg = "注销失败，你还没登录呢";
         }
@@ -70,9 +71,9 @@ public class ManagerServiceImpl implements ManagerService {
     @Instruction(name = "register", descrption = "注册",
         errorMsg = "设置错误，指令的参数格式为:\n" +
             "qq号=【数字】 密码=【字符】")
-    public String register(ReceiveMsg receiveMsg, Map<String, String> params) {
+    public String register(ReqMsg reqMsg, Map<String, String> params) {
         // 获取并用户id和密码
-        Long userId = InstructionUtils.getParamValueOfLong(params, "id", "qq号");
+        String userId = InstructionUtils.getParamValue(params, "id", "qq号");
         String password = InstructionUtils.getParamValue(params, "password", "密码");
 
         // 校验qq号和密码是否为空
@@ -89,7 +90,7 @@ public class ManagerServiceImpl implements ManagerService {
         // 插入数据
         RobotManagerEntity insertEntity = new RobotManagerEntity();
         insertEntity.setId(userId);
-        insertEntity.setNickName(receiveMsg.getSender().getNickname());
+        insertEntity.setNickName(reqMsg.getNickname());
         insertEntity.setPassword(password);
         robotManagerDao.insert(insertEntity);
         return "新增管理员成功！";

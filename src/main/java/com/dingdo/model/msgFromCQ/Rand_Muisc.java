@@ -3,6 +3,7 @@ package com.dingdo.model.msgFromCQ;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated
 public class Rand_Muisc {
     /**
      *  返回的状态码

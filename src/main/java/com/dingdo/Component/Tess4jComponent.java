@@ -5,7 +5,8 @@ import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.otherService.PythonService;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.ImageUtil;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -42,14 +43,14 @@ public class Tess4jComponent implements ApplicationRunner {
 
     @VerifiAnnotation
     @Instruction(name = "enableWDSR", descrption = "开启超分辨率识别")
-    public String enableWDSR(ReceiveMsg receiveMsg, Map<String, String> params) {
+    public String enableWDSR(ReqMsg reqMsg, Map<String, String> params) {
         this.enableWDSR = true;
         return "超分辨率识别已开启";
     }
 
     @VerifiAnnotation
     @Instruction(name = "disableWDSR", descrption = "关闭超分辨率识别")
-    public String disableWDSR(ReceiveMsg receiveMsg, Map<String, String> params) {
+    public String disableWDSR(ReqMsg reqMsg, Map<String, String> params) {
         this.enableWDSR = false;
         return "超分辨率识别已关闭";
     }

@@ -33,8 +33,8 @@ public class MsgTypeComponent {
      * @param userId
      * @return
      */
-    public boolean getUserMsgStatus(Long userId) {
-        String userStatus = redisTemplate.opsForValue().get(Long.toString(userId));
+    public boolean getUserMsgStatus(String userId) {
+        String userStatus = redisTemplate.opsForValue().get(userId);
         setUserStatus(userId, "0", 5, TimeUnit.MINUTES);
         return "1".equals(userStatus) ? true : false;
     }
@@ -46,7 +46,7 @@ public class MsgTypeComponent {
      * @param msg
      * @return 0（没有状态改变），1（启动功能模式），-1（退出功能模式）
      */
-    public int msgTriger(long userId, String msg) {
+    public int msgTriger(String userId, String msg) {
         boolean userMsgStatus = this.getUserMsgStatus(userId);
 
         if (userMsgStatus && isIntoServiceInstruction(msg)) {
@@ -70,11 +70,11 @@ public class MsgTypeComponent {
      * @param time     超时时间
      * @param timeUnit 时间单位
      */
-    public void setUserStatus(long userId, String status, long time, TimeUnit timeUnit) {
+    public void setUserStatus(String userId, String status, long time, TimeUnit timeUnit) {
         if(status == null){
             status = "0";
         }
-        redisTemplate.opsForValue().set(Long.toString(userId), status, time, timeUnit);
+        redisTemplate.opsForValue().set(userId, status, time, timeUnit);
     }
 
     public boolean isIntoServiceInstruction(String msg) {

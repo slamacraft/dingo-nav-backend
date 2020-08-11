@@ -1,15 +1,15 @@
 package com.dingdo.service;
 
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 
 public interface MsgHandleService {
 
     /**
      * 消息的预处理层
      * 所有对消息的预处理，固定消息的返回都在这里
-     * @param receiveMsg
+     * @param reqMsg
      * @return
      */
-    ReplyMsg handleMsg(ReceiveMsg receiveMsg);
+    String handleMsg(ReqMsg reqMsg);
 }

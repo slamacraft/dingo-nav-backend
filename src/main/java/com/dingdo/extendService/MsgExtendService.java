@@ -1,7 +1,8 @@
 package com.dingdo.extendService;
 
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 
 /**
  * 功能服务接口
@@ -13,11 +14,11 @@ public interface MsgExtendService {
      * 返回封装完毕的回复信息
      * @return
      */
-    ReplyMsg sendReply(ReceiveMsg receiveMsg);
+    String sendReply(ReqMsg reqMsg);
 
     /**
      * 返回处理完毕的回复信息
      * @return
      */
-    String getReply(ReceiveMsg receiveMsg);
+    String getReply(ReqMsg reqMsg);
 }

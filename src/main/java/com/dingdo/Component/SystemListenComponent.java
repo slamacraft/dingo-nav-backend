@@ -7,7 +7,8 @@ import com.dingdo.Schedule.SchedulingRunnable;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.RedisEnum;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.InstructionUtils;
 import com.sun.management.OperatingSystemMXBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class SystemListenComponent {
 
     @VerifiAnnotation
     @Instruction(name = "getSysInfo", descrption = "获取系统信息")
-    public String getSysInfo(ReceiveMsg receiveMsg, Map<String, String> params) {
+    public String getSysInfo(ReqMsg reqMsg, Map<String, String> params) {
         String sysJson = stringRedisTemplate.opsForValue().get(RedisEnum.SYSINFO.toString());
         MonitorInfoBean infoBean = JSONObject.parseObject(sysJson, MonitorInfoBean.class);
         String result = infoBean.toString();
@@ -52,7 +53,7 @@ public class SystemListenComponent {
     @Instruction(name = "setUpdateSysInfoInterval", descrption = "设置更新系统信息间隔",
             errorMsg = "设置错误，指令的参数格式为:\n" +
                         "时间间隔=【数字】")
-    public String setUpdateSysInfoTime(ReceiveMsg receiveMsg, Map<String, String> params) {
+    public String setUpdateSysInfoTime(ReqMsg reqMsg, Map<String, String> params) {
         int time = InstructionUtils.getParamValueOfInteger(params, "time", "时间间隔") * 1000;
         SchedulingRunnable task = new SchedulingRunnable("systemListenComponent",
                     "updateSysInfo");

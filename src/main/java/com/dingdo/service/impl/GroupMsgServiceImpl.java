@@ -6,8 +6,8 @@ import com.dingdo.Component.classifier.NaiveBayesComponent;
 import com.dingdo.Component.VarComponent;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.otherService.ServiceFromApi;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.AbstractMsgService;
 import com.dingdo.service.GroupMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
     private VarComponent varComponent;
 
     @Override
-    public void sendGroupMsg(Long groupId, String msg) {
+    public void sendGroupMsg(String groupId, String msg) {
         RestTemplate restTemplate = new RestTemplate();
         JSONObject json = new JSONObject();
         json.put("message", msg);
@@ -50,15 +50,15 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
     }
 
     @Override
-    public ReplyMsg handleGroupMsg(ReceiveMsg receiveMsg) {
-        String msg = receiveMsg.getRaw_message();
+    public String handleGroupMsg(ReqMsg reqMsg) {
+        String msg = reqMsg.getMessage();
 
         // 不需要at的功能
         // 群管家欢迎新人时，自动发出语句，这个功能不需要at
-        if (receiveMsg.getSender().getUser_id().toString().equals("2854196310")) {
-            receiveMsg.setRaw_message("欢迎新人");
-            return serviceFromApi.sendMsgFromApi(receiveMsg);
-        }
+//        if (reqMsg.getUserId().toString().equals("2854196310")) {
+//            reqMsg.setRaw_message("欢迎新人");
+//            return serviceFromApi.sendMsgFromApi(reqMsg);
+//        }
 
         //没有at机器人就不回答
         if (!msg.contains("CQ:at,qq=" + varComponent.getUserId())) {
@@ -69,44 +69,45 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
         msg = this.removeAtUser(msg, varComponent.getUserId());
 
         // 没有请求什么功能，直接调用api的机器人回答它
-        if (!msgTypeComponent.getUserMsgStatus(receiveMsg.getUser_id())) {
-            ReplyMsg replyMsg = serviceFromApi.sendMsgFromApi(receiveMsg);
-            this.atSenderOnBeginning(replyMsg, receiveMsg.getSender().getUser_id());
-            return replyMsg;
+        if (!msgTypeComponent.getUserMsgStatus(reqMsg.getUserId())) {
+            String String = serviceFromApi.sendMsgFromApi(reqMsg);
+            this.atSenderOnBeginning(String, reqMsg.getUserId());
+            return String;
         }
 
         // 通过分类器确定请求的功能模块,调用相对应的功能模块
-        ReplyMsg replyMsg = extendServiceMap.get(naiveBayesComponent.predict(msg))
-                .sendReply(receiveMsg);
-        this.atSenderOnBeginning(replyMsg, receiveMsg.getSender().getUser_id());
-        return replyMsg;
+        String reply = extendServiceMap.get(naiveBayesComponent.predict(msg))
+                .sendReply(reqMsg);
+        return atSenderOnBeginning(reply, reqMsg.getUserId());
     }
 
     @Override
-    public ReplyMsg handleMsg(ReceiveMsg receiveMsg) {
+    public String handleMsg(ReqMsg reqMsg) {
         // 确定用户状态
-        ReplyMsg statusReply = super.determineUserStatus(receiveMsg);
+        String statusReply = super.determineUserStatus(reqMsg);
         if (statusReply != null) {
             return statusReply;
         }
-        return this.handleGroupMsg(receiveMsg);
+        return this.handleGroupMsg(reqMsg);
     }
 
     /**
      * 在句首at某人
-     * @param replyMsg
+     *
+     * @param reply
      * @param userId
      */
-    private void atSenderOnBeginning(ReplyMsg replyMsg, Long userId){
-        replyMsg.setReply("[CQ:at,qq=" + userId + "]" + replyMsg.getReply());
+    private String atSenderOnBeginning(String reply, String userId) {
+        return "[CQ:at,qq=" + userId + "]" + reply;
     }
 
     /**
      * 删除句子中的at某人
+     *
      * @param msg
      * @param userId
      */
-    private String removeAtUser(String msg, Long userId){
+    private String removeAtUser(String msg, String userId) {
         return msg.replaceAll("\\[CQ:at,qq=" + userId + "\\]", "");
     }
 }

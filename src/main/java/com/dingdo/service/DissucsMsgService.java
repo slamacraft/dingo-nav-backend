@@ -1,9 +1,9 @@
 package com.dingdo.service;
 
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 
 public interface DissucsMsgService {
 
-    ReplyMsg handleDissucsMsg(ReceiveMsg receiveMsg);
+    String handleDissucsMsg(ReqMsg reqMsg);
 }

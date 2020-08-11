@@ -7,12 +7,11 @@ import com.dingdo.Component.WebClientComponent;
 import com.dingdo.dao.MusicDao;
 import com.dingdo.entities.MusicEntity;
 import com.dingdo.enums.UrlEnum;
+import com.dingdo.extendService.musicService.MusicService;
+import com.dingdo.model.msgFromCQ.SearchMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.model.musicFromQQ.MusicQQ;
 import com.dingdo.model.musicFromQQ.SongQQ;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
-import com.dingdo.model.msgFromCQ.SearchMsg;
-import com.dingdo.extendService.musicService.MusicService;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.hankcs.hanlp.HanLP;
@@ -26,7 +25,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
@@ -42,7 +40,7 @@ import java.util.regex.Pattern;
 /**
  * 音乐服务接口的实现类
  */
-@Service
+@Deprecated
 public class MusicServiceImpl implements MusicService {
 
     // 使用log4j打印日志
@@ -58,26 +56,26 @@ public class MusicServiceImpl implements MusicService {
     private WebClientComponent webClientComponent;
 
     @Override
-    public ReplyMsg sendReply(ReceiveMsg receiveMsg) {
-        String keyword = this.getKeyword(receiveMsg);
+    public String sendReply(ReqMsg reqMsg) {
+        String keyword = this.getKeyword(null);
         return this.getMusic(keyword);
     }
 
     @Override
-    public String getReply(ReceiveMsg receiveMsg) {
+    public String getReply(ReqMsg reqMsg) {
         return null;
     }
 
     /**
      * 从自然语言中获取歌曲关键字
-     * @param receiveMsg
+     * @param reqMsg
      * @return
      */
     @Override
-    public String getKeyword(ReceiveMsg receiveMsg) {
+    public String getKeyword(ReqMsg reqMsg) {
         // 暂时不知道怎么处理
         String keyword = "";
-        return receiveMsg.getRaw_message();
+        return reqMsg.getMessage();
     }
 
     /**
@@ -87,19 +85,18 @@ public class MusicServiceImpl implements MusicService {
      */
     @Override
     @Transactional
-    public ReplyMsg getMusic(String keyword) {
-        ReplyMsg replyMsg = new ReplyMsg();
+    public String getMusic(String keyword) {
+        String String = new String();
 
         // 从数据库查询歌曲
 //        MusicEntity music = getMusicFromMysql(keyword);
         MusicEntity music = getMusicFromMusicQQApi(keyword);
 
         if (music != null) {
-            replyMsg.setReply("[CQ:music,type=qq,id=" + music.getMusicMid() + "]");
+            return "[CQ:music,type=qq,id=" + music.getMusicMid() + "]";
         } else {
-            replyMsg.setReply("没找到这首歌");
+            return "没找到这首歌";
         }
-        return replyMsg;
     }
 
     /**
@@ -107,8 +104,8 @@ public class MusicServiceImpl implements MusicService {
      *
      * @return
      */
-    private ReplyMsg randMusic() {
-        ReplyMsg replyMsg = new ReplyMsg();
+    private String randMusic() {
+        String String = new String();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject json = new JSONObject();
@@ -130,9 +127,7 @@ public class MusicServiceImpl implements MusicService {
             e.printStackTrace();
         }
 
-        replyMsg.setReply("[CQ:music,type=163,id=" + id + "]");
-
-        return replyMsg;
+        return "[CQ:music,type=163,id=" + id + "]";
     }
 
     /**

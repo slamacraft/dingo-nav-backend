@@ -11,7 +11,7 @@ public class WolfKillerGamerData {
     /**
      * 用户id
      */
-    private long userId;
+    private String userId;
 
     /**
      * 用户名称

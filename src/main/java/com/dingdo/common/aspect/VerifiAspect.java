@@ -1,7 +1,8 @@
 package com.dingdo.common.aspect;
 
 import com.dingdo.common.exception.CheckException;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -28,15 +29,15 @@ public class VerifiAspect {
     public void userVerification(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         for (Object item : args) {
-            if (item instanceof ReceiveMsg) {
-                ReceiveMsg receiveMsg = (ReceiveMsg) item;
-                Long userId = receiveMsg.getUser_id();
-                String password = (String) redisTemplate.opsForValue().get(Long.toString(userId));
+            if (item instanceof ReqMsg) {
+                ReqMsg reqMsg = (ReqMsg) item;
+                String userId = reqMsg.getUserId();
+                String password = (String) redisTemplate.opsForValue().get(userId);
                 if (StringUtils.isBlank(password)) {
                     throw new CheckException("该指令为管理员指令，请先登录");
                 }
                 // 刷新自动下线时间
-                redisTemplate.opsForValue().set(Long.toString(userId), password, 30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set(userId, password, 30, TimeUnit.MINUTES);
             }
         }
     }

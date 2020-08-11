@@ -2,9 +2,10 @@ package com.dingdo.extendService.knowledgeService.impl;
 
 import com.dingdo.Component.WebClientComponent;
 import com.dingdo.enums.UrlEnum;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.extendService.knowledgeService.ZhidaoService;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HTMLParser;
@@ -27,37 +28,33 @@ public class ZhidaoServiceImpl implements ZhidaoService {
     private WebClientComponent webClientComponent;
 
     @Override
-    public ReplyMsg sendReply(ReceiveMsg receiveMsg) {
-        ReplyMsg replyMsg = new ReplyMsg();
+    public String sendReply(ReqMsg reqMsg) {
+        String String = new String();
 
-        String rawMsg = receiveMsg.getRaw_message();
+        String rawMsg = reqMsg.getMessage();
         String resultMsg = getReplyFromBaidu(rawMsg);
         if (resultMsg != null) {
-            replyMsg.setReply(resultMsg);
-            return replyMsg;
+            return resultMsg;
         }
-        replyMsg.setReply("好像什么也没找到");
-        return replyMsg;
+        return "好像什么也没找到";
     }
 
     @Override
-    public String getReply(ReceiveMsg receiveMsg) {
+    public String getReply(ReqMsg reqMsg) {
         return null;
     }
 
     @Override
-    public ReplyMsg stdReplyFromBaidu(ReceiveMsg receiveMsg) {
-        ReplyMsg replyMsg = new ReplyMsg();
+    public String stdReplyFromBaidu(ReqMsg reqMsg) {
+        String String = new String();
 
-        String rawMsg = receiveMsg.getRaw_message();
+        String rawMsg = reqMsg.getMessage();
         String words = rawMsg.split("百度一下")[1].trim();
         String resultMsg = getReplyFromBaidu(words);
         if (resultMsg != null) {
-            replyMsg.setReply(resultMsg);
-            return replyMsg;
+            return resultMsg;
         }
-        replyMsg.setReply("好像什么也没找到");
-        return replyMsg;
+        return "好像什么也没找到";
     }
 
     @Override

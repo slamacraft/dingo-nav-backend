@@ -6,8 +6,7 @@ import com.dingdo.Component.classifier.NaiveBayesComponent;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.musicService.impl.MusicServiceImpl;
 import com.dingdo.extendService.otherService.ServiceFromApi;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.AbstractMsgService;
 import com.dingdo.service.PrivateMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class PrivateMsgServiceImpl extends AbstractMsgService implements Private
     private MsgTypeComponent msgTypeComponent;
 
     @Override
-    public void sendPrivateMsg(Long userId, String msg) {
+    public void sendPrivateMsg(String userId, String msg) {
         RestTemplate restTemplate = new RestTemplate();
         JSONObject json = new JSONObject();
         json.put("message", msg);
@@ -51,24 +50,24 @@ public class PrivateMsgServiceImpl extends AbstractMsgService implements Private
     }
 
     @Override
-    public ReplyMsg handlePrivateMsg(ReceiveMsg receiveMsg) {
+    public String handlePrivateMsg(ReqMsg reqMsg) {
         // 非功能请求状态，调用机器人api
-        if (!msgTypeComponent.getUserMsgStatus(receiveMsg.getUser_id())) {
-            return serviceFromApi.sendMsgFromApi(receiveMsg);
+        if (!msgTypeComponent.getUserMsgStatus(reqMsg.getUserId())) {
+            return serviceFromApi.sendMsgFromApi(reqMsg);
         }
 
         // 功能请求状态， 调用对应的功能模块
-        return extendServiceMap.get(naiveBayesComponent.predict(receiveMsg.getRaw_message()))
-                .sendReply(receiveMsg);
+        return extendServiceMap.get(naiveBayesComponent.predict(reqMsg.getMessage()))
+                .sendReply(reqMsg);
     }
 
     @Override
-    public ReplyMsg handleMsg(ReceiveMsg receiveMsg) {
+    public String handleMsg(ReqMsg reqMsg) {
         // 确定用户状态
-        ReplyMsg statusReply = super.determineUserStatus(receiveMsg);
+        String statusReply = super.determineUserStatus(reqMsg);
         if (statusReply != null) {
             return statusReply;
         }
-        return this.handlePrivateMsg(receiveMsg);
+        return this.handlePrivateMsg(reqMsg);
     }
 }

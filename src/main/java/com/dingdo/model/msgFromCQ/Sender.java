@@ -2,6 +2,7 @@ package com.dingdo.model.msgFromCQ;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 /**
  * 发送者
@@ -11,11 +12,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * 尤其对于匿名消息，此字段不具有参考价值。
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Data
+@Deprecated
 public class Sender {
     /**
      * 发送者QQ号
      */
-    private Long user_id;
+    private String userId;
 
     /**
      * 昵称
@@ -37,50 +40,10 @@ public class Sender {
      */
     private Integer age;
 
-    public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getCard() {
-        return card;
-    }
-
-    public void setCard(String card) {
-        this.card = card;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
     @Override
     public String toString() {
         return "Sender{" +
-                "user_id=" + user_id +
+                "userId=" + userId +
                 ", nickname='" + nickname + '\'' +
                 ", card='" + card + '\'' +
                 ", sex='" + sex + '\'' +

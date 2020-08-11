@@ -1,7 +1,7 @@
 package com.dingdo.service;
 
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 
 /**
  * 私聊消息处理接口
@@ -11,15 +11,15 @@ public interface PrivateMsgService extends MsgHandleService{
     /**
      * 真正的消息处理层
      * 以及真正的服务转接层，对消息内容进行处理和转发
-     * @param receiveMsg
+     * @param reqMsg
      * @return
      */
-    ReplyMsg handlePrivateMsg(ReceiveMsg receiveMsg);
+    String handlePrivateMsg(ReqMsg reqMsg);
 
     /**
      * 发送私聊信息
      * @param msg
      * @param userId
      */
-    void sendPrivateMsg(Long userId, String msg);
+    void sendPrivateMsg(String userId, String msg);
 }

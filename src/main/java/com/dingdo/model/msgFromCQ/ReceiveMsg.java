@@ -1,12 +1,15 @@
 package com.dingdo.model.msgFromCQ;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 /**
  * 发送请求的实体类
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ReceiveMsg {
+@Deprecated
+@Data
+class reqMsg {
     /**
      * 上报类型
      * message	收到消息
@@ -89,121 +92,9 @@ public class ReceiveMsg {
      */
     private Sender sender;
 
-    public String getPost_type() {
-        return post_type;
-    }
-
-    public void setPost_type(String post_type) {
-        this.post_type = post_type;
-    }
-
-    public String getMessage_type() {
-        return message_type;
-    }
-
-    public void setMessage_type(String message_type) {
-        this.message_type = message_type;
-    }
-
-    public String getSub_type() {
-        return sub_type;
-    }
-
-    public void setSub_type(String sub_type) {
-        this.sub_type = sub_type;
-    }
-
-    public Long getMessage_id() {
-        return message_id;
-    }
-
-    public void setMessage_id(Long message_id) {
-        this.message_id = message_id;
-    }
-
-    public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
-    }
-
-    public Long getGroup_id() {
-        return group_id;
-    }
-
-    public void setGroup_id(Long group_id) {
-        this.group_id = group_id;
-    }
-
-    public Long getDiscuss_id() {
-        return discuss_id;
-    }
-
-    public void setDiscuss_id(Long discuss_id) {
-        this.discuss_id = discuss_id;
-    }
-
-    public Object getAnonymous() {
-        return anonymous;
-    }
-
-    public void setAnonymous(Object anonymous) {
-        this.anonymous = anonymous;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getRaw_message() {
-        return raw_message;
-    }
-
-    public void setRaw_message(String raw_message) {
-        this.raw_message = raw_message;
-    }
-
-    public Long getFont() {
-        return font;
-    }
-
-    public void setFont(Long font) {
-        this.font = font;
-    }
-
-    public Long getTime() {
-        return time;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
-    public Long getSelf_id() {
-        return self_id;
-    }
-
-    public void setSelf_id(Long self_id) {
-        this.self_id = self_id;
-    }
-
-    public Sender getSender() {
-        return sender;
-    }
-
-    public void setSender(Sender sender) {
-        this.sender = sender;
-    }
-
     @Override
     public String toString() {
-        return "ReceiveMsg{" +
+        return "reqMsg{" +
                 "post_type='" + post_type + '\'' +
                 ", message_type='" + message_type + '\'' +
                 ", sub_type='" + sub_type + '\'' +

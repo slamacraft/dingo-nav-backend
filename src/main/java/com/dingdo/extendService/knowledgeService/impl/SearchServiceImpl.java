@@ -2,9 +2,8 @@ package com.dingdo.extendService.knowledgeService.impl;
 
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.knowledgeService.SearchService;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
-import com.dingdo.model.msgFromCQ.ReplyMsg;
 import com.dingdo.model.msgFromCQ.SearchMsg;
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.NLPUtils;
 import com.hankcs.hanlp.seg.common.Term;
 import org.apache.commons.collections4.CollectionUtils;
@@ -34,12 +33,11 @@ public class SearchServiceImpl implements SearchService {
     StringRedisTemplate redisTemplate;
 
     @Override
-    public ReplyMsg sendReply(ReceiveMsg receiveMsg) {
-        List<Term> keywordList = NLPUtils.getNER(receiveMsg.getRaw_message());
-        ReplyMsg replyMsg = new ReplyMsg();
+    public String sendReply(ReqMsg reqMsg) {
+        List<Term> keywordList = NLPUtils.getNER(reqMsg.getMessage());
+        String String = new String();
         if (CollectionUtils.isEmpty(keywordList)) {
-            replyMsg.setReply("请问你要查询什么");
-            return replyMsg;
+            return "请问你要查询什么";
         }
 
         StringBuffer reply = new StringBuffer();
@@ -47,29 +45,26 @@ public class SearchServiceImpl implements SearchService {
             reply.append(keyword + ":" + searchHandler(keyword.word) + "\n");
         }
 
-        replyMsg.setReply(reply.toString());
-        return replyMsg;
+        return reply.toString();
     }
 
 
     @Override
-    public String getReply(ReceiveMsg receiveMsg) {
+    public String getReply(ReqMsg reqMsg) {
         return null;
     }
 
 
     @Override
-    public ReplyMsg stdSearch(ReceiveMsg receiveMsg) {
-        ReplyMsg replyMsg = new ReplyMsg();
-        String keyword = receiveMsg.getRaw_message().split("搜索")[1].trim();
+    public String stdSearch(ReqMsg reqMsg) {
+        String String = new String();
+        String keyword = reqMsg.getMessage().split("搜索")[1].trim();
 
         if (StringUtils.isBlank(keyword)) { // 关键词为空
-            replyMsg.setReply("请问你要查询什么");
-            return replyMsg;
+            return "请问你要查询什么";
         }
 
-        replyMsg.setReply(keyword + ":" + searchHandler(keyword));
-        return replyMsg;
+        return keyword + ":" + searchHandler(keyword);
     }
 
 

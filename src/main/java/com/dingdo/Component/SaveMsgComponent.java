@@ -2,7 +2,8 @@ package com.dingdo.Component;
 
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
-import com.dingdo.model.msgFromCQ.ReceiveMsg;
+
+import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.FileUtil;
 import com.dingdo.util.InstructionUtils;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class SaveMsgComponent {
     // 群消息列表(不一定线程安全)
     // Tip:volatite会不会使Map的Key值对所有线程可见有待确认
-    volatile private Map<Long, List<String>> groupMsgList = new ConcurrentHashMap<>();
+    volatile private Map<String, List<String>> groupMsgList = new ConcurrentHashMap<>();
 
     // 消息存储池
     private ThreadPoolExecutor msgStroePool;
@@ -48,7 +49,7 @@ public class SaveMsgComponent {
     @VerifiAnnotation
     @Instruction(name = "setMsgListSize", descrption = "设置消息缓存大小",
                 errorMsg = "设置错误，指令的参数格式为:\n消息列表大小=【数字】")
-    public String setMsgListSize(ReceiveMsg receiveMsg, Map<String, String> params) {
+    public String setMsgListSize(ReqMsg reqMsg, Map<String, String> params) {
         String resultMsg = "设置成功";
         Integer setValue = InstructionUtils.getParamValueOfInteger(params, "msgListSize", "大小");
         this.msgListSize = setValue;
@@ -59,10 +60,10 @@ public class SaveMsgComponent {
      * 消息存储的线程类
      */
     private class msgStoreThread implements Runnable {
-        private long groupId;
+        private String groupId;
         private String[] msgList;
 
-        public msgStoreThread(long groupId, String[] msgList) {
+        public msgStoreThread(String groupId, String[] msgList) {
             this.groupId = groupId;
             this.msgList = msgList;
         }
@@ -87,7 +88,7 @@ public class SaveMsgComponent {
      * @param msg
      * @param groupId
      */
-    public void saveGroupMsg(String msg, long groupId) {
+    public void saveGroupMsg(String msg, String groupId) {
         // 获取该群的群消息列表
         List<String> msgList = groupMsgList.get(groupId);
         if (msgList == null) {
@@ -96,7 +97,7 @@ public class SaveMsgComponent {
         }
         msgList.add(msg);
 
-        // 当消息列表长度超过阈值，将消息列表转发给子线程进行存储
+        // 当消息列表长度超过阈值，将消息列表分发给子线程进行存储
         if (msgList.size() >= msgListSize) {
             String[] msgs = msgList.toArray(new String[0]);
             msgList.clear();
