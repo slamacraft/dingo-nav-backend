@@ -70,8 +70,12 @@ public class Tess4jComponent implements ApplicationRunner {
      * @return
      */
     public String tessOCR(String imgCode) {
-        String imgUrl = imgCode.split("file=")[1].split("]")[0];
-        String imageSrc = getImageSrc(imgUrl);
+        //[CQ:image,image=/1114951452-3211345979-26D43FB8907DF3147E3AE936E2FD5F40,file=/1114951452-3211345979-26D43FB8907DF3147E3AE936E2FD5F40,url=http://c2cpicdw.qpic.cn/offpic_new/1114951452//1114951452-3211345979-26D43FB8907DF3147E3AE936E2FD5F40/0?term=2]
+//        String imgUrl = imgCode.split("file=")[1].split("]")[0];
+//        String imageSrc = getImageSrc(imgUrl);
+        String imgUrl = imgCode.split("url=")[1].split("]")[0];
+        String imgName = imgCode.split("image=/")[1].split(",")[0];
+        String imageSrc = ImageUtil.getImageAndSaveFromURL(imgUrl, imgName);
         if (imageSrc == null) {
             return "";
         }
@@ -100,6 +104,7 @@ public class Tess4jComponent implements ApplicationRunner {
      * @param imgCode
      * @return
      */
+    @Deprecated
     public String getImageSrc(String imgCode) {
         RestTemplate restTemplate = new RestTemplate();
         JSONObject json = new JSONObject();

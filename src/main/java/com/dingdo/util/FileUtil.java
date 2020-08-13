@@ -5,8 +5,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.boot.system.ApplicationHome;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 文件操作工具类
@@ -17,7 +20,22 @@ public class FileUtil {
     // 使用log4j打印日志
     private static Logger logger = Logger.getLogger(FileUtil.class);
 
-    private static String jarUrl;
+    /**
+     * 获取jar路径的静态内部类
+     */
+    private static class JarPathUtil {
+        private static String jarUrl;
+
+        static {
+            ApplicationHome home = new ApplicationHome(FileUtil.class);
+            File jarFile = home.getSource();
+            jarUrl = jarFile.getParentFile().toString() + "/image\\";
+            if (StringUtils.isBlank(jarUrl)) {
+                jarUrl = "/python/CQPython/static/image/";
+            }
+            System.out.println("获取的jar包路径为:" + jarUrl);
+        }
+    }
 
     /**
      * 获取某个目录下所有下级文件，包括目录下的子目录的下的文件
@@ -73,17 +91,7 @@ public class FileUtil {
      */
     public static void saveMsgToFile(String path, String text) {
         // 获取当前jar包所在的文件路径
-        if (jarUrl == null) {
-            ApplicationHome home = new ApplicationHome(FileUtil.class);
-            File jarFile = home.getSource();
-            jarUrl = jarFile.getParentFile().toString() + "/Message\\";
-            if (StringUtils.isBlank(jarUrl)) {
-                jarUrl = "/python/CQPython/static/input/";
-            }
-            System.out.println("获取的jar包路径为:" + jarUrl);
-        }
-
-        path = jarUrl + path;
+        path = JarPathUtil.jarUrl + path;
         writeFile(path, text);
     }
 
@@ -120,20 +128,36 @@ public class FileUtil {
 
     /**
      * 清空文件
+     *
      * @param filePath
      */
-    public static void clearFile(String filePath){
-        File file =new File(filePath);
+    public static void clearFile(String filePath) {
+        File file = new File(filePath);
         try {
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
-            FileWriter fileWriter =new FileWriter(file);
+            FileWriter fileWriter = new FileWriter(file);
             fileWriter.write("");
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String saveImage(String imageURL, String fileName) {
+        BufferedImage imageFromURL = ImageUtil.getImageFromURL(imageURL);
+        File file = new File(JarPathUtil.jarUrl + fileName);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+                ImageIO.write(imageFromURL, "jpg", file);
+                return JarPathUtil.jarUrl + fileName;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

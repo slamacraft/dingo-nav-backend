@@ -8,6 +8,7 @@ import com.dingdo.model.MsgFromSiZhi.ChatMsg;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,15 +21,16 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ServiceFromApiImpl implements ServiceFromApi {
 
+    private static final Logger logger = Logger.getLogger(ServiceFromApiImpl.class);
+
     @Autowired
     private RestTemplate restTemplate;
 
-    JSONObject json = new JSONObject();
 
     @Override
     public String sendMsgFromApi(ReqMsg reqMsg) {
-        String String = new String();
         String msg = reqMsg.getMessage();
+        JSONObject json = new JSONObject();
 
         // 对啥也不说的人的回答
         if (StringUtils.isBlank(msg)) {
@@ -49,19 +51,20 @@ public class ServiceFromApiImpl implements ServiceFromApi {
             ChatMsg api_String = new ObjectMapper().readValue(response.getBody(), ChatMsg.class);
             return getReplyTextFromResponse(api_String);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
-        return String;
+        return "不是很懂\n" + "（；´д｀）ゞ";
     }
 
     /**
      * 这里从api的返回中提取回答，
      * 并且在失败后将回答设置为默认的回答
+     *
      * @param chatMsg
      * @return
      */
-    private String getReplyTextFromResponse(ChatMsg chatMsg){
-        if (chatMsg.getMessage().equals("success")){
+    private String getReplyTextFromResponse(ChatMsg chatMsg) {
+        if (chatMsg.getMessage().equals("success")) {
             return chatMsg.getData().getInfo().getText();
         } else {
             return "不是很懂\n" + "（；´д｀）ゞ";

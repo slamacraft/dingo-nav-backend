@@ -1,5 +1,6 @@
 package com.dingdo.util;
 
+import com.simbot.component.mirai.ImageCache;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
@@ -53,9 +54,10 @@ public class ImageUtil {
      * @param imageURL
      * @return
      */
-    public static BufferedImage getRemoteBufferedImage(String imageURL) {
+    public static BufferedImage getImageFromURL(String imageURL) {
         URL url = null;
         InputStream is = null;
+
         BufferedImage bufferedImage = null;
         try {
             url = new URL(imageURL);
@@ -79,6 +81,18 @@ public class ImageUtil {
         }
         return bufferedImage;
     }
+
+    /**
+     * 获取远程网络图片信息
+     *
+     * @param imageURL
+     * @return
+     */
+    public static String getImageAndSaveFromURL(String imageURL, String filePath) {
+        BufferedImage imageFromURL = ImageUtil.getImageFromURL(imageURL);
+        return FileUtil.saveImage(imageURL, filePath);
+    }
+
 
     /**
      * 获取一张二值化图片

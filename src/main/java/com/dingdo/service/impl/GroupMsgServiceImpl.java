@@ -1,24 +1,15 @@
 package com.dingdo.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.dingdo.Component.MsgTypeComponent;
 import com.dingdo.Component.classifier.NaiveBayesComponent;
-import com.dingdo.Component.VarComponent;
-import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.otherService.ServiceFromApi;
-
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.AbstractMsgService;
 import com.dingdo.service.GroupMsgService;
 import com.forte.qqrobot.bot.BotManager;
 import com.forte.qqrobot.bot.BotSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgService {
@@ -28,8 +19,6 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
     private NaiveBayesComponent naiveBayesComponent;
     @Autowired
     private MsgTypeComponent msgTypeComponent;
-    @Autowired
-    private VarComponent varComponent;
     @Autowired
     private BotManager botManager;
 
@@ -51,12 +40,12 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
 //        }
 
         //没有at机器人就不回答
-        if (!msg.contains("CQ:at,qq=" + varComponent.getUserId())) {
+        if (!msg.contains("CQ:at,qq=" + reqMsg.getSelfId())) {
             return null;
         }
 
         // 移出at机器人的句段
-        msg = this.removeAtUser(msg, varComponent.getUserId());
+        msg = this.removeAtUser(msg, reqMsg.getSelfId());
 
         // 没有请求什么功能，直接调用api的机器人回答它
         if (!msgTypeComponent.getUserMsgStatus(reqMsg.getUserId())) {

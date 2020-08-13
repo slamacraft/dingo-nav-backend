@@ -2,7 +2,6 @@ package com.dingdo.extendService.musicService.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.dingdo.Component.VarComponent;
 import com.dingdo.Component.WebClientComponent;
 import com.dingdo.dao.MusicDao;
 import com.dingdo.entities.MusicEntity;
@@ -12,6 +11,7 @@ import com.dingdo.model.msgFromCQ.SearchMsg;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.model.musicFromQQ.MusicQQ;
 import com.dingdo.model.musicFromQQ.SongQQ;
+import com.dingdo.util.PinyinUtil;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.hankcs.hanlp.HanLP;
@@ -51,8 +51,6 @@ public class MusicServiceImpl implements MusicService {
     @Autowired(required = false)
     private MusicDao musicDao;
     @Autowired
-    private VarComponent varComponent;
-    @Autowired
     private WebClientComponent webClientComponent;
 
     @Override
@@ -68,6 +66,7 @@ public class MusicServiceImpl implements MusicService {
 
     /**
      * 从自然语言中获取歌曲关键字
+     *
      * @param reqMsg
      * @return
      */
@@ -80,6 +79,7 @@ public class MusicServiceImpl implements MusicService {
 
     /**
      * 由歌曲关键字获取歌曲信息
+     *
      * @param keyword
      * @return
      */
@@ -164,7 +164,7 @@ public class MusicServiceImpl implements MusicService {
         }
         musicEntity.setMusicAuthor(author.toString());
 
-        try{
+        try {
             if (musicDao.selectList(new QueryWrapper<MusicEntity>()
                     .eq("music_mid", musicEntity.getMusicMid())
                     .eq("music_type", "qq")).size() == 0) {
@@ -267,6 +267,7 @@ public class MusicServiceImpl implements MusicService {
 
     /**
      * 计算字符串最小编辑距离
+     *
      * @param s1
      * @param s2
      * @return
@@ -331,7 +332,7 @@ public class MusicServiceImpl implements MusicService {
 
                     String s1Shenmu = "";
                     String s1Yunmu = "";
-                    if (varComponent.shenmuList.contains(s1Pinyin.charAt(0))) {   // 如果有声母
+                    if (PinyinUtil.isShenmu("" + s1Pinyin.charAt(0))) {   // 如果有声母
                         if (s1Pinyin.charAt(1) == 'h') {
                             s1Shenmu = s1Pinyin.substring(0, 2);
                             s1Yunmu = s1Pinyin.substring(2, s1Pinyin.length());
@@ -345,7 +346,7 @@ public class MusicServiceImpl implements MusicService {
 
                     String s2Shenmu = "";
                     String s2Yunmu = "";
-                    if (varComponent.shenmuList.contains(s2Pinyin.charAt(0))) {   // 如果有声母
+                    if (PinyinUtil.isShenmu("" + s2Pinyin.charAt(0))) {   // 如果有声母
                         if (s2Pinyin.charAt(1) == 'h') {
                             s2Shenmu = s2Pinyin.substring(0, 2);
                             s2Yunmu = s2Pinyin.substring(2, s2Pinyin.length());

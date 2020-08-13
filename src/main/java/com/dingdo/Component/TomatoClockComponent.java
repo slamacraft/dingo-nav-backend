@@ -102,6 +102,7 @@ public class TomatoClockComponent {
     public String addTomatoClock(ReqMsg reqMsg, Map<String, String> params) {
         String userId = reqMsg.getUserId();
         Tomato userThread = tomatoMap.get(userId);
+
         if (userThread == null) {  // 还没有番茄钟时，创建一个
             Tomato tomato = new Tomato(reqMsg.getSelfId(), userId);
             tomatoMap.put(userId, tomato);

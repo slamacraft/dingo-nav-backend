@@ -53,7 +53,8 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
         }
 
         // 根据请求的类型不同跳转☞不同的service实例的handleMsg方法处理
-        return msgMap.get(reqMsg.getMessageType()).handleMsg(reqMsg);
+        return msgMap.get(reqMsg.getMessageType())
+                .handleMsg(reqMsg);
     }
 
     /**

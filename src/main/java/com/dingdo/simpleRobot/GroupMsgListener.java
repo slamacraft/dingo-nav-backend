@@ -20,8 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 public class GroupMsgListener extends MsgListener{
 
     @Listen(MsgGetTypes.groupMsg)
-    public void groupMsgListener(GroupMsg groupMsg, MsgSender sender) {
-//        BotRuntime.getRuntime().getBotManager().getBot("3087687530").getSender();
+    public void groupMsgListener(GroupMsg groupMsg, MsgSender sender) throws InterruptedException {
         String reply = super.getReplyFromRobot(new ReqMsg(groupMsg));
         if(StringUtils.isBlank(reply)){
             return;
@@ -29,9 +28,9 @@ public class GroupMsgListener extends MsgListener{
         while(reply.length() > 300){
             sender.SENDER.sendGroupMsg(groupMsg, reply.substring(0, 300));
             reply = reply.substring(300);
+            Thread.sleep(1000);
         }
         sender.SENDER.sendGroupMsg(groupMsg, reply);
-//        sender.SENDER.sendPrivateMsg(groupMsg, super.getReplyFromRobot(new ReqMsg(groupMsg)));
     }
 
     private String sendPicture(String imgPath) {

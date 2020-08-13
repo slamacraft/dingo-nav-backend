@@ -36,8 +36,10 @@ public class PrivateMsgServiceImpl extends AbstractMsgService implements Private
 
     @Override
     public void sendPrivateMsg(String robotId, String userId, String msg) {
-        BotSender sender = botManager.getBot(robotId).getSender();
-        sender.SENDER.sendPrivateMsg(userId, msg);
+        botManager.getBot(robotId)
+                .getSender()
+                .SENDER
+                .sendPrivateMsg(userId, msg);
     }
 
     @Override
@@ -48,7 +50,8 @@ public class PrivateMsgServiceImpl extends AbstractMsgService implements Private
         }
 
         // 功能请求状态， 调用对应的功能模块
-        return extendServiceMap.get(naiveBayesComponent.predict(reqMsg.getMessage()))
+        return extendServiceMap
+                .get(naiveBayesComponent.predict(reqMsg.getMessage()))
                 .sendReply(reqMsg);
     }
 
