@@ -46,6 +46,7 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
 
         // 移出at机器人的句段
         msg = this.removeAtUser(msg, reqMsg.getSelfId());
+        reqMsg.setMessage(msg);
 
         // 没有请求什么功能，直接调用api的机器人回答它
         if (!msgTypeComponent.getUserMsgStatus(reqMsg.getUserId())) {
@@ -87,6 +88,6 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
      * @param userId
      */
     private String removeAtUser(String msg, String userId) {
-        return msg.replaceAll("\\[CQ:at,qq=" + userId + "\\]", "");
+        return msg.replaceAll("\\[CQ:at,qq=" + userId + ".*?\\]", "");
     }
 }

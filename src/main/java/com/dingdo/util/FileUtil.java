@@ -29,9 +29,9 @@ public class FileUtil {
         static {
             ApplicationHome home = new ApplicationHome(FileUtil.class);
             File jarFile = home.getSource();
-            jarUrl = jarFile.getParentFile().toString() + "/image\\";
+            jarUrl = jarFile.getParentFile().toString();
             if (StringUtils.isBlank(jarUrl)) {
-                jarUrl = "/python/CQPython/static/image/";
+                jarUrl = "/python/CQPython/static/";
             }
             System.out.println("获取的jar包路径为:" + jarUrl);
         }
@@ -91,7 +91,7 @@ public class FileUtil {
      */
     public static void saveMsgToFile(String path, String text) {
         // 获取当前jar包所在的文件路径
-        path = JarPathUtil.jarUrl + path;
+        path = JarPathUtil.jarUrl + "message/" + path;
         writeFile(path, text);
     }
 
@@ -153,7 +153,7 @@ public class FileUtil {
             try {
                 file.createNewFile();
                 ImageIO.write(imageFromURL, "jpg", file);
-                return JarPathUtil.jarUrl + fileName;
+                return JarPathUtil.jarUrl + "image/" + fileName;
             } catch (IOException e) {
                 e.printStackTrace();
             }

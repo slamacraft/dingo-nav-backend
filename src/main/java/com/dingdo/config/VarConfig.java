@@ -14,8 +14,8 @@ public class VarConfig {
     @Bean
     public RestTemplate restTemplate() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(3000);// 设置超时
-        requestFactory.setReadTimeout(3000);
+        requestFactory.setConnectTimeout(5000);// 设置超时
+        requestFactory.setReadTimeout(5000);
         return new RestTemplate(requestFactory);
     }
 

@@ -18,7 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MsgListener {
 
     private static class MsgServiceInitalizer {
-        private static MsgService msgService = (MsgService) SpringContextUtils.getBean(MsgService.class);
+        private static MsgService msgService;
+
+        static {
+            while (msgService == null){
+                msgService = (MsgService) SpringContextUtils.getBean(MsgService.class);
+            }
+        }
     }
 
     public String getReplyFromRobot(ReqMsg reqMsg) {
