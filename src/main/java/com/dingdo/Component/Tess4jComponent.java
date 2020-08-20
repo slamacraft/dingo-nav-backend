@@ -24,8 +24,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -70,30 +72,35 @@ public class Tess4jComponent implements ApplicationRunner {
      * @return
      */
     public String tessOCR(String imgCode) {
-        //[CQ:image,image=/1114951452-3211345979-26D43FB8907DF3147E3AE936E2FD5F40,file=/1114951452-3211345979-26D43FB8907DF3147E3AE936E2FD5F40,url=http://c2cpicdw.qpic.cn/offpic_new/1114951452//1114951452-3211345979-26D43FB8907DF3147E3AE936E2FD5F40/0?term=2]
 //        String imgUrl = imgCode.split("file=")[1].split("]")[0];
 //        String imageSrc = getImageSrc(imgUrl);
+        System.out.println("图片CQ码:" + imgCode);
         String imgUrl = imgCode.split("url=")[1].split("]")[0];
-        String imgName = imgCode.split("image=/")[1].split(",")[0];
+        String imgName = imgCode.split("image=")[1].split(",")[0];
+        // 去除{,},\,.mirai字符
+        imgName = imgName.replaceAll("(\\{|\\}|\\\\|\\.mirai)", "");
         String imageSrc = ImageUtil.getImageAndSaveFromURL(imgUrl, imgName);
         if (imageSrc == null) {
             return "";
         }
 
-        BufferedImage imgBuffer = null;
         String result = null;
         try {
             // 是否启用超分辨率服务
+            BufferedImage imgBuffer = ImageIO.read(new File(imageSrc));
             if (enableWDSR) {
                 imgBuffer = pythonService.doWDSR(imageSrc);
             } else {
                 // 没有启动超分辨服务，使用dpi扩增
-                imgBuffer = ImageUtil.getImgAndSetDpi(new File(imageSrc), 300, 300);
+                // rt已经不推荐使用
+//                imgBuffer = ImageUtil.getImgAndSetDpi(new File(imageSrc), 300, 300);
             }
             imgBuffer = ImageUtil.binaryImage(imgBuffer);   // 图片二值化
             result = tesseract.doOCR(imgBuffer);            // 图片文字提取
         } catch (TesseractException e) {
             logger.error(e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result.replaceAll("[^\\u4e00-\\u9fa5]", "");
     }
@@ -118,7 +125,7 @@ public class Tess4jComponent implements ApplicationRunner {
         try {
             ResponseEntity<Object> response = restTemplate.postForEntity(UrlEnum.URL + UrlEnum.GET_IMAGE.toString(), request, Object.class);
             String responseBody = response.getBody().toString();
-            System.out.println("请求的结果为:"+responseBody);
+            System.out.println("请求的结果为:" + responseBody);
             String imgSrc = null;
             if (StringUtils.isNotBlank(responseBody) && responseBody.contains("file=")) {
                 imgSrc = response.getBody().toString().split("file=")[1].split("},")[0];

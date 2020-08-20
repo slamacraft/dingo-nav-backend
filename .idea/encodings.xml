@@ -3,6 +3,12 @@
   <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources/application.properties" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/log4j.properties" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/target/message/2020-02-19 799200346.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/target/message/2020-03-19 799200346.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/target/message/2020-04-19 799200346.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/target/message/2020-05-19 799200346.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/target/message/2020-08-19 799200346.txt" charset="GBK" />
     <file url="PROJECT" charset="GBK" />
   </component>
 </project>

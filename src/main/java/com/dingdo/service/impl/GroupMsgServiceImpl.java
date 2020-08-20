@@ -3,6 +3,7 @@ package com.dingdo.service.impl;
 import com.dingdo.Component.MsgTypeComponent;
 import com.dingdo.Component.classifier.NaiveBayesComponent;
 import com.dingdo.extendService.otherService.ServiceFromApi;
+import com.dingdo.extendService.otherService.SpecialReplyService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.AbstractMsgService;
 import com.dingdo.service.GroupMsgService;
@@ -10,6 +11,9 @@ import com.forte.qqrobot.bot.BotManager;
 import com.forte.qqrobot.bot.BotSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 @Service
 public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgService {
@@ -21,6 +25,12 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
     private MsgTypeComponent msgTypeComponent;
     @Autowired
     private BotManager botManager;
+    @Autowired
+    private SpecialReplyService specialReplyService;
+
+    private int RANDOM_RATIO = 10;
+
+    private Random random = new Random();
 
     @Override
     public void sendGroupMsg(String robotId, String groupId, String msg) {
@@ -32,18 +42,21 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
     public String handleGroupMsg(ReqMsg reqMsg) {
         String msg = reqMsg.getMessage();
 
-        // 不需要at的功能
-        // 群管家欢迎新人时，自动发出语句，这个功能不需要at
-//        if (reqMsg.getUserId().toString().equals("2854196310")) {
-//            reqMsg.setRaw_message("欢迎新人");
-//            return serviceFromApi.sendMsgFromApi(reqMsg);
-//        }
+        ArrayList<Object> objects = new ArrayList<>();
 
+        /* ===========================复读模块============================ */
+        specialReplyService.rereadGroupMsg(reqMsg);
+
+        /* ===========================随机回答模块============================ */
         //没有at机器人就不回答
         if (!msg.contains("CQ:at,qq=" + reqMsg.getSelfId())) {
+            if(random.nextInt(100) < RANDOM_RATIO){
+                return specialReplyService.getRandomGroupMsgYesterday(reqMsg);
+            }
             return null;
         }
 
+        /* ===========================api请求模块============================ */
         // 移出at机器人的句段
         msg = this.removeAtUser(msg, reqMsg.getSelfId());
         reqMsg.setMessage(msg);
@@ -55,6 +68,7 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
             return String;
         }
 
+        /* ===========================功能请求模块============================ */
         // 通过分类器确定请求的功能模块,调用相对应的功能模块
         String reply = extendServiceMap.get(naiveBayesComponent.predict(msg))
                 .sendReply(reqMsg);

@@ -9,6 +9,8 @@ import com.dingdo.util.InstructionUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class SaveMsgComponent {
     // 消息存储池
     private ThreadPoolExecutor msgStroePool;
     // 缓冲区阈值
-    private int msgListSize = 10;
+    private int msgListSize = 1;
 
     /**
      * 当这个实例被初次注入时所做的事情
@@ -48,7 +50,7 @@ public class SaveMsgComponent {
 
     @VerifiAnnotation
     @Instruction(name = "setMsgListSize", descrption = "设置消息缓存大小",
-                errorMsg = "设置错误，指令的参数格式为:\n消息列表大小=【数字】")
+            errorMsg = "设置错误，指令的参数格式为:\n消息列表大小=【数字】")
     public String setMsgListSize(ReqMsg reqMsg, Map<String, String> params) {
         String resultMsg = "设置成功";
         Integer setValue = InstructionUtils.getParamValueOfInteger(params, "msgListSize", "大小");
@@ -78,7 +80,8 @@ public class SaveMsgComponent {
             for (String msg : msgList) {
                 toWirteString.append(msg + "\r\n");
             }
-            FileUtil.saveMsgToFile(groupId + ".txt", toWirteString.toString());
+            String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            FileUtil.saveMsgToFile(groupId + " " + today + ".txt", toWirteString.toString());
         }
     }
 

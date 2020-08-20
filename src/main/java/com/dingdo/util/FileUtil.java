@@ -31,7 +31,7 @@ public class FileUtil {
             File jarFile = home.getSource();
             jarUrl = jarFile.getParentFile().toString();
             if (StringUtils.isBlank(jarUrl)) {
-                jarUrl = "/python/CQPython/static/";
+                jarUrl = "/python/CQPython/static";
             }
             System.out.println("获取的jar包路径为:" + jarUrl);
         }
@@ -84,15 +84,34 @@ public class FileUtil {
     }
 
     /**
-     * 将文本写入文件末尾
+     * 将文件读取为String
      *
-     * @param path 相对于jar包同级的目录为根目录
-     * @param text
+     * @param path
+     * @return
      */
-    public static void saveMsgToFile(String path, String text) {
-        // 获取当前jar包所在的文件路径
-        path = JarPathUtil.jarUrl + "message/" + path;
-        writeFile(path, text);
+    public static String loadFileFromPath(String path) {
+        path = JarPathUtil.jarUrl + "/message/" + path;
+        File file = new File(path);
+        StringBuffer result = new StringBuffer();
+
+        if (file.isFile() && file.exists()) { //判断文件是否存在
+            try{
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(new FileInputStream(file), "UTF-8"));//构造一个BufferedReader类来读取文件
+                String s = null;
+                while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                    result.append(System.lineSeparator()+s);
+                }
+                br.close();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return result.toString();
+        } else {
+            logger.info("找不到指定的文件，请确认文件路径是否正确");
+        }
+
+        return result.toString();
     }
 
     /**
@@ -101,7 +120,26 @@ public class FileUtil {
      * @param path 相对于jar包同级的目录为根目录
      * @param text
      */
-    public static void writeFile(String path, String text) {
+    public static void saveMsgToFile(String path, String text) {
+        // 获取当前jar包所在的文件路径
+        path = JarPathUtil.jarUrl + "/message/" + path;
+        try {
+            writeFile(path, text);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 将文本写入文件末尾
+     *
+     * @param path 相对于jar包同级的目录为根目录
+     * @param text
+     */
+    public static void writeFile(String path, String text) throws IOException {
+        if(StringUtils.isBlank(text)){
+            return;
+        }
         File file = new File(path);// 要写入的文件路径
         if (!file.exists()) {// 判断文件是否存在
             try {
@@ -112,16 +150,20 @@ public class FileUtil {
         }
 
         FileOutputStream fos = null;
-        PrintStream ps = null;
+//        PrintStream ps = null;
+        Writer writer = null;
         try {
             fos = new FileOutputStream(file, true);// 文件输出流 追加
-            ps = new PrintStream(fos);
+            writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));
+            writer.write(text);
         } catch (FileNotFoundException e) {
             logger.error(e);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }finally {
+            writer.flush();
+            writer.close();
         }
-
-        ps.print(text); // 执行写操作
-        ps.close(); // 关闭流
 
         System.out.println("文件" + path + "写入完毕!");
     }
@@ -148,12 +190,14 @@ public class FileUtil {
 
     public static String saveImage(String imageURL, String fileName) {
         BufferedImage imageFromURL = ImageUtil.getImageFromURL(imageURL);
-        File file = new File(JarPathUtil.jarUrl + fileName);
+        System.out.println("图片名称:" + fileName +", 图片url:" + imageURL);
+        File file = new File(JarPathUtil.jarUrl + "/image/" + fileName);
         if (!file.exists()) {
             try {
                 file.createNewFile();
                 ImageIO.write(imageFromURL, "jpg", file);
-                return JarPathUtil.jarUrl + "image/" + fileName;
+                System.out.println("图片保存至:" + JarPathUtil.jarUrl + "/image/" + fileName);
+                return JarPathUtil.jarUrl + "/image/" + fileName;
             } catch (IOException e) {
                 e.printStackTrace();
             }

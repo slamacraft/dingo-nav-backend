@@ -62,6 +62,7 @@ public class ImageUtil {
         try {
             url = new URL(imageURL);
             is = url.openStream();
+            System.out.println("从url读取图片：" + url);
             bufferedImage = ImageIO.read(is);
         } catch (MalformedURLException e) {
             logger.error("图片: " + imageURL + ",无效!", e);
@@ -89,7 +90,6 @@ public class ImageUtil {
      * @return
      */
     public static String getImageAndSaveFromURL(String imageURL, String filePath) {
-        BufferedImage imageFromURL = ImageUtil.getImageFromURL(imageURL);
         return FileUtil.saveImage(imageURL, filePath);
     }
 

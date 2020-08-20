@@ -80,7 +80,8 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
     public void saveMsg(ReqMsg reqMsg) {
         // 存储群消息
         if (reqMsg.getMessageType().equals("group")) {
-            saveMsgComponent.saveGroupMsg(reqMsg.getMessage(), reqMsg.getGroupId());
+            saveMsgComponent.saveGroupMsg(
+                    reqMsg.getMessage().replaceAll("\\[CQ:.*?\\]", ""), reqMsg.getGroupId());
         }
     }
 
