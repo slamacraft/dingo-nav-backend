@@ -24,7 +24,7 @@ public abstract class AbstractWeatherService{
      * 从文本中获取地名
      * @param msg
      */
-    public static List<String> getLoaction(String msg){
+    public static List<String> getLocation(String msg){
         List<Term> termList = segment.seg(msg);
 
         List<String> result = new ArrayList<>();

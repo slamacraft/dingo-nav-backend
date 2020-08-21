@@ -31,7 +31,7 @@ public class SaveMsgComponent {
     // 消息存储池
     private ThreadPoolExecutor msgStroePool;
     // 缓冲区阈值
-    private int msgListSize = 1;
+    private int msgListSize = 10;
 
     /**
      * 当这个实例被初次注入时所做的事情

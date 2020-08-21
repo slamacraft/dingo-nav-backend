@@ -34,7 +34,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public String sendReply(ReqMsg reqMsg) {
-        List<Term> keywordList = NLPUtils.getNER(reqMsg.getMessage());
+        List<Term> keywordList = NLPUtils.getNER(reqMsg.getRawMessage());
         String String = new String();
         if (CollectionUtils.isEmpty(keywordList)) {
             return "请问你要查询什么";
@@ -58,7 +58,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public String stdSearch(ReqMsg reqMsg) {
         String String = new String();
-        String keyword = reqMsg.getMessage().split("搜索")[1].trim();
+        String keyword = reqMsg.getRawMessage().split("搜索")[1].trim();
 
         if (StringUtils.isBlank(keyword)) { // 关键词为空
             return "请问你要查询什么";

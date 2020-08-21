@@ -108,7 +108,7 @@ public class InstructionMethodContext {
      * @return
      */
     public Object invokeMethodByMsg(ReqMsg reqMsg) {
-        String rawMsg = reqMsg.getMessage();
+        String rawMsg = reqMsg.getRawMessage();
         String instruction = rawMsg.split(" ")[0].split("\\.|。")[1];
         Map<String, String> params = InstructionUtils.analysisInstruction(rawMsg.split("\\.|。")[1].split(" "));
         return this.invokeMethodByInstruction(instruction, reqMsg, params);

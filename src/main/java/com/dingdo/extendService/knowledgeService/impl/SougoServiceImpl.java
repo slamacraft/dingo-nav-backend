@@ -28,7 +28,7 @@ public class SougoServiceImpl implements SougoService {
 
     @Override
     public String sendReply(ReqMsg reqMsg) {
-        String rawMsg = reqMsg.getMessage();
+        String rawMsg = reqMsg.getRawMessage();
         String resultMsg = getReplyFromSougo(rawMsg);
         if (resultMsg != null) {
             return resultMsg;

@@ -28,7 +28,7 @@ public abstract class AbstractMsgService implements ApplicationContextAware {
      * @return
      */
     public String determineUserStatus(ReqMsg reqMsg){
-        String msg = reqMsg.getMessage();
+        String msg = reqMsg.getRawMessage();
         // 功能模式切换
         switch (msgTypeComponent.msgTriger(reqMsg.getUserId(), msg)) {
             case 1: {

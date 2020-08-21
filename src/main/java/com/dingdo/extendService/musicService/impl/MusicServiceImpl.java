@@ -74,7 +74,7 @@ public class MusicServiceImpl implements MusicService {
     public String getKeyword(ReqMsg reqMsg) {
         // 暂时不知道怎么处理
         String keyword = "";
-        return reqMsg.getMessage();
+        return reqMsg.getRawMessage();
     }
 
     /**

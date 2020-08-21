@@ -17,7 +17,7 @@ public class WeatherServiceImpl extends AbstractWeatherService implements Weathe
     @Override
     public String sendReply(ReqMsg reqMsg) {
         StringBuffer reply = new StringBuffer();
-        List<String> loactionList = getLoaction(reqMsg.getMessage());
+        List<String> loactionList = getLocation(reqMsg.getRawMessage());
         if (CollectionUtils.isEmpty(loactionList)){
             return "至少告诉我是哪个地方吧啊喂！";
         }

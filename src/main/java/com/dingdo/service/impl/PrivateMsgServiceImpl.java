@@ -51,7 +51,7 @@ public class PrivateMsgServiceImpl extends AbstractMsgService implements Private
 
         // 功能请求状态， 调用对应的功能模块
         return extendServiceMap
-                .get(naiveBayesComponent.predict(reqMsg.getMessage()))
+                .get(naiveBayesComponent.predict(reqMsg.getRawMessage()))
                 .sendReply(reqMsg);
     }
 

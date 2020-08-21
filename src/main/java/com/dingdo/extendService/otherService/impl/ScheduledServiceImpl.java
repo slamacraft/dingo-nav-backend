@@ -76,11 +76,11 @@ public class ScheduledServiceImpl implements ScheduledService {
      */
     private SchedulingRunnable getRemindRunnable(ReqMsg reqMsg, String message){
         SchedulingRunnable task = null;
-        if(reqMsg.getMessage().equals("private")){
+        if(reqMsg.getMessageType().equals("private")){
             task = new SchedulingRunnable("privateMsgSeriveImpl",
                     "sendPrivateMsg",
                     reqMsg.getUserId(), message);
-        } else if(reqMsg.getMessage().equals("group")){
+        } else if(reqMsg.getMessageType().equals("group")){
             task = new SchedulingRunnable("groupMsgServiceImpl",
                     "sendGroupMsg",
                     reqMsg.getGroupId(), message);

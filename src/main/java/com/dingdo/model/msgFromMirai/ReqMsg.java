@@ -56,6 +56,11 @@ public class ReqMsg {
      */
     private String message;
 
+    /**
+     * 消息内容
+     * 该内容为通过转译后的不含有CQ码的纯文本字符
+     */
+    private String rawMessage;
 
     /**
      * 字体

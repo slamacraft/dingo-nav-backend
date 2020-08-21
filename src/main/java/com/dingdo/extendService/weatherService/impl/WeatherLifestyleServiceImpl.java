@@ -17,11 +17,11 @@ public class WeatherLifestyleServiceImpl extends AbstractWeatherService implemen
     @Override
     public String sendReply(ReqMsg reqMsg) {
         StringBuffer reply = new StringBuffer();
-        List<String> loactionList = getLoaction(reqMsg.getMessage());
-        if (CollectionUtils.isEmpty(loactionList)) {
+        List<String> locationList = getLocation(reqMsg.getRawMessage());
+        if (CollectionUtils.isEmpty(locationList)) {
             return "请问你要查询哪个地方呢";
         }
-        for (String location : loactionList) {
+        for (String location : locationList) {
             Weather weatherInfoFromApi = getWeatherInfoFromApi(location, "lifestyle");
             reply.append(location);
             reply.append(weatherInfoFromApi.getHeWeather6().get(0).getLifeStyleInfo());

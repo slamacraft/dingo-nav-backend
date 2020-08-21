@@ -29,7 +29,7 @@ public class ServiceFromApiImpl implements ServiceFromApi {
 
     @Override
     public String sendMsgFromApi(ReqMsg reqMsg) {
-        String msg = reqMsg.getMessage();
+        String msg = reqMsg.getRawMessage();
         JSONObject json = new JSONObject();
 
         // 对啥也不说的人的回答

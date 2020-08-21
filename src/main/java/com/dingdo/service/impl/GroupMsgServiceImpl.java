@@ -40,9 +40,7 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
 
     @Override
     public String handleGroupMsg(ReqMsg reqMsg) {
-        String msg = reqMsg.getMessage();
-
-        ArrayList<Object> objects = new ArrayList<>();
+        String msg = reqMsg.getRawMessage();
 
         /* ===========================复读模块============================ */
         specialReplyService.rereadGroupMsg(reqMsg);
@@ -51,7 +49,11 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
         //没有at机器人就不回答
         if (!msg.contains("CQ:at,qq=" + reqMsg.getSelfId())) {
             if(random.nextInt(100) < RANDOM_RATIO){
-                return specialReplyService.getRandomGroupMsgYesterday(reqMsg);
+                if(random.nextInt(100) < 50){
+                    return specialReplyService.getRandomGroupMsgYesterday(reqMsg);
+                }else {
+                    return serviceFromApi.sendMsgFromApi(reqMsg);
+                }
             }
             return null;
         }

@@ -48,7 +48,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
         // 消息预处理
         this.msgOCR(reqMsg);    // 识别图中文字
         this.saveMsg(reqMsg);   // 存储群消息
-        if (InstructionUtils.DFA(reqMsg.getMessage())) {    // 有穷自动机确定是否属于指令格式
+        if (InstructionUtils.DFA(reqMsg.getRawMessage())) {    // 有穷自动机确定是否属于指令格式
             return this.instructionHandle(reqMsg);
         }
 
@@ -68,12 +68,13 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
         if (StringUtils.isNotBlank(message) && message.contains("[CQ:image,")) {
             String imgChiInfo = tess4jComponent.tessOCR(message);
             System.out.println("识别图中的文字为:" + imgChiInfo);
-            reqMsg.setMessage(message.replaceAll("\\[CQ:image,file=.*?\\]", imgChiInfo));
+            reqMsg.setRawMessage(message.replaceAll("\\[CQ:image,file=.*?\\]", imgChiInfo));
         }
+        reqMsg.setRawMessage(reqMsg.getMessage());
     }
 
     /**
-     * 通过组件存储消息
+     * 通过组件存储文本消息
      *
      * @param reqMsg
      */

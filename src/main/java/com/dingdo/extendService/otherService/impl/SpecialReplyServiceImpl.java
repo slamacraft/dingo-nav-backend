@@ -1,6 +1,5 @@
 package com.dingdo.extendService.otherService.impl;
 
-import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.extendService.otherService.SpecialReplyService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.impl.GroupMsgServiceImpl;
@@ -29,85 +28,153 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
 
     private Map<String, String[]> groupMsgMap = new HashMap<>();
 
+    private Map<String, RereadMsgQueue> reReadGroupMsgMap = new HashMap<>();
 
-    private Map<String, SpecialReplyServiceImpl.RereadMsgInfo> reReadGroupMsgMap = new HashMap<>();
+    private int MIN_REREAD_COUNT = 2;
 
-    private int MIN_REREAD_COUNT = 0;
+    @Data
+    class RereadMsgInfo {
+        private String userId;
+        private List<String> message = new ArrayList<>();
+        private int status = 0;
+        private boolean flag = false; // 是否参与复读
 
-    @Override
-    public void rereadGroupMsg(ReqMsg reqMsg) {
-        SpecialReplyServiceImpl.RereadMsgInfo rereadMsgInfo = reReadGroupMsgMap.get(reqMsg.getGroupId() + reqMsg.getSelfId());
-
-        if (rereadMsgInfo == null) {
-            reReadGroupMsgMap.put(reqMsg.getGroupId() + reqMsg.getSelfId(), new SpecialReplyServiceImpl.RereadMsgInfo(reqMsg));
-            return;
+        public RereadMsgInfo(ReqMsg reqMsg) {
+            this.userId = reqMsg.getUserId();
+            this.message.add(reqMsg.getMessage());
         }
-
-        int status = rereadMsgInfo.getStatus(); // 匹配的状态
-        List<String> toRereadMessage = rereadMsgInfo.getToRereadMessage();  // 复读的消息池
-        List<String> currentMessage = rereadMsgInfo.getCurrentMessage();
-
-        // 如果是同一个人继续发送的消息，放入准备复读的消息池
-        if (rereadMsgInfo.getUserId().equals(reqMsg.getUserId())) {
-            currentMessage.add(reqMsg.getMessage());
-        }
-        // 如果不是同一个人发的
-        else {
-            rereadMsgInfo.setUserId(reqMsg.getUserId());
-
-            if (status == toRereadMessage.size()) {   // 如果确认本次用户产生了复读
-                rereadMsgInfo.setStatus(0);
-            } else {                                 // 没有复读，覆盖准备复读的语句,并初始化状态
-                toRereadMessage.clear();
-                toRereadMessage.addAll(currentMessage);
-                rereadMsgInfo.setCount(0);
-                rereadMsgInfo.setFlag(false);
-            }
-            rereadMsgInfo.setStatus(0);
-            currentMessage.clear();
-            currentMessage.add(reqMsg.getMessage());
-        }
-
-        toReread(reqMsg, rereadMsgInfo);
     }
 
-    public void toReread(ReqMsg reqMsg, SpecialReplyServiceImpl.RereadMsgInfo rereadMsgInfo) {
-        int status = rereadMsgInfo.getStatus(); // 匹配的状态
-        List<String> toRereadMessage = rereadMsgInfo.getToRereadMessage();  // 复读的消息池
-        List<String> currentMessage = rereadMsgInfo.getCurrentMessage();
-        int count = rereadMsgInfo.getCount();   // 复读的次数
+    @Data
+    class RereadMsgQueue {
+        volatile private List<RereadMsgInfo> msgInfoList = new LinkedList<>();
 
-        // 已经匹配完成，不再进行匹配
-        if (status == toRereadMessage.size()) {
+        public RereadMsgQueue(ReqMsg reqMsg) {
+            msgInfoList.add(new RereadMsgInfo(reqMsg));
+        }
+    }
+
+
+    public void rereadGroupMsg(ReqMsg reqMsg) {
+        RereadMsgQueue rereadMsgQueue = reReadGroupMsgMap.get(reqMsg.getGroupId() + reqMsg.getSelfId());
+
+        if (rereadMsgQueue == null) {
+            reReadGroupMsgMap.put(reqMsg.getGroupId() + reqMsg.getSelfId(), new RereadMsgQueue(reqMsg));
             return;
         }
 
-        if (status == 0) {
-            int index = toRereadMessage.indexOf(currentMessage.get(currentMessage.size() - 1));
-            if (index != -1) {
-                status = index + 1;
-                rereadMsgInfo.setStateIndex(index);
+        List<RereadMsgInfo> msgInfoList = rereadMsgQueue.getMsgInfoList();
+        RereadMsgInfo currentMsgInfo = msgInfoList.get(msgInfoList.size() - 1);
+
+        // 如果是同一个人继续发送的消息
+        if (currentMsgInfo.getUserId().equals(reqMsg.getUserId())) {
+            currentMsgInfo.getMessage().add(reqMsg.getMessage());
+        } else {
+            msgInfoList.add(new RereadMsgInfo(reqMsg));
+            msgInfoList.get(0).setStatus(0);
+        }
+
+        toReread(reqMsg, rereadMsgQueue);
+    }
+
+    /**
+     * @param reqMsg
+     * @param rereadMsgQueue
+     */
+    public void toReread(ReqMsg reqMsg, RereadMsgQueue rereadMsgQueue) {
+        List<RereadMsgInfo> msgInfoList = rereadMsgQueue.getMsgInfoList();
+
+        // 最少也要2句话才算复读吧
+        if (msgInfoList.size() < 2) {
+            return;
+        }
+
+        RereadMsgInfo currentMsgInfo = msgInfoList.get(msgInfoList.size() - 1);// 当前用户的消息
+
+        RereadMsgInfo startMsg = msgInfoList.get(0);
+        int status = startMsg.getStatus(); // 匹配的状态
+
+        if (status == startMsg.getMessage().size()) {
+            if (currentMsgInfo.getUserId().equals(reqMsg.getUserId())) {
+                // 将最新发送者作为最初发送者
+                msgInfoList.clear();
+                msgInfoList.add(currentMsgInfo);
             }
-            rereadMsgInfo.setStatus(status);
-        }else if (toRereadMessage.get(status).equals(currentMessage.get(currentMessage.size() - 1))) {
+            return;
+        }
+
+        // 新发送的消息如果从没有匹配过任何消息，优先与队列尾进行复读匹配
+        if (startMsg.getStatus() == 0) {
+            // 查找第一句话在最新的发送者的消息中的位置
+            int index = this.getIndexOf(startMsg.getMessage(), reqMsg.getMessage());
+            if (index == 0) {   // 和第一句话匹配上，那么接下来的匹配肯定和最初发送者的相同
+                status = index + 1;
+                startMsg.setStatus(status);
+            }
+            // 和非第一句话匹配上，那么和接下来的匹配和最初发送者的不同了
+            else if (index > 0) {
+                // 将最新发送者作为最初发送者
+                rereadMsgQueue.setMsgInfoList(msgInfoList.subList(msgInfoList.size() - 2, msgInfoList.size()));
+                startMsg = rereadMsgQueue.getMsgInfoList().get(0);
+
+                List<String> message = startMsg.getMessage();
+                startMsg.setMessage(message.subList(index, message.size()));
+
+                status += 1;
+                startMsg.setStatus(status);
+            } else { // 如果第一句话未能进行复读匹配
+                rereadMsgQueue.setMsgInfoList(msgInfoList.subList(msgInfoList.size() - 1, msgInfoList.size()));
+                return;
+            }
+        }
+        // 如果不是第一次匹配，那么进行剩余消息的匹配
+        else if (this.equals(startMsg.getMessage().get(status), reqMsg.getMessage())) {
             status += 1;
+            startMsg.setStatus(status);
         }else {
             return;
         }
 
-        if (status == toRereadMessage.size())  // 消息全部匹配完成
-        {
+        // 消息全部匹配完成
+        if (status == startMsg.getMessage().size()) {
             // 达到最小参与复读的次数, 且没有复读过
-            if (count >= MIN_REREAD_COUNT && !rereadMsgInfo.isFlag()) {
-                for (int i = rereadMsgInfo.getStateIndex(); i < toRereadMessage.size(); i++) {
-                    groupMsgService.sendGroupMsg(reqMsg.getSelfId(), reqMsg.getGroupId(), toRereadMessage.get(i));
+            if (msgInfoList.size() >= MIN_REREAD_COUNT && !startMsg.isFlag()) {
+                for (String msg : startMsg.getMessage()) {
+                    groupMsgService.sendGroupMsg(reqMsg.getSelfId(), reqMsg.getGroupId(), msg);
                 }
-                rereadMsgInfo.setFlag(true);
-                return;
+                startMsg.setFlag(true);
             }
-            rereadMsgInfo.setCount(count + 1);
         }
-        rereadMsgInfo.setStatus(status);
+    }
+
+    private boolean equals(String msg1, String msg2) {
+        if (msg1 == msg2) {
+            return true;
+        }
+        if (msg1 == null || msg2 == null) {
+            return false;
+        }
+        String textMsg1 = msg1.replaceAll("\\[CQ:image.*?\\]", "");
+        String imageMsg1 = "";
+        String textMsg2 = msg2.replaceAll("\\[CQ:image.*?\\]", "");
+        String imageMsg2 = "";
+        if (msg1.contains("CQ:image")) {
+            imageMsg1 = msg1.split("\\[CQ:image,image=")[1].split(",")[0];
+        }
+        if (msg2.contains("CQ:image")) {
+            imageMsg2 = msg2.split("\\[CQ:image,image=")[1].split(",")[0];
+        }
+
+        return textMsg1.equals(textMsg2) && imageMsg1.equals(imageMsg2);
+    }
+
+    private int getIndexOf(List<String> msgList, String msg) {
+        for (int i = 0; i < msgList.size(); i++) {
+            if (this.equals(msgList.get(i), msg)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -135,26 +202,5 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
         calendar.set(Calendar.HOUR_OF_DAY, -24);
         return dateFormat.format(calendar.getTime());
     }
-
-    /**
-     * 消息复读类
-     */
-    @Data
-    private class RereadMsgInfo {
-        private int count = 0; // 复读次数
-        private int stateIndex = 0; // 复读起始行
-        private String userId;
-        private List<String> toRereadMessage = new ArrayList<>();
-        private List<String> currentMessage = new ArrayList<>();
-        private int status = 0;
-        private boolean flag = false; // 是否参与复读
-
-        public RereadMsgInfo(ReqMsg reqMsg) {
-            this.userId = reqMsg.getUserId();
-            this.toRereadMessage.add(reqMsg.getMessage());
-            this.currentMessage.add(reqMsg.getMessage());
-        }
-    }
-
 
 }

@@ -31,7 +31,7 @@ public class ZhidaoServiceImpl implements ZhidaoService {
     public String sendReply(ReqMsg reqMsg) {
         String String = new String();
 
-        String rawMsg = reqMsg.getMessage();
+        String rawMsg = reqMsg.getRawMessage();
         String resultMsg = getReplyFromBaidu(rawMsg);
         if (resultMsg != null) {
             return resultMsg;
@@ -48,7 +48,7 @@ public class ZhidaoServiceImpl implements ZhidaoService {
     public String stdReplyFromBaidu(ReqMsg reqMsg) {
         String String = new String();
 
-        String rawMsg = reqMsg.getMessage();
+        String rawMsg = reqMsg.getRawMessage();
         String words = rawMsg.split("百度一下")[1].trim();
         String resultMsg = getReplyFromBaidu(words);
         if (resultMsg != null) {

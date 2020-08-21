@@ -26,7 +26,7 @@ public enum RobotAppidEnum {
     }
 
     public static String getAppidByMsg(ReqMsg reqMsg){
-        String message_type = reqMsg.getMessage();
+        String message_type = reqMsg.getMessageType();
         if("private".equals(message_type)){     // 通过私聊发送
             return getAppid(message_type, reqMsg.getUserId());
         }
