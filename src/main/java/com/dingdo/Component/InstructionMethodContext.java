@@ -11,6 +11,7 @@ import com.dingdo.extendService.MsgExtendService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.InstructionUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -41,8 +42,8 @@ public class InstructionMethodContext {
     private Map<String, Method> methodMap = new HashMap<>();
     // 指令对应方法的错误信息Map
     private Map<Method, String> errorMsgMap = new HashMap<>();
-
-    protected static final Map<Double, MsgExtendService> extendServiceMap = new HashedMap();
+    // 功能策略集
+    private static final Map<Double, MsgExtendService> extendServiceMap = new HashedMap();
 
 
     /**
@@ -52,8 +53,8 @@ public class InstructionMethodContext {
      */
     public static void setApplicationContext(ApplicationContext applicationContext) {
         InstructionMethodContext.applicationContext = applicationContext;
-        if (applicationContext == null && applicationContext != null) {
-            InstructionMethodContext.applicationContext = applicationContext;
+        if (applicationContext == null) {
+            throw new RuntimeException("方法容器初始化失败：无法获得ApplicationContext");
         }
         InstructionMethodContext thisBean = applicationContext.getBean(InstructionMethodContext.class);
         thisBean.initContext();
@@ -65,7 +66,7 @@ public class InstructionMethodContext {
             MsgExtendService item = iterator.next();
             String simpleName = item.getClass().getSimpleName();
             ClassicEnum enumByServiceName = ClassicEnum.getEnumByServiceName(simpleName);
-            if(enumByServiceName != null){
+            if (enumByServiceName != null) {
                 extendServiceMap.put(enumByServiceName.getValue(), item);
             }
         }
@@ -112,10 +113,22 @@ public class InstructionMethodContext {
                 continue;
             }
             Instruction instruction = AnnotationUtils.findAnnotation(method, Instruction.class);
-            if(instruction.inMenu()){
+            if (instruction.inMenu()) {
                 result.append(index + "、" + instruction.description() + "\n");
                 index++;
             }
+        }
+
+        result.append("同样，你也可以通过以下方式访问服务：\n");
+
+        ClassicEnum[] values = ClassicEnum.values();
+        List<ClassicEnum> classicEnumList = Arrays.stream(values)
+                .filter(item -> StringUtils.isNotBlank(item.getServiceName()))
+                .collect(Collectors.toList());
+
+        for (int i = 1; i <= classicEnumList.size(); i++) {
+            ClassicEnum classicEnum = classicEnumList.get(i - 1);
+            result.append(i + "、" + classicEnum.getDescribe() + "\n");
         }
         return result.toString();
     }
@@ -171,7 +184,7 @@ public class InstructionMethodContext {
         Object target = this.getBeanByInstruction(instruction);
         Method method = this.getMethodByInstruction(instruction);
         if (method == null) {
-            ReqMsg reqMsg = (ReqMsg)params[0];
+            ReqMsg reqMsg = (ReqMsg) params[0];
             return extendServiceMap.get(naiveBayesClassifierComponent.predict(reqMsg.getRawMessage()))
                     .sendReply(reqMsg);
         }

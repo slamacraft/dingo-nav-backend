@@ -46,7 +46,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
         // 消息预处理
         this.msgOCR(reqMsg);    // 识别图中文字
         this.saveMsg(reqMsg);   // 存储群消息
-        if (InstructionUtils.DFA(reqMsg.getRawMessage())) {    // 有穷自动机确定是否属于指令格式
+        if (InstructionUtils.DFA(reqMsg.getRawMessage())) {    // 使用DFA确定是否属于指令格式
             return this.instructionHandle(reqMsg);
         }
 

@@ -4,6 +4,7 @@ import com.dingdo.extendService.knowledgeService.impl.SearchServiceImpl;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -17,8 +18,8 @@ public class WebClientComponent {
 
     @PostConstruct
     private void initWebClient(){
-        logger.getLogger("com.gargoylesoftware").setLevel(Level.INFO.OFF);
-        logger.getLogger("org.apache.http.client").setLevel(Level.INFO.OFF);
+        Logger.getLogger("com.gargoylesoftware").setLevel(Level.WARN);
+        Logger.getLogger("org.apache.http.client").setLevel(Level.WARN);
 
         // HtmlUnit 模拟浏览器
         WebClient webClient = new WebClient(BrowserVersion.CHROME);

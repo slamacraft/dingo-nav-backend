@@ -2,7 +2,6 @@ package com.dingdo;
 
 import com.dingdo.Listener.ApplicationRunListener;
 import com.dingdo.config.SimpleRobotConfig;
-import com.dingdo.util.ServiceUtil;
 import com.forte.qqrobot.SimpleRobotApplication;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +26,6 @@ public class DingDoRobot {
 
     public static void main(String[] args) {
         SimpleRobotConfig.initSimpleRobotContext(DingDoRobot.class, args);
-        ServiceUtil.startMysql();
         SpringApplication sa = new SpringApplication(DingDoRobot.class);
         sa.addListeners(new ApplicationRunListener());
         sa.run(DingDoRobot.class, args);

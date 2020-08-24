@@ -21,6 +21,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Autowired(required = false)
     private RobotManagerDao robotManagerDao;
+
     @Autowired
     private RedisTemplate redisTemplate;
 

@@ -12,16 +12,16 @@ import java.util.Map;
 public class InstructionUtils {
 
     /**
-     * 指令验证的有穷自动机
+     * 验证语句是否是符合规范的指令
      *
-     * @param instruction 指令码
+     * @param instruction 语句
      * @return
      */
     public static boolean DFA(String instruction) {
         int status = 1; // 有穷自动机状态
         char[] chars = instruction.toCharArray();
 
-        if(StringUtils.isBlank(instruction) || (chars[0] != '.' && chars[0] != '。' )){
+        if (StringUtils.isBlank(instruction) || (chars[0] != '.' && chars[0] != '。')) {
             return false;
         }
 
@@ -85,7 +85,7 @@ public class InstructionUtils {
                         status = 7;
                     }
                     if (chars[i] != ' ' && chars[i] != '=') { // 数字/字符，转移到状态8
-                        status = 8;
+                        status = 2;
                     }
                 }
                 break;
@@ -94,19 +94,19 @@ public class InstructionUtils {
                         status = 9;
                     }
                     if (chars[i] != ' ' && chars[i] != '=') { // 数字/字符，转移到状态8
-                        status = 8;
+                        status = 2;
                     }
                 }
                 break;
-                case 8: {
-                    if (chars[i] == '=') {    // 输入=号，直接失败
-                        status = 9;
-                    }
-                    if (chars[i] == ' ') {    // 空格，转移到状态3
-                        status = 3;
-                    }
-                }
-                break;
+//                case 8: {
+//                    if (chars[i] == '=') {    // 输入=号，直接失败
+//                        status = 9;
+//                    }
+//                    if (chars[i] == ' ') {    // 空格，转移到状态3
+//                        status = 3;
+//                    }
+//                }
+//                break;
                 case 9: {
                     // 失败状态，什么也不做
                 }
@@ -115,11 +115,12 @@ public class InstructionUtils {
         }
 
         // 结束时停留在2，3，8状态，指令识别成功
-        if (status == 2 || status == 3 || status == 8) {
+        if (status == 2 || status == 3) {
             return true;
         }
         return false;
     }
+
 
     /**
      * 解析指令参数
@@ -141,14 +142,16 @@ public class InstructionUtils {
         return argsMap;
     }
 
+
     /**
      * 从参数Map中通过参数关键字/中文描述获取参数值
+     *
      * @param params
      * @param key
      * @param discrption
      * @return
      */
-    public static String getParamValue(Map<String, String> params, String key, String discrption){
+    public static String getParamValue(Map<String, String> params, String key, String discrption) {
         String result = params.get(key);
         if (result == null) {
             result = params.get(discrption);
@@ -156,26 +159,56 @@ public class InstructionUtils {
         return result;
     }
 
-    public static Integer getParamValueOfInteger(Map<String, String> params, String key, String discrption) throws NumberFormatException{
+
+    /**
+     * 从参数Map中通过参数关键字/中文描述获取一个Integer参数值
+     *
+     * @param params
+     * @param key
+     * @param discrption
+     * @return
+     * @throws NumberFormatException
+     */
+    public static Integer getParamValueOfInteger(Map<String, String> params, String key, String discrption) throws NumberFormatException {
         String value = getParamValue(params, key, discrption);
-        if(StringUtils.isBlank(value)){
+        if (StringUtils.isBlank(value)) {
             return 0;
         }
         return Integer.valueOf(value);
     }
 
-    public static Long getParamValueOfLong(Map<String, String> params, String key, String discrption) throws NumberFormatException{
+
+    /**
+     * 从参数Map中通过参数关键字/中文描述获取一个Long参数值
+     *
+     * @param params
+     * @param key
+     * @param discrption
+     * @return
+     * @throws NumberFormatException
+     */
+    public static Long getParamValueOfLong(Map<String, String> params, String key, String discrption) throws NumberFormatException {
         String value = getParamValue(params, key, discrption);
-        if(StringUtils.isBlank(value)){
+        if (StringUtils.isBlank(value)) {
             return null;
         }
         Long result = Long.valueOf(value);
         return result;
     }
 
-    public static Double getParamValueOfDouble(Map<String, String> params, String key, String discrption) throws NumberFormatException{
+
+    /**
+     * 从参数Map中通过参数关键字中文描述获取一个Double参数值
+     *
+     * @param params
+     * @param key
+     * @param discrption
+     * @return
+     * @throws NumberFormatException
+     */
+    public static Double getParamValueOfDouble(Map<String, String> params, String key, String discrption) throws NumberFormatException {
         String value = getParamValue(params, key, discrption);
-        if(StringUtils.isBlank(value)){
+        if (StringUtils.isBlank(value)) {
             return null;
         }
         Double result = Double.valueOf(value);

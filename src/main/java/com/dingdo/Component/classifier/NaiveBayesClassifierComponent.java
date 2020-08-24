@@ -47,8 +47,6 @@ public class NaiveBayesClassifierComponent
 
     // 词典集
     protected Map<String, Integer> vocabulary = new HashMap<>();
-    // index对应的label映射
-    protected Map<Double, Double> labelMap = new HashMap<>();
 
     // ================================================指令控制变量=============================================
     // 是否打印分类详情
@@ -59,7 +57,6 @@ public class NaiveBayesClassifierComponent
         trainDataPath = "D:\\workspace\\springboot-webjar\\src\\main\\resources\\python\\CQPython\\static\\question\\TrainDataLibSVM.txt";
         modelSavePath = "D:\\workspace\\springboot-webjar\\src\\main\\resources\\python\\CQPython\\static\\question\\model";
         modelLoadPath = "D:\\workspace\\springboot-webjar\\src\\main\\resources\\python\\CQPython\\static\\question\\model";
-        indexToLabel();
         if (!new File(vocabularyPath).exists()) {
             throw new ClassifierInitializeException("分类器初始化异常，文件" + vocabularyPath + "不存在");
         }
@@ -68,7 +65,6 @@ public class NaiveBayesClassifierComponent
 
     @PostConstruct
     public void run() throws IOException, InstantiationException, IllegalAccessException {
-        indexToLabel();
         if (!new File(vocabularyPath).exists()) {
             throw new ClassifierInitializeException("分类器初始化异常，文件" + vocabularyPath + "不存在");
         }
@@ -87,17 +83,15 @@ public class NaiveBayesClassifierComponent
         File trainDataFile = new File(trainDataPath);
         if (!trainDataFile.exists()) {
             trainDataFile.createNewFile();
+            initTrainData(trainDataPath);
         }
-        initTrainData(trainDataPath);
 
         Dataset<Row> data = super.getDataFromFileByFormat(trainDataPath, "libsvm");
-        Dataset<Row>[] splits = data.randomSplit(new double[]{0.7, 0.3});
+//        Dataset<Row>[] splits = data.randomSplit(new double[]{0.7, 0.3});
 
-        fit(splits[0]);
+        fit(data);
         saveOrOverwrite(modelSavePath);
 
-//        logger.warn("模型正确率：" + evaluate(splits[1]));
-//        this.indexToLabel();
         logger.warn("朴素贝叶斯模型初始化完成");
     }
 
@@ -137,17 +131,11 @@ public class NaiveBayesClassifierComponent
     @Override
     public double predict(Object object) {
         double[] vectors = this.sentenceToArrays((String) object, NaiveBayesClassifierComponent::queryPlaceAbstract);
-//        Double label = labelMap.get(super.predict(vectors));
-//        printInfo(logger::warn, super.getModel().predictRaw(Vectors.dense(vectors)));
-//        printInfo(logger::warn, super.predict(vectors));
-//        printInfo(logger::warn, "预测的分类为" + label);
         return super.predict(vectors);
     }
 
 
-    /**
-     * =================================================下面是初始化方法===============================================
-     */
+    /*=================================================下面是初始化方法===============================================*/
 
     /**
      * 初始化训练数据
@@ -157,8 +145,7 @@ public class NaiveBayesClassifierComponent
         FileUtil.clearFile(trainDataPath);
         Map<String, String> filePath2NameMap = ClassicEnum.getAllFileSrc();
 
-        double index = 0;
-        StringBuffer toWriteString = new StringBuffer();
+        StringBuilder toWriteString = new StringBuilder();
         for (Map.Entry<String, String> file : filePath2NameMap.entrySet()) {
             String trainDataFile = FileUtil.loadFile(file.getKey());
             if (StringUtils.isBlank(trainDataFile)) {  // 不计入空文件
@@ -174,11 +161,12 @@ public class NaiveBayesClassifierComponent
             if (enumByFileName != null) {
                 label = enumByFileName.getValue();
             }
-            labelMap.put(index, label);
 
             String[] trainDataList = trainDataFile.split("\n");
             for (String trainData : trainDataList) {
                 double[] questionVector = sentenceToArrays(trainData, null);
+
+                // 忽视0向量
                 double sum = Arrays.stream(questionVector).sum();
                 if (sum <= 0) {
                     continue;
@@ -186,14 +174,10 @@ public class NaiveBayesClassifierComponent
 
                 toWriteString.append(label);
                 for (int i = 0; i < questionVector.length; i++) {
-//                    if (questionVector[i] > 0)
                     toWriteString.append(" " + (i + 1) + ":" + questionVector[i]);
                 }
                 toWriteString.append("\n");
             }
-
-            index += 1;
-//            logger.warn(file.getValue() + "加载：" + trainDataList.length);
         }
 
         try {
@@ -208,7 +192,7 @@ public class NaiveBayesClassifierComponent
      */
     private void initVocabulary() {
         // 初始化字典表
-        String scoreVocabulary = FileUtil.loadFile("python/CQPython/static/dict/newVocabulary.txt");
+        String scoreVocabulary = FileUtil.loadFile(vocabularyPath);
         String[] vocabularies = scoreVocabulary.split("\n");
         for (int i = 0; i < vocabularies.length; i++) {
             String[] vocabularyList = vocabularies[i].split(" ");
@@ -218,26 +202,6 @@ public class NaiveBayesClassifierComponent
         }
     }
 
-    /**
-     * 将分类器的index与枚举类型的label对应起来
-     */
-    private void indexToLabel() {
-        Map<String, String> filePath2NameMap = ClassicEnum.getAllFileSrc();
-        double index = 0;
-        for (Map.Entry<String, String> file : filePath2NameMap.entrySet()) {
-            String scoreQuestions = FileUtil.loadFile(file.getKey());
-            if (StringUtils.isBlank(scoreQuestions)) {
-                continue;
-            }
-            double label = 0;
-            ClassicEnum enumByFileName = ClassicEnum.getEnumByFileName(file.getValue());
-            if (enumByFileName != null) {
-                label = enumByFileName.getValue();
-            }
-            labelMap.put(index, label);
-            index += 1;
-        }
-    }
 
     /**
      * 根据词典将训练数据初始化为向量

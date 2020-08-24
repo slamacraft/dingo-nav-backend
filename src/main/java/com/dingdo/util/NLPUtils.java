@@ -52,7 +52,7 @@ public class NLPUtils {
     }
 
     /**
-     * 语句抽象化，将指定词性的词替换成磁性的简写
+     * 语句抽象化，将指定词性的词替换成词性的简写
      *
      * @param querySentence
      * @return

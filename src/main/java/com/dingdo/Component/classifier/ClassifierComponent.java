@@ -116,6 +116,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      * @throws IllegalAccessException
      */
     public void fit(Dataset<Row> trainData, Class<Classifier> classifierClass) throws InstantiationException, IllegalAccessException {
+
         // 索引标签，将元数据添加到标签列。
         // 适合整个数据集以将所有标签包括在索引中。
         StringIndexerModel labelIndexer = new StringIndexer()

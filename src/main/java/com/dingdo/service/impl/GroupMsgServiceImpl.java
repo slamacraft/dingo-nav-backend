@@ -1,20 +1,23 @@
 package com.dingdo.service.impl;
 
 import com.dingdo.Component.MsgTypeComponent;
+import com.dingdo.common.annotation.Instruction;
+import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.extendService.otherService.SpecialReplyService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.dingdo.service.AbstractMsgService;
 import com.dingdo.service.GroupMsgService;
+import com.dingdo.util.InstructionUtils;
 import com.forte.qqrobot.bot.BotManager;
 import com.forte.qqrobot.bot.BotSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Random;
 
 @Service
-public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgService {
+public class GroupMsgServiceImpl implements GroupMsgService {
     @Autowired
     private ServiceFromApi serviceFromApi;
     @Autowired
@@ -24,15 +27,32 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
     @Autowired
     private SpecialReplyService specialReplyService;
 
-    private int RANDOM_RATIO = 10;
+    private int RANDOM_RATIO = 0;
 
     private Random random = new Random();
+
+
+    /**
+     * 设置每次群里发送消息，不通过at机器人使机器人产生响应的几率
+     *
+     * @param reqMsg
+     * @param params
+     * @return
+     */
+    @VerifiAnnotation
+    @Instruction(name = "setRandomRatio", description = "设置随机响应几率")
+    public String setRandomReplyRatio(ReqMsg reqMsg, Map<String, String> params) {
+        this.RANDOM_RATIO = InstructionUtils.getParamValueOfInteger(params, "randomRatio", "概率");
+        return "随机响应几率已设置为" + this.RANDOM_RATIO;
+    }
+
 
     @Override
     public void sendGroupMsg(String robotId, String groupId, String msg) {
         BotSender sender = botManager.getBot(robotId).getSender();
         sender.SENDER.sendGroupMsg(groupId, msg);
     }
+
 
     @Override
     public String handleGroupMsg(ReqMsg reqMsg) {
@@ -54,30 +74,11 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
             return null;
         }
 
-        /* ===========================api请求模块============================ */
-        // 移出at机器人的句段
-        msg = this.removeAtUser(msg, reqMsg.getSelfId());
-        reqMsg.setMessage(msg);
-
-        // 没有请求什么功能，直接调用api的机器人回答它
-        if (!msgTypeComponent.getUserMsgStatus(reqMsg.getUserId())) {
-            String String = serviceFromApi.sendMsgFromApi(reqMsg);
-            this.atSenderOnBeginning(String, reqMsg.getUserId());
-            return String;
-        }
-
-        /* ===========================功能请求模块============================ */
-        // 通过分类器确定请求的功能模块,调用相对应的功能模块
-        return atSenderOnBeginning("", reqMsg.getUserId());
+        return atSenderOnBeginning(serviceFromApi.sendMsgFromApi(reqMsg), reqMsg.getUserId());
     }
 
     @Override
     public String handleMsg(ReqMsg reqMsg) {
-        // 确定用户状态
-        String statusReply = super.determineUserStatus(reqMsg);
-        if (statusReply != null) {
-            return statusReply;
-        }
         return this.handleGroupMsg(reqMsg);
     }
 

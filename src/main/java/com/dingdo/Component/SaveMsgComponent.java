@@ -25,13 +25,13 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class SaveMsgComponent {
     // 群消息列表(不一定线程安全)
-    // Tip:volatite会不会使Map的Key值对所有线程可见有待确认
     volatile private Map<String, List<String>> groupMsgList = new ConcurrentHashMap<>();
 
     // 消息存储池
     private ThreadPoolExecutor msgStorePool;
     // 缓冲区阈值
     private int msgListSize = 10;
+
 
     /**
      * 当这个实例被初次注入时所做的事情
@@ -81,6 +81,7 @@ public class SaveMsgComponent {
         }
     }
 
+
     /**
      * 存储群聊信息
      *
@@ -98,9 +99,9 @@ public class SaveMsgComponent {
 
         // 当消息列表长度超过阈值，将消息列表分发给子线程进行存储
         if (msgList.size() >= msgListSize) {
-            String[] msgs = msgList.toArray(new String[0]);
+            String[] messageList = msgList.toArray(new String[0]);
             msgList.clear();
-            msgStorePool.execute(new msgStoreThread(groupId, msgs));
+            msgStorePool.execute(new msgStoreThread(groupId, messageList));
         }
     }
 }

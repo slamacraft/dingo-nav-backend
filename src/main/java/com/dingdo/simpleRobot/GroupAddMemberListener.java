@@ -17,7 +17,7 @@ public class GroupAddMemberListener {
 
     @Listen(MsgGetTypes.groupMemberIncrease)
     public void addGroupMemberFor479867525(GroupMemberIncrease groupMemberIncrease, MsgSender sender) throws InterruptedException {
-        if(groupMemberIncrease.getGroupCode() != "479867525"){
+        if (!groupMemberIncrease.getGroupCode().equals("479867525")) {
             return;
         }
         String beOperatedQQ = groupMemberIncrease.getBeOperatedQQ();

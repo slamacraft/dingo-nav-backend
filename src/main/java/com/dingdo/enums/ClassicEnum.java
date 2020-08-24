@@ -24,9 +24,9 @@ public enum ClassicEnum {
     //========================================================================================================
     WEATHER_SRC("python/CQPython/static/question/weatherQA/",
             null, 3, ""),
-    WEATHER_NOW("WeatherNow.txt", "WeatherServiceImpl", 3.1, "获取现在天气详情"),
+    WEATHER_NOW("WeatherNow.txt", "WeatherServiceImpl", 3.1, "【询问地区的实时气温】"),
     WEATHER_DAILY_FORECAST("WeatherDailyForecast.txt", null, 3.2, "获取天气预测"),
-    WEATHER_LIFESTYLE("WeatherLifestyle.txt", "WeatherLifestyleServiceImpl", 3.3, "获取生活指数"),
+    WEATHER_LIFESTYLE("WeatherLifestyle.txt", "WeatherLifestyleServiceImpl", 3.3, "【询问地区的生活指数】"),
     WEATHER_HOURLY("WeatherHourly.txt", null, 3.4, "获取气温每小时详情");
 
     private String fileName;
