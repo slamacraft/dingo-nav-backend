@@ -48,10 +48,15 @@ public class PythonServiceImpl implements PythonService {
     }
 
     @Override
-    public VocabularyInfo getVocabularyInfo(){
-        VocabularyInfo result = new VocabularyInfo();
-        Integer size = NaiveBayesComponent.getNewVocabulary().values().stream().max(Integer::compareTo).get();
-        result.setLength(size);
-        return result;
+    public VocabularyInfo getVocabularyInfo() {
+        return null;
     }
+
+//    @Override
+//    public VocabularyInfo getVocabularyInfo(){
+//        VocabularyInfo result = new VocabularyInfo();
+//        Integer size = NaiveBayesComponent.getNewVocabulary().values().stream().max(Integer::compareTo).get();
+//        result.setLength(size);
+//        return result;
+//    }
 }

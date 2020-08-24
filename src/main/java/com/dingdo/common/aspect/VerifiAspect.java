@@ -3,6 +3,9 @@ package com.dingdo.common.aspect;
 import com.dingdo.common.exception.CheckException;
 
 import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.forte.qqrobot.beans.messages.result.GroupMemberInfo;
+import com.forte.qqrobot.beans.messages.result.GroupMemberList;
+import com.forte.qqrobot.bot.BotManager;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,6 +24,9 @@ public class VerifiAspect {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private BotManager botManager;
+
     @Pointcut("@annotation(com.dingdo.common.annotation.VerifiAnnotation)")
     public void verifiCut() {
     }
@@ -34,7 +40,15 @@ public class VerifiAspect {
                 String userId = reqMsg.getUserId();
                 String password = (String) redisTemplate.opsForValue().get("ManagerServiceImpl$" + userId);
                 if (StringUtils.isBlank(password)) {
-                    throw new CheckException("该指令为管理员指令，请先登录");
+                    String botId = reqMsg.getSelfId();
+                    String groupId = reqMsg.getGroupId();
+                    GroupMemberInfo groupMemberInfo = botManager.getBot(botId)
+                            .getSender()
+                            .GETTER
+                            .getGroupMemberInfo(groupId, userId);
+                    if (groupMemberInfo.getPowerType().isMember()) {
+                        throw new CheckException("该指令为管理员指令，请先登录");
+                    }
                 }
                 // 刷新自动下线时间
                 redisTemplate.opsForValue().set("ManagerServiceImpl$" + userId, password, 30, TimeUnit.MINUTES);

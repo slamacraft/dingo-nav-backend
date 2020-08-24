@@ -1,7 +1,6 @@
 package com.dingdo.service.impl;
 
 import com.dingdo.Component.MsgTypeComponent;
-import com.dingdo.Component.classifier.NaiveBayesComponent;
 import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.extendService.otherService.SpecialReplyService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
@@ -12,15 +11,12 @@ import com.forte.qqrobot.bot.BotSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 @Service
 public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgService {
     @Autowired
     private ServiceFromApi serviceFromApi;
-    @Autowired
-    private NaiveBayesComponent naiveBayesComponent;
     @Autowired
     private MsgTypeComponent msgTypeComponent;
     @Autowired
@@ -47,11 +43,11 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
 
         /* ===========================随机回答模块============================ */
         //没有at机器人就不回答
-        if (!msg.contains("CQ:at,qq=" + reqMsg.getSelfId())) {
-            if(random.nextInt(100) < RANDOM_RATIO){
-                if(random.nextInt(100) < 50){
+        if (!reqMsg.getMessage().contains("CQ:at,qq=" + reqMsg.getSelfId())) {
+            if (random.nextInt(100) < RANDOM_RATIO) {
+                if (random.nextInt(100) < 10) {
                     return specialReplyService.getRandomGroupMsgYesterday(reqMsg);
-                }else {
+                } else {
                     return serviceFromApi.sendMsgFromApi(reqMsg);
                 }
             }
@@ -72,9 +68,7 @@ public class GroupMsgServiceImpl extends AbstractMsgService implements GroupMsgS
 
         /* ===========================功能请求模块============================ */
         // 通过分类器确定请求的功能模块,调用相对应的功能模块
-        String reply = extendServiceMap.get(naiveBayesComponent.predict(msg))
-                .sendReply(reqMsg);
-        return atSenderOnBeginning(reply, reqMsg.getUserId());
+        return atSenderOnBeginning("", reqMsg.getUserId());
     }
 
     @Override

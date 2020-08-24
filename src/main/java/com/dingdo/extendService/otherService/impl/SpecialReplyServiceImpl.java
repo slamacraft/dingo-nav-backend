@@ -181,7 +181,7 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
     public String getRandomGroupMsgYesterday(ReqMsg reqMsg) {
 
         String groupId = reqMsg.getGroupId();
-        String[] msgList = groupMsgMap.get(groupId);
+        String[] msgList = groupMsgMap.get(groupId + " "+ new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         if (msgList == null || msgList.length < 3) {
             String filePath = reqMsg.getGroupId() + " " + getYesterdayDate() + ".txt";
             String msg = FileUtil.loadFileFromPath(filePath);

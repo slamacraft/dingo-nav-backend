@@ -159,10 +159,9 @@ public class InstructionUtils {
     public static Integer getParamValueOfInteger(Map<String, String> params, String key, String discrption) throws NumberFormatException{
         String value = getParamValue(params, key, discrption);
         if(StringUtils.isBlank(value)){
-            return null;
+            return 0;
         }
-        Integer result = Integer.valueOf(value);
-        return result;
+        return Integer.valueOf(value);
     }
 
     public static Long getParamValueOfLong(Map<String, String> params, String key, String discrption) throws NumberFormatException{

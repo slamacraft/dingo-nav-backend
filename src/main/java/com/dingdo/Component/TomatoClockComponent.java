@@ -1,7 +1,6 @@
 package com.dingdo.Component;
 
 import com.dingdo.common.annotation.Instruction;
-
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.PrivateMsgService;
 import lombok.SneakyThrows;
@@ -98,7 +97,7 @@ public class TomatoClockComponent {
      * @param params
      * @return
      */
-    @Instruction(name = "tomatoClock", descrption = "番茄钟")
+    @Instruction(name = "tomatoClock", description = "番茄钟")
     public String addTomatoClock(ReqMsg reqMsg, Map<String, String> params) {
         String userId = reqMsg.getUserId();
         Tomato userThread = tomatoMap.get(userId);
@@ -122,7 +121,7 @@ public class TomatoClockComponent {
      * @param params
      * @return
      */
-    @Instruction(name = "stopTomato", descrption = "暂停番茄钟")
+    @Instruction(name = "stopTomato", description = "暂停番茄钟", inMenu = false)
     public String unplanedEvent(ReqMsg reqMsg, Map<String, String> params) {
         String userId = reqMsg.getUserId();
         userInterruptePointMap.put(userId, System.currentTimeMillis());
@@ -137,7 +136,7 @@ public class TomatoClockComponent {
      * @param params
      * @return
      */
-    @Instruction(name = "continueTomato", descrption = "继续番茄钟")
+    @Instruction(name = "continueTomato", description = "继续番茄钟", inMenu = false)
     public String continueEvent(ReqMsg reqMsg, Map<String, String> params) {
         userStatusMap.put(reqMsg.getUserId(), 1);    // 定时状态中
         return "番茄闹钟继续计时";
@@ -150,7 +149,7 @@ public class TomatoClockComponent {
      * @param params
      * @return
      */
-    @Instruction(name = "tomatoCount", descrption = "番茄数量")
+    @Instruction(name = "tomatoCount", description = "番茄数量", inMenu = false)
     public String getTomatoCount(ReqMsg reqMsg, Map<String, String> params) {
         Tomato tomato = tomatoMap.get(reqMsg.getUserId());
         return "你现在有" + tomato.getTomatoCound() + "个番茄";

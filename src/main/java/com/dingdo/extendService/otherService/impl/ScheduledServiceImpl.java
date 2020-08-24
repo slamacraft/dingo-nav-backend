@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 public class ScheduledServiceImpl implements ScheduledService {
@@ -26,13 +27,15 @@ public class ScheduledServiceImpl implements ScheduledService {
      * @return
      */
     @Override
-    @Instruction(name = "addRemindTask", descrption = "设置提醒")
+    @Instruction(name = "addRemindTask", description = "设置提醒")
     public String addRemindTask(ReqMsg reqMsg, Map<String, String> params){
         String cron = InstructionUtils.getParamValue(params, "cron", "表达式");
         if(StringUtils.isBlank(cron)){
             return "表达式不能为空哦";
         }
         cron = cron.replaceAll("_", " ");
+
+        CopyOnWriteArrayList copyOnWriteArrayList = new CopyOnWriteArrayList();
 
         String message = InstructionUtils.getParamValue(params, "message", "提醒消息");
         if(StringUtils.isBlank(message)){
@@ -52,7 +55,7 @@ public class ScheduledServiceImpl implements ScheduledService {
      * @return
      */
     @Override
-    @Instruction(name = "removeRemindTask", descrption = "移除提醒")
+    @Instruction(name = "removeRemindTask", description = "移除提醒", inMenu = false)
     public String removeRemindTask(ReqMsg reqMsg, Map<String, String> params){
         String message = InstructionUtils.getParamValue(params, "message", "提醒消息");
         if(StringUtils.isBlank(message)){

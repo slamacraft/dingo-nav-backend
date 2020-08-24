@@ -39,7 +39,7 @@
 //     * @param params
 //     * @return
 //     */
-//    @Instruction(name = "wolfKiller", descrption = "狼人杀")
+//    @Instruction(name = "wolfKiller", description = "狼人杀")
 //    public String instructionJoinGame(ReqMsg reqMsg, Map<String, String> params) {
 //        Long groupId = reqMsg.getGroup_id();
 //
@@ -102,7 +102,7 @@
 //     * @param params
 //     * @return
 //     */
-//    @Instruction(name = "setDuty", descrption = "设置身份")
+//    @Instruction(name = "setDuty", description = "设置身份")
 //    public String setDutyMap(ReqMsg reqMsg, Map<String, String> params) {
 //        Long groupId = reqMsg.getGroup_id();
 //        String userId = reqMsg.getUserId();
@@ -145,7 +145,7 @@
 //     * @param params
 //     * @return
 //     */
-//    @Instruction(name = "ready", descrption = "准备")
+//    @Instruction(name = "ready", description = "准备")
 //    public String ready(ReqMsg reqMsg, Map<String, String> params) {
 //        Long groupId = reqMsg.getGroup_id();
 //        String userId = reqMsg.getUserId();
@@ -180,7 +180,7 @@
 //        return "准备完成";
 //    }
 //
-//    @Instruction(name = "startGame", descrption = "开始游戏")
+//    @Instruction(name = "startGame", description = "开始游戏")
 //    public String startGame(ReqMsg reqMsg, Map<String, String> params) {
 //        Long groupId = reqMsg.getGroup_id();
 //        WolfKillerGame wolfKillerGame = (WolfKillerGame) gameComponent
@@ -189,7 +189,7 @@
 //        return wolfKillerGame.startGame();
 //    }
 //
-//    @Instruction(name = "killTarget", descrption = "迫害")
+//    @Instruction(name = "killTarget", description = "迫害")
 //    public String killTarget(ReqMsg reqMsg, Map<String, String> params){
 //        WolfKillerGame wolfKillerGame = (WolfKillerGame) gameComponent
 //                .getGameData(reqMsg.getGroup_id(), "狼人杀");

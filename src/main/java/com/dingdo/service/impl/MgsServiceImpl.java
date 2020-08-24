@@ -31,10 +31,8 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
 
     @Autowired
     private Tess4jComponent tess4jComponent;
-
     @Autowired
     private SaveMsgComponent saveMsgComponent;
-
     @Autowired
     private InstructionMethodContext instructionMethodContext;
 
@@ -70,7 +68,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
             System.out.println("识别图中的文字为:" + imgChiInfo);
             reqMsg.setRawMessage(message.replaceAll("\\[CQ:image,file=.*?\\]", imgChiInfo));
         }
-        reqMsg.setRawMessage(reqMsg.getMessage());
+        reqMsg.setRawMessage(reqMsg.getMessage().replaceAll("\\[CQ:.*?\\]", ""));
     }
 
     /**

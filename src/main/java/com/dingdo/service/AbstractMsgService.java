@@ -50,7 +50,9 @@ public abstract class AbstractMsgService implements ApplicationContextAware {
             MsgExtendService item = iterator.next();
             String simpleName = item.getClass().getSimpleName();
             ClassicEnum enumByServiceName = ClassicEnum.getEnumByServiceName(simpleName);
-            extendServiceMap.put(enumByServiceName.getValue(), item);
+            if(enumByServiceName != null){
+                extendServiceMap.put(enumByServiceName.getValue(), item);
+            }
         }
     }
 

@@ -1,12 +1,20 @@
 package com.dingdo.Component;
 
+import com.dingdo.Component.classifier.NaiveBayesClassifierComponent;
+import com.dingdo.Component.classifier.NaiveBayesComponent;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.common.exception.CheckException;
 
+import com.dingdo.enums.ClassicEnum;
+import com.dingdo.extendService.MsgExtendService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.InstructionUtils;
+import org.apache.commons.collections.map.HashedMap;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
@@ -14,9 +22,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +31,9 @@ import java.util.stream.Collectors;
 @Component
 public class InstructionMethodContext {
 
+    @Autowired
+    private NaiveBayesClassifierComponent naiveBayesClassifierComponent;
+
     private static ApplicationContext applicationContext;
     // 指令对应的实例Map
     private Map<String, Object> beanMap = new HashMap<>();
@@ -32,6 +41,9 @@ public class InstructionMethodContext {
     private Map<String, Method> methodMap = new HashMap<>();
     // 指令对应方法的错误信息Map
     private Map<Method, String> errorMsgMap = new HashMap<>();
+
+    protected static final Map<Double, MsgExtendService> extendServiceMap = new HashedMap();
+
 
     /**
      * 获取applicationContext，并初始化容器
@@ -45,6 +57,18 @@ public class InstructionMethodContext {
         }
         InstructionMethodContext thisBean = applicationContext.getBean(InstructionMethodContext.class);
         thisBean.initContext();
+
+        Map<String, MsgExtendService> beansOfType = applicationContext.getBeansOfType(MsgExtendService.class);
+        Collection<MsgExtendService> values = beansOfType.values();
+        Iterator<MsgExtendService> iterator = values.iterator();
+        for (int i = 0; i < values.size(); i++) {
+            MsgExtendService item = iterator.next();
+            String simpleName = item.getClass().getSimpleName();
+            ClassicEnum enumByServiceName = ClassicEnum.getEnumByServiceName(simpleName);
+            if(enumByServiceName != null){
+                extendServiceMap.put(enumByServiceName.getValue(), item);
+            }
+        }
     }
 
     /**
@@ -63,12 +87,12 @@ public class InstructionMethodContext {
                 Instruction annotation = AnnotationUtils.findAnnotation(method, Instruction.class);
                 if (annotation != null) {
                     String name = annotation.name();
-                    String descrption = annotation.descrption();
+                    String description = annotation.description();
                     String errorMsg = annotation.errorMsg();
                     methodMap.put(name, method);
-                    methodMap.put(descrption, method);
+                    methodMap.put(description, method);
                     beanMap.put(name, bean);
-                    beanMap.put(descrption, bean);
+                    beanMap.put(description, bean);
                     errorMsgMap.put(method, errorMsg);
                 }
             }
@@ -76,19 +100,41 @@ public class InstructionMethodContext {
         System.out.println("方法容器准备完毕");
     }
 
-    @Instruction(name = "help", descrption = "帮助")
+    @Instruction(name = "help", description = "菜单", inMenu = false)
     public String help(ReqMsg reqMsg, Map<String, String> params) {
         StringBuffer result = new StringBuffer();
         List<Method> methodList = methodMap.values().stream().distinct().collect(Collectors.toList());
+        int index = 1;
         for (int i = 0; i < methodList.size(); i++) {
             Method method = methodList.get(i);
-            Instruction instruction = AnnotationUtils.findAnnotation(method, Instruction.class);
-            result.append((i + 1) + "、" + instruction.descrption());
             VerifiAnnotation verifiAnnotation = AnnotationUtils.findAnnotation(method, VerifiAnnotation.class);
             if (verifiAnnotation != null) {
-                result.append(" <-管理员指令");
+                continue;
             }
-            result.append("\n");
+            Instruction instruction = AnnotationUtils.findAnnotation(method, Instruction.class);
+            if(instruction.inMenu()){
+                result.append(index + "、" + instruction.description() + "\n");
+                index++;
+            }
+        }
+        return result.toString();
+    }
+
+    @VerifiAnnotation
+    @Instruction(name = "manager", description = "管理员", inMenu = false)
+    public String manager(ReqMsg reqMsg, Map<String, String> params) {
+        StringBuffer result = new StringBuffer();
+        List<Method> methodList = methodMap.values().stream().distinct().collect(Collectors.toList());
+        int index = 1;
+        for (int i = 0; i < methodList.size(); i++) {
+            Method method = methodList.get(i);
+            VerifiAnnotation verifiAnnotation = AnnotationUtils.findAnnotation(method, VerifiAnnotation.class);
+            if (verifiAnnotation == null) {
+                continue;
+            }
+            Instruction instruction = AnnotationUtils.findAnnotation(method, Instruction.class);
+            result.append(index + "、" + instruction.description() + "\n");
+            index++;
         }
         return result.toString();
     }
@@ -125,7 +171,9 @@ public class InstructionMethodContext {
         Object target = this.getBeanByInstruction(instruction);
         Method method = this.getMethodByInstruction(instruction);
         if (method == null) {
-            return "该指令不存在";
+            ReqMsg reqMsg = (ReqMsg)params[0];
+            return extendServiceMap.get(naiveBayesClassifierComponent.predict(reqMsg.getRawMessage()))
+                    .sendReply(reqMsg);
         }
         return this.invokeMethod(target, method, params);
     }
@@ -201,4 +249,5 @@ public class InstructionMethodContext {
 
         return returnValue;
     }
+
 }

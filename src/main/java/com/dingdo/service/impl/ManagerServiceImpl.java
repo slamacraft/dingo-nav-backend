@@ -11,6 +11,7 @@ import com.dingdo.util.InstructionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +24,8 @@ public class ManagerServiceImpl implements ManagerService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    @Instruction(name = "login", descrption = "登录",
+
+    @Instruction(name = "login", description = "登录", inMenu = false,
             errorMsg = "登录，指令的参数格式为:\n" +
                     "密码=【字符】")
     public String login(ReqMsg reqMsg, Map<String, String> params) {
@@ -54,7 +56,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
 
-    @Instruction(name = "cancel", descrption = "注销")
+    @Instruction(name = "cancel", description = "注销")
     @VerifiAnnotation
     public String cancel(ReqMsg reqMsg, Map<String, String> params) {
         String resultMsg = "注销成功！";
@@ -67,8 +69,10 @@ public class ManagerServiceImpl implements ManagerService {
         return resultMsg;
     }
 
+
+    @Transactional
     @VerifiAnnotation
-    @Instruction(name = "register", descrption = "注册",
+    @Instruction(name = "register", description = "注册",
             errorMsg = "设置错误，指令的参数格式为:\n" +
                     "qq号=【数字】 密码=【字符】")
     public String register(ReqMsg reqMsg, Map<String, String> params) {

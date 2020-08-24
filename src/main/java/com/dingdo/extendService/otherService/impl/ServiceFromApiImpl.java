@@ -34,7 +34,10 @@ public class ServiceFromApiImpl implements ServiceFromApi {
 
         // 对啥也不说的人的回答
         if (StringUtils.isBlank(msg)) {
-            return "你想对我说什么呢？";
+            if(reqMsg.getMessageType().equals("private")){
+                return "你想对我说什么呢？";
+            }
+            return null;
         }
 
         HttpHeaders headers = new HttpHeaders();
@@ -53,6 +56,7 @@ public class ServiceFromApiImpl implements ServiceFromApi {
         } catch (Exception e) {
             logger.error(e);
         }
+
         return "不是很懂\n" + "（；´д｀）ゞ";
     }
 

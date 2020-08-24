@@ -12,7 +12,23 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target({ElementType.METHOD})
 public @interface Instruction {
+    /**
+     * 指令的英文名称
+     */
     String name();
-    String descrption();
+
+    /**
+     * 指令的中文名称
+     */
+    String description();
+
+    /**
+     * 指令执行异常后发送给用户的异常消息
+     */
     String errorMsg() default "指令参数错误！";
+
+    /**
+     * 指令是否在菜单上显示
+     */
+    boolean inMenu() default true;  // 是否在菜单上显示该指令
 }

@@ -1,5 +1,7 @@
 package com.dingdo.enums;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 
 /**
@@ -9,23 +11,23 @@ public enum ClassicEnum {
     //========================================================================================================
     KNOWLEDGE_SRC("python/CQPython/static/question/knowledgeQA/",
             null, 1, "知识问答语料库路径"),
-    BAIDU_BAIKE("BaiduBaike.txt", "SearchServiceImpl", 1.1, "百度百科搜索"),
-    BAIDU_ZHIDAO("BaiduZhidao.txt", "ZhidaoServiceImpl", 1.2, "搜狗问问搜索"),
-    SOUGOU_WENWEN("SougouWenWen.txt", "SougoServiceImpl", 1.3, "搜狗问问搜索"),
+    BAIDU_BAIKE("BaiduBaike.txt", null, 1.1, "百度百科搜索"),
+    BAIDU_ZHIDAO("BaiduZhidao.txt", null, 1.2, "搜狗问问搜索"),
+    SOUGOU_WENWEN("SougouWenWen.txt", null, 1.3, "搜狗问问搜索"),
 
     //========================================================================================================
     MUSIC_SRC("python/CQPython/static/question/musicQA/",
             null, 2, "点歌服务语料路径"),
-//    MUSIC_FROM_QQ("MusicFromQQ.txt", "MusicServiceImpl", 2.1, "QQ音乐点歌"),
+    //    MUSIC_FROM_QQ("MusicFromQQ.txt", "MusicServiceImpl", 2.1, "QQ音乐点歌"),
     RANDOM_MUSIC("RandomMusic.txt", "", 2.2, "网易云随机音乐"),
 
     //========================================================================================================
     WEATHER_SRC("python/CQPython/static/question/weatherQA/",
             null, 3, ""),
     WEATHER_NOW("WeatherNow.txt", "WeatherServiceImpl", 3.1, "获取现在天气详情"),
-    WEATHER_DAILY_FORECAST("WeatherDailyForecast.txt", "", 3.2, "获取天气预测"),
+    WEATHER_DAILY_FORECAST("WeatherDailyForecast.txt", null, 3.2, "获取天气预测"),
     WEATHER_LIFESTYLE("WeatherLifestyle.txt", "WeatherLifestyleServiceImpl", 3.3, "获取生活指数"),
-    WEATHER_HOURLY("WeatherHourly.txt", "", 3.4, "获取气温每小时详情");
+    WEATHER_HOURLY("WeatherHourly.txt", null, 3.4, "获取气温每小时详情");
 
     private String fileName;
     private String serviceName;
@@ -72,17 +74,24 @@ public enum ClassicEnum {
         Map<String, String> resultList = new HashMap<>();
 
         for (int i = 0; i < values.length; i++) {
-            if (values[i].getServiceName() == null) {
+            if (StringUtils.isBlank(values[i].getServiceName())
+                    && values[i].getValue() - (int)values[i].getValue() == 0) {
                 for (int j = i + 1; j < values.length; j++) {
-                    double sub = values[j].getValue() - values[i].getValue();
-                    if (sub > 0 && sub < 1) {
-                        resultList.put(values[i].getFileName() + values[j].getFileName(), values[j].getFileName());
+                    if (StringUtils.isNotBlank(values[j].getServiceName())) {
+//                        double sub = values[j].getValue() - values[i].getValue();
+                        if ((int) values[j].getValue() == (int) values[i].getValue()) {
+                            resultList.put(values[i].getFileName() + values[j].getFileName(), values[j].getFileName());
+                        }
                     }
                 }
             }
         }
 
         return resultList;
+    }
+
+    public static void main(String args[]) {
+        getAllFileSrc();
     }
 
     // ==========================================get&set============================================

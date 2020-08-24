@@ -15,7 +15,10 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
+import javax.annotation.PreDestroy;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class ClassifierComponent<Classifier extends ProbabilisticClassifier, Model extends ProbabilisticClassificationModel> {
 
@@ -28,9 +31,11 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
     protected String classifierName = "defaultClassifier";
     // sparkSession
     protected SparkSession spark = null;
+    // 预测索引与预测标签Map
+    protected Map<Object, Object> predictedLabelMap;
     // 分类的模型
-    private Model model = null;
-
+    protected Model model = null;
+    // 模型管道
     private PipelineModel pipelineModel = null;
 
     public ClassifierComponent() {
@@ -41,31 +46,32 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
         this();
         this.classifierName = classifierName;
     }
+
     /**
-     * 初始化分类模型
+     * 初始化SparkSession
      *
      * @return
      */
     private void initSpark() {
-        // 创建sparkSession
+        // 如果还没有初始化spark，创建sparkSession
         this.spark = SparkSession
                 .builder()
                 .appName(this.classifierName)
                 .master("local[*]")
-                .config("spark.sql.warehouse.dir",
-                        "file///:G:/Projects/Java/Spark/spark-warehouse")
+                .config("spark.sql.warehouse.dir", "file///:G:/Projects/Java/Spark/spark-warehouse")
                 .getOrCreate();
 
         // 屏蔽spark的INFO日志
-        logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
-        logger.getLogger("org.apache.hadoop").setLevel(Level.ERROR);
-        logger.getLogger("org.apache.zookeeper").setLevel(Level.WARN);
-        logger.getLogger("org.apache.hive").setLevel(Level.WARN);
+        Logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
+        Logger.getLogger("org.apache.hadoop").setLevel(Level.ERROR);
+        Logger.getLogger("org.apache.zookeeper").setLevel(Level.WARN);
+        Logger.getLogger("org.apache.hive").setLevel(Level.WARN);
         SparkSession.builder().getOrCreate().sparkContext().setLogLevel("WARN");
     }
 
+
     /**
-     * 加载随机森林模型
+     * 加载模型
      *
      * @param path 模型路径
      * @return
@@ -73,6 +79,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
     public Model load(String path, Function<String, Model> loadFunction) {
         return (Model) loadFunction.apply(path);
     }
+
 
     /**
      * 将文件提取为Dataset<Row>
@@ -85,8 +92,10 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
         return this.spark.read().format(format).load(filePath);
     }
 
+
     /**
      * 训练模型
+     * 加载并解析数据文件，然后将其转换为DataFrame。
      *
      * @param trainDataPath   训练数据的地址
      * @param classifierClass 训练的模型类型
@@ -94,9 +103,9 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      * @throws IllegalAccessException
      */
     public void fit(String trainDataPath, String dataFormat, Class<Classifier> classifierClass) throws IllegalAccessException, InstantiationException {
-        // 加载并解析数据文件，然后将其转换为DataFrame。
         this.fit(this.getDataFromFileByFormat(trainDataPath, dataFormat), classifierClass);
     }
+
 
     /**
      * 训练模型
@@ -119,16 +128,15 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
         VectorIndexerModel featureIndexer = new VectorIndexer()
                 .setInputCol("features")
                 .setOutputCol("indexedFeatures")
-                .setMaxCategories(8)
+                .setMaxCategories(4)
                 .fit(trainData);
 
-        // 训练RandomForest模型。
+        // 构建分类模型。
         Classifier classifier = null;
 
         classifier = (Classifier) this.getInstanceOfT(classifierClass)
-                    .setLabelCol("indexedLabel")
-                    .setFeaturesCol("indexedFeatures");
-
+                .setLabelCol("indexedLabel")
+                .setFeaturesCol("indexedFeatures");
 
         // 将索引标签转换回原始标签。
         IndexToString labelConverter = new IndexToString()
@@ -142,7 +150,17 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
 
         // 训练模型。这也会运行索引器。
         this.pipelineModel = pipeline.fit(trainData);
-        pipelineModel.transform(trainData).select("predictedLabel", "label", "features").show(5);
+        pipelineModel.transform(trainData)
+                .select("label", "features", "indexedLabel", "prediction", "predictedLabel")
+                .show(5);
+
+        // 将预测索引与标签索引组装为map
+        predictedLabelMap = pipelineModel.transform(trainData)
+                .select("prediction", "predictedLabel")
+                .distinct()
+                .collectAsList()
+                .stream()
+                .collect(Collectors.toMap(item -> item.getAs("prediction"), item -> item.getAs("predictedLabel")));
 
         this.model = (Model) (pipelineModel.stages()[2]);
     }
@@ -175,8 +193,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
                 .setPredictionCol("prediction")
                 .setMetricName("accuracy");
 
-        double accuracy = evaluator.evaluate(predictions);
-        return accuracy;
+        return evaluator.evaluate(predictions);
     }
 
     /**
@@ -199,6 +216,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
         return this.predict(predictVector);
     }
 
+
     /**
      * 预测分类
      *
@@ -207,8 +225,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      */
     public double predict(Vector predictVector) {
         double predict = model.predict(predictVector);
-        Vector vector = model.predictRaw(predictVector);
-        return predict;
+        return Double.valueOf((String) predictedLabelMap.get(predict));
     }
 
     private Classifier getInstanceOfT(Class<Classifier> aClass) throws IllegalAccessException, InstantiationException {
@@ -225,5 +242,10 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
 
     protected Model getModel() {
         return model;
+    }
+
+    @PreDestroy
+    public void destroy() {
+        spark.stop();
     }
 }

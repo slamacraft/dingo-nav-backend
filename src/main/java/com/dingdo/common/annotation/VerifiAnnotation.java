@@ -11,5 +11,4 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target({ElementType.METHOD})
 public @interface VerifiAnnotation {
-    String discrption() default  "需要校验的方法";
 }

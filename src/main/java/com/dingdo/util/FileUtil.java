@@ -29,9 +29,10 @@ public class FileUtil {
         static {
             ApplicationHome home = new ApplicationHome(FileUtil.class);
             File jarFile = home.getSource();
-            jarUrl = jarFile.getParentFile().toString();
-            if (StringUtils.isBlank(jarUrl)) {
+            if (jarFile == null || StringUtils.isBlank(jarFile.getParentFile().toString())) {
                 jarUrl = "/python/CQPython/static";
+            }else {
+                jarUrl = jarFile.getParentFile().toString();
             }
             System.out.println("获取的jar包路径为:" + jarUrl);
         }
@@ -71,7 +72,7 @@ public class FileUtil {
         BufferedReader br = null;
         try {
             InputStream stream = FileUtil.class.getClassLoader().getResourceAsStream(path);
-            br = new BufferedReader(new InputStreamReader(stream));
+            br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
             String s = "";
             while ((s = br.readLine()) != null) {
                 result.append(s + "\n");
