@@ -67,7 +67,7 @@ public class FileUtil {
      * @param path
      * @return
      */
-    public static String loadFile(String path) {
+    public static String loadFileFromResourse(String path) {
         StringBuffer result = new StringBuffer();
         BufferedReader br = null;
         try {
@@ -90,8 +90,7 @@ public class FileUtil {
      * @param path
      * @return
      */
-    public static String loadFileFromPath(String path) {
-        path = JarPathUtil.jarUrl + "/message/" + path;
+    public static String loadFile(String path) {
         File file = new File(path);
         StringBuffer result = new StringBuffer();
 
@@ -113,6 +112,17 @@ public class FileUtil {
         }
 
         return result.toString();
+    }
+
+    /**
+     * 将文件读取为String
+     *
+     * @param path
+     * @return
+     */
+    public static String loadFileFromJarPath(String path) {
+        path = JarPathUtil.jarUrl + "/message/" + path;
+        return loadFile(path);
     }
 
     /**

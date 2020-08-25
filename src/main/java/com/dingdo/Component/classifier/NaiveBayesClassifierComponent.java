@@ -52,6 +52,10 @@ public class NaiveBayesClassifierComponent
     // 是否打印分类详情
     private boolean enabePrintInfo = true;
 
+    /**
+     * 测试方法
+     * @throws Exception
+     */
     public void test() throws Exception {
         vocabularyPath = "D:\\workspace\\springboot-webjar\\src\\main\\resources\\python\\CQPython\\static\\dict\\newVocabulary.txt";
         trainDataPath = "D:\\workspace\\springboot-webjar\\src\\main\\resources\\python\\CQPython\\static\\question\\TrainDataLibSVM.txt";
@@ -81,11 +85,10 @@ public class NaiveBayesClassifierComponent
 //            }
 //        }
         File trainDataFile = new File(trainDataPath);
-        if (!trainDataFile.exists()) {
+        if (!trainDataFile.exists() || StringUtils.isBlank(FileUtil.loadFile(trainDataPath))) {
             trainDataFile.createNewFile();
             initTrainData(trainDataPath);
         }
-
         Dataset<Row> data = super.getDataFromFileByFormat(trainDataPath, "libsvm");
 //        Dataset<Row>[] splits = data.randomSplit(new double[]{0.7, 0.3});
 
@@ -147,7 +150,7 @@ public class NaiveBayesClassifierComponent
 
         StringBuilder toWriteString = new StringBuilder();
         for (Map.Entry<String, String> file : filePath2NameMap.entrySet()) {
-            String trainDataFile = FileUtil.loadFile(file.getKey());
+            String trainDataFile = FileUtil.loadFileFromResourse(file.getKey());
             if (StringUtils.isBlank(trainDataFile)) {  // 不计入空文件
                 continue;
             }

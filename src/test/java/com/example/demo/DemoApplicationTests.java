@@ -19,8 +19,6 @@ public class DemoApplicationTests {
         NaiveBayesClassifierComponent naiveBayesClassifierComponent = new NaiveBayesClassifierComponent();
         naiveBayesClassifierComponent.test();
 
-        Scanner scanner = new Scanner(System.in);
-
         naiveBayesClassifierComponent.predict("长沙今天气温多少度");
         naiveBayesClassifierComponent.predict("长沙今天适合钓鱼吗");
         naiveBayesClassifierComponent.predict("长沙适合洗车吗");
