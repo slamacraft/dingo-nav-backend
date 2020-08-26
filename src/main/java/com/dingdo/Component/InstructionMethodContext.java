@@ -4,12 +4,15 @@ import com.dingdo.Component.classifier.NaiveBayesClassifierComponent;
 import com.dingdo.Component.classifier.NaiveBayesComponent;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
+import com.dingdo.common.aspect.VerifiAspect;
 import com.dingdo.common.exception.CheckException;
 
+import com.dingdo.dao.RobotManagerDao;
 import com.dingdo.enums.ClassicEnum;
 import com.dingdo.extendService.MsgExtendService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.InstructionUtils;
+import com.forte.qqrobot.bot.BotManager;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -34,6 +37,9 @@ public class InstructionMethodContext {
 
     @Autowired
     private NaiveBayesClassifierComponent naiveBayesClassifierComponent;
+
+    @Autowired
+    private VerifiAspect verifiAspect;
 
     private static ApplicationContext applicationContext;
     // 指令对应的实例Map
@@ -101,6 +107,14 @@ public class InstructionMethodContext {
         System.out.println("方法容器准备完毕");
     }
 
+
+    /**
+     * 获取请求的用户能够使用的指令菜单
+     *
+     * @param reqMsg
+     * @param params
+     * @return
+     */
     @Instruction(name = "help", description = "菜单", inMenu = false)
     public String help(ReqMsg reqMsg, Map<String, String> params) {
         StringBuffer result = new StringBuffer();
@@ -109,7 +123,7 @@ public class InstructionMethodContext {
         for (int i = 0; i < methodList.size(); i++) {
             Method method = methodList.get(i);
             VerifiAnnotation verifiAnnotation = AnnotationUtils.findAnnotation(method, VerifiAnnotation.class);
-            if (verifiAnnotation != null) {
+            if (verifiAnnotation != null && !verifiAspect.checkVerification(reqMsg, verifiAnnotation.level())) {
                 continue;
             }
             Instruction instruction = AnnotationUtils.findAnnotation(method, Instruction.class);

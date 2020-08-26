@@ -2,7 +2,9 @@ package com.dingdo.enums;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 记录着每个服务对应的激活语料库文件地址
@@ -43,6 +45,11 @@ public enum ClassicEnum {
         this.describe = describe;
     }
 
+    /**
+     * 通过文件名称获取枚举
+     * @param fileName
+     * @return
+     */
     public static ClassicEnum getEnumByFileName(String fileName) {
         ClassicEnum[] values = ClassicEnum.values();
         for (ClassicEnum item : values) {
@@ -53,6 +60,11 @@ public enum ClassicEnum {
         return null;
     }
 
+    /**
+     * 通过调用的服务名称获取枚举
+     * @param serviceName
+     * @return
+     */
     public static ClassicEnum getEnumByServiceName(String serviceName) {
         ClassicEnum[] values = ClassicEnum.values();
         for (ClassicEnum item : values) {
@@ -88,10 +100,6 @@ public enum ClassicEnum {
         }
 
         return resultList;
-    }
-
-    public static void main(String args[]) {
-        getAllFileSrc();
     }
 
     // ==========================================get&set============================================

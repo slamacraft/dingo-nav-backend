@@ -95,7 +95,6 @@ public class ManagerServiceImpl implements ManagerService {
         // 插入数据
         RobotManagerEntity insertEntity = new RobotManagerEntity();
         insertEntity.setId(userId);
-        insertEntity.setNickName(reqMsg.getNickname());
         insertEntity.setPassword(password);
         robotManagerDao.insert(insertEntity);
         return "新增管理员成功！";

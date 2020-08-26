@@ -7,11 +7,9 @@ import lombok.Data;
 @TableName("robot_manager")
 @Data
 public class RobotManagerEntity {
+
     @TableField("id")
     private String id;
-
-    @TableField("nick_name")
-    private String nickName;
 
     @TableField("password")
     private String password;

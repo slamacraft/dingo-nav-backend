@@ -12,28 +12,28 @@ import java.util.Objects;
 public class SchedulingRunnable implements Runnable {
     private static Logger logger = Logger.getLogger(SchedulingRunnable.class);
 
-    private String beanName;
+    private Class beanClazz;
     private String methodName;
     private Object[] params;
 
     /**
      * 没有执行参数的构造方法
-     * @param beanName
+     * @param beanClazz
      * @param methodName
      */
-    public SchedulingRunnable(String beanName, String methodName) {
-        this.beanName = beanName;
+    public SchedulingRunnable(Class beanClazz, String methodName) {
+        this.beanClazz = beanClazz;
         this.methodName = methodName;
     }
 
     /**
      * 有执行参数的构造方法
-     * @param beanName
+     * @param beanClazz
      * @param methodName
      * @param params
      */
-    public SchedulingRunnable(String beanName, String methodName, Object... params) {
-        this.beanName = beanName;
+    public SchedulingRunnable(Class beanClazz, String methodName, Object... params) {
+        this.beanClazz = beanClazz;
         this.methodName = methodName;
         this.params = params;
     }
@@ -43,19 +43,19 @@ public class SchedulingRunnable implements Runnable {
      */
     @Override
     public void run() {
-        logger.info("定时任务开始执行 - bean：{" + beanName + "}，方法：{" + methodName + "}，参数：{" + params + "}");
+        logger.info("定时任务开始执行 - bean：{" + beanClazz + "}，方法：{" + methodName + "}，参数：{" + params + "}");
         long startTime = System.currentTimeMillis();
 
         try {
             // 通过方法名反射调用具体的方法
-            Object target = SpringContextUtils.getBean(beanName);
+            Object target = SpringContextUtils.getBean(beanClazz);
             InstructionMethodContext.invokeMethodByName(target, methodName, params);
         } catch (Exception ex) {
-            logger.error(String.format("定时任务执行异常 - bean：%s，方法：%s，参数：%s ", beanName, methodName, params), ex);
+            logger.error(String.format("定时任务执行异常 - bean：%s，方法：%s，参数：%s ", beanClazz, methodName, params), ex);
         }
 
         long times = System.currentTimeMillis() - startTime;
-        logger.info(String.format("定时任务执行结束 - bean：%s，方法：%s，参数：%s，耗时：%d 毫秒", beanName, methodName, params, times));
+        logger.info(String.format("定时任务执行结束 - bean：%s，方法：%s，参数：%s，耗时：%d 毫秒", beanClazz, methodName, params, times));
     }
 
     /**
@@ -72,7 +72,7 @@ public class SchedulingRunnable implements Runnable {
 
         SchedulingRunnable that = (SchedulingRunnable) obj;
         if (params == null) {
-            return beanName.equals(that.beanName) &&
+            return beanClazz.equals(that.beanClazz) &&
                     methodName.equals(that.methodName) &&
                     that.params == null;
         }
@@ -85,7 +85,7 @@ public class SchedulingRunnable implements Runnable {
                 break;
             }
         }
-        return beanName.equals(that.beanName) &&
+        return beanClazz.equals(that.beanClazz) &&
                 methodName.equals(that.methodName) &&
                 flag;
     }
@@ -97,12 +97,12 @@ public class SchedulingRunnable implements Runnable {
     @Override
     public int hashCode() {
         if (params == null) {
-            return Objects.hash(beanName + methodName);
+            return Objects.hash(beanClazz + methodName);
         }
         String paramString = "";
         for (int i = 0; i < params.length; i++) {
             paramString += params[i];
         }
-        return Objects.hash(beanName + methodName + paramString);
+        return Objects.hash(beanClazz + methodName + paramString);
     }
 }

@@ -55,7 +55,7 @@ public class SystemListenComponent {
                         "时间间隔=【数字】")
     public String setUpdateSysInfoTime(ReqMsg reqMsg, Map<String, String> params) {
         int time = InstructionUtils.getParamValueOfInteger(params, "time", "时间间隔") * 1000;
-        SchedulingRunnable task = new SchedulingRunnable("systemListenComponent",
+        SchedulingRunnable task = new SchedulingRunnable(SystemListenComponent.class,
                     "updateSysInfo");
         taskRegister.addCronTask(task, time, 0);
         return "设置系统信息更新时间成功！";

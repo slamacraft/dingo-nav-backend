@@ -2,6 +2,7 @@ package com.dingdo.Component;
 
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
+import com.dingdo.enums.VerificationEnum;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.util.FileUtil;
 import com.dingdo.util.InstructionUtils;
@@ -48,7 +49,7 @@ public class SaveMsgComponent {
         );
     }
 
-    @VerifiAnnotation
+    @VerifiAnnotation(level = VerificationEnum.DEVELOPER)
     @Instruction(name = "setMsgListSize", description = "设置消息缓存大小",
             errorMsg = "设置错误，指令的参数格式为:\n消息列表大小=【数字】")
     public String setMsgListSize(ReqMsg reqMsg, Map<String, String> params) {

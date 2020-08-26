@@ -1,11 +1,8 @@
 package com.dingdo.simpleRobot;
 
-import com.dingdo.Component.classifier.NaiveBayesComponent;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.MsgService;
 import com.dingdo.util.SpringContextUtils;
-import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 一些声明信息

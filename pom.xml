@@ -17,7 +17,6 @@
     <properties>
         <java.version>1.8</java.version>
         <kotlin.version>1.4.0</kotlin.version>
-        <kotlin-coroutines.version>1.4.0</kotlin-coroutines.version>
     </properties>
 
     <dependencies>
@@ -36,17 +35,17 @@
         </dependency>
 
         <!-- kt -->
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <!-- kt -->
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jetbrains.kotlin</groupId>-->
+<!--            <artifactId>kotlin-stdlib-jdk8</artifactId>-->
+<!--            <version>${kotlin.version}</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; kt &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.jetbrains.kotlin</groupId>-->
+<!--            <artifactId>kotlin-stdlib</artifactId>-->
+<!--            <version>${kotlin.version}</version>-->
+<!--        </dependency>-->
 
         <!--        <dependency>-->
 <!--            <groupId>io.github.ForteScarlet.simple-robot</groupId>-->
@@ -76,6 +75,10 @@
             <version>2.29</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
@@ -276,14 +279,14 @@
             <id>bintray</id>
             <url>https://dl.bintray.com/kotlin/kotlin-eap</url>
         </repository>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>Maven Repository Switchboard</name>
-            <url>http://repo2.maven.org/maven2</url>
-        </repository>
+<!--        <repository>-->
+<!--            <snapshots>-->
+<!--                <enabled>false</enabled>-->
+<!--            </snapshots>-->
+<!--            <id>central</id>-->
+<!--            <name>Maven Repository Switchboard</name>-->
+<!--            <url>http://repo2.maven.org/maven2</url>-->
+<!--        </repository>-->
     </repositories>
 
 

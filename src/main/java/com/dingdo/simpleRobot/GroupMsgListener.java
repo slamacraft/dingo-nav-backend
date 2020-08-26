@@ -33,8 +33,4 @@ public class GroupMsgListener extends MsgListener{
         sender.SENDER.sendGroupMsg(groupMsg, reply);
     }
 
-    private String sendPicture(String imgPath) {
-        return KQCodeUtils.INSTANCE.toCq("image", imgPath);
-    }
-
 }
