@@ -40,7 +40,7 @@ public class SystemListenComponent {
     private TaskRegister taskRegister;
 
     @VerifiAnnotation
-    @Instruction(name = "getSysInfo", description = "获取系统信息")
+    @Instruction(description = "获取系统信息")
     public String getSysInfo(ReqMsg reqMsg, Map<String, String> params) {
         String sysJson = stringRedisTemplate.opsForValue().get(RedisEnum.SYSINFO.toString());
         MonitorInfoBean infoBean = JSONObject.parseObject(sysJson, MonitorInfoBean.class);
@@ -50,9 +50,8 @@ public class SystemListenComponent {
 
 
     @VerifiAnnotation
-    @Instruction(name = "setUpdateSysInfoInterval", description = "设置更新系统信息间隔",
-            errorMsg = "设置错误，指令的参数格式为:\n" +
-                        "时间间隔=【数字】")
+    @Instruction(description = "设置更新系统信息间隔",
+            errorMsg = "设置错误，指令的参数格式为:\n" + "时间间隔=【数字】")
     public String setUpdateSysInfoTime(ReqMsg reqMsg, Map<String, String> params) {
         int time = InstructionUtils.getParamValueOfInteger(params, "time", "时间间隔") * 1000;
         SchedulingRunnable task = new SchedulingRunnable(SystemListenComponent.class,

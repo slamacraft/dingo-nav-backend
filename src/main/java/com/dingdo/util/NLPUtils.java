@@ -123,26 +123,26 @@ public class NLPUtils {
 
         StringBuilder cron = new StringBuilder();
 
-        int sec = getIndexBatch(wordList, SEC_PERIOD);
-        int sec2 = getIndexBatch(wordList, SEC_POINT);
-        int min = getIndexBatch(wordList, MIN_PERIOD);
-        int min2 = getIndexBatch(wordList, MIN_POINT);
-        int hour = getIndexBatch(wordList, HOUR_PERIOD);
-        int hour2 = getIndexBatch(wordList, HOUR_POINT);
+        int secPeriod = getIndexBatch(wordList, SEC_PERIOD);
+        int secPoint = getIndexBatch(wordList, SEC_POINT);
+        int minPeriod = getIndexBatch(wordList, MIN_PERIOD);
+        int minPoint = getIndexBatch(wordList, MIN_POINT);
+        int hourPeriod = getIndexBatch(wordList, HOUR_PERIOD);
+        int hourPoint = getIndexBatch(wordList, HOUR_POINT);
         int day = getIndexBatch(wordList, DAY);
         int mon = getIndexBatch(wordList, MONTH);
         int week = getIndexBatch(wordList, WEEK);
-        int week2 = getIndexBatch(wordList, WEEK_ENUM);
+        int weekEnum = getIndexBatch(wordList, WEEK_ENUM);
 
-        if (sec2 >= 1 && (sec2 -2 >=0 && !"每".equals(list.get(sec2 - 2).word))) {
-            int number = getNumber(list.get(sec2 - 1).word);
+        if (secPoint >= 1 && (secPoint -2 >=0 && !"每".equals(list.get(secPoint - 2).word))) {
+            int number = getNumber(list.get(secPoint - 1).word);
             if (number >= 0) {
                 cron.append(number + " ");
             } else {
                 cron.append("* ");
             }
-        } else if(sec >= 1){
-            int number = getNumber(list.get(sec - 1).word);
+        } else if(secPeriod >= 1){
+            int number = getNumber(list.get(secPeriod - 1).word);
             if (number >= 0) {
                 cron.append("0/" + number + " ");
             } else {
@@ -152,27 +152,29 @@ public class NLPUtils {
             cron.append("0 ");
         }
 
-        if (min2 >= 1 && (min2 -2 >=0 && !"每".equals(list.get(min2 - 2).word))) {
-            int number = getNumber(list.get(min2 - 1).word);
+        if (minPoint >= 1 && (minPoint -2 >=0 && !"每".equals(list.get(minPoint - 2).word))) {
+            int number = getNumber(list.get(minPoint - 1).word);
             if (number >= 0) {
                 cron.append(number + " ");
             } else {
                 cron.append("0 ");
             }
-        }else if (min >= 1) {
-            int number = getNumber(list.get(min - 1).word);
+        }else if(hourPoint >= 1 && "半".equals(list.get(hourPoint + 1).word)){
+            cron.append("30 ");
+        }else if (minPeriod >= 1) {
+            int number = getNumber(list.get(minPeriod - 1).word);
             if (number >= 0) {
                 cron.append("0/" + number + " ");
             } else {
                 cron.append("* ");
             }
-        } else {
+        }else {
             cron.append("0 ");
         }
 
-        if (hour2 >= 1) {
-            int number = getNumber(list.get(hour2 - 1).word);
-            if (hour2 - 2 > 0 && "晚上".equals(list.get(hour2 - 2).word)) {
+        if (hourPoint >= 1) {
+            int number = getNumber(list.get(hourPoint - 1).word);
+            if (hourPoint - 2 > 0 && "晚上".equals(list.get(hourPoint - 2).word)) {
                 number += 12;
             }
             if (number >= 0) {
@@ -180,9 +182,9 @@ public class NLPUtils {
             }else {
                 cron.append("* ");
             }
-        }else if (hour >= 1) {
-            int number = getNumber(list.get(hour - 1).word);
-            if (hour - 2 >= 0 && "晚上".equals(list.get(hour - 2).word)) {
+        }else if (hourPeriod >= 1) {
+            int number = getNumber(list.get(hourPeriod - 1).word);
+            if (hourPeriod - 2 >= 0 && "晚上".equals(list.get(hourPeriod - 2).word)) {
                 number += 12;
             }
             if (number >= 0) {
@@ -216,8 +218,8 @@ public class NLPUtils {
             cron.append("* ");
         }
 
-         if (week2 >= 0) {
-            int number = getNumber(list.get(week2).word.substring(1));
+         if (weekEnum >= 0) {
+            int number = getNumber(list.get(weekEnum).word.substring(1));
             if (number >= 0) {
                 cron.append(number);
             } else {
@@ -256,6 +258,9 @@ public class NLPUtils {
     public static int getNumber(String text) {
         if("每".equals(text)){
             return -1;
+        }
+        if("半".equals(text)){
+            return 30;
         }
         if ("日".equals(text)) {
             return 7;

@@ -1,5 +1,6 @@
 package com.dingdo.common.aspect;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.common.exception.CheckException;
 import com.dingdo.dao.RobotManagerDao;
@@ -63,6 +64,10 @@ public class VerifiAspect {
     }
 
 
+    public RobotManagerEntity getRobotManager(String userId){
+        return robotManagerDao.selectById(userId);
+    }
+
     /**
      * 校验用户权限级别
      *
@@ -70,12 +75,20 @@ public class VerifiAspect {
      * @param level
      * @return
      */
-    public boolean checkVerification(ReqMsg reqMsg, VerificationEnum level) {
+    public boolean checkVerification(ReqMsg reqMsg, VerificationEnum level, RobotManagerEntity... managerEntities) {
         switch (level) {
-            case ROOT:
-                return isRoot(reqMsg);
-            case DEVELOPER:
-                return isDeveloper(reqMsg);
+            case ROOT:{
+                if(ArrayUtil.isEmpty(managerEntities)){
+                    return isRoot(reqMsg);
+                }
+                return isRoot(managerEntities[0]);
+            }
+            case DEVELOPER: {
+                if (ArrayUtil.isEmpty(managerEntities)) {
+                    return isDeveloper(reqMsg);
+                }
+                return isDeveloper(managerEntities[0]);
+            }
             case MANAGER:
                 return isManager(reqMsg);
             case FRIEND:
@@ -84,16 +97,30 @@ public class VerifiAspect {
         return false;
     }
 
-    public boolean isRoot(ReqMsg reqMsg) {
+    public boolean isRoot(RobotManagerEntity robotManagerEntity) {
+        if(robotManagerEntity == null){
+            return false;
+        }
+        if(robotManagerEntity.getLevel() == 0){
+            return true;
+        }
         return false;
     }
 
-    public boolean isDeveloper(ReqMsg reqMsg) {
+    public boolean isRoot(ReqMsg reqMsg) {
         RobotManagerEntity robotManagerEntity = robotManagerDao.selectById(reqMsg.getUserId());
-        if (robotManagerEntity == null) {
+        return isRoot(robotManagerEntity);
+    }
+
+    public boolean isDeveloper(ReqMsg reqMsg) {
+        return isDeveloper(robotManagerDao.selectById(reqMsg.getUserId()));
+    }
+
+    public boolean isDeveloper(RobotManagerEntity robotManagerEntity) {
+        if (robotManagerEntity != null) {
             return true;
         }
-        return isRoot(reqMsg);
+        return isRoot(robotManagerEntity);
     }
 
     public boolean isManager(ReqMsg reqMsg) {

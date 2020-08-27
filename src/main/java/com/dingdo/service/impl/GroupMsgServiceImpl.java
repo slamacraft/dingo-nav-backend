@@ -1,6 +1,5 @@
 package com.dingdo.service.impl;
 
-import com.dingdo.Component.MsgTypeComponent;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.extendService.otherService.ServiceFromApi;
@@ -18,15 +17,17 @@ import java.util.Random;
 
 @Service
 public class GroupMsgServiceImpl implements GroupMsgService {
+
     @Autowired
     private ServiceFromApi serviceFromApi;
-    @Autowired
-    private MsgTypeComponent msgTypeComponent;
+
     @Autowired
     private BotManager botManager;
+
     @Autowired
     private SpecialReplyService specialReplyService;
 
+    // 在不at的情况下，机器人对群消息产生响应的几率，默认是0
     private int RANDOM_RATIO = 0;
 
     private Random random = new Random();
@@ -40,10 +41,10 @@ public class GroupMsgServiceImpl implements GroupMsgService {
      * @return
      */
     @VerifiAnnotation
-    @Instruction(name = "setRandomRatio", description = "设置随机响应几率")
+    @Instruction(description = "设置随机响应几率")
     public String setRandomReplyRatio(ReqMsg reqMsg, Map<String, String> params) {
         this.RANDOM_RATIO = InstructionUtils.getParamValueOfInteger(params, "randomRatio", "概率");
-        return "随机响应几率已设置为" + this.RANDOM_RATIO;
+        return "随机响应几率已设置为" + this.RANDOM_RATIO + "%";
     }
 
 

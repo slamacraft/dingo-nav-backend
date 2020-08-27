@@ -12,10 +12,11 @@ public class MsgMQConfig {
 
     /**
      * 注册一个消息队列线程池bean
+     *
      * @return
      */
     @Bean
-    public ThreadPoolExecutor msgMqPool(){
+    public ThreadPoolExecutor msgMqPool() {
         return new ThreadPoolExecutor(
                 1,  // 核心线程池大小（没加几个群，用不了多少核心线程）
                 10,  // 最大线程池大小

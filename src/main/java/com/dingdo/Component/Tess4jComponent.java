@@ -43,14 +43,14 @@ public class Tess4jComponent implements ApplicationRunner {
     private boolean enableWDSR = false;
 
     @VerifiAnnotation
-    @Instruction(name = "enableWDSR", description = "开启超分辨率识别")
+    @Instruction(description = "开启超分辨率识别")
     public String enableWDSR(ReqMsg reqMsg, Map<String, String> params) {
         this.enableWDSR = true;
         return "超分辨率识别已开启";
     }
 
     @VerifiAnnotation
-    @Instruction(name = "disableWDSR", description = "关闭超分辨率识别")
+    @Instruction(description = "关闭超分辨率识别")
     public String disableWDSR(ReqMsg reqMsg, Map<String, String> params) {
         this.enableWDSR = false;
         return "超分辨率识别已关闭";

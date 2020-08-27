@@ -1,11 +1,14 @@
 package com.dingdo.Component;
 
 import com.dingdo.common.annotation.Instruction;
+import com.dingdo.dao.UserTomatoDao;
+import com.dingdo.entities.UserTomatoEntity;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.PrivateMsgService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,13 +39,18 @@ public class TomatoClockComponent {
     @Autowired
     private PrivateMsgService privateMsgService;
 
-    public void setTomatoCoreSize(int coreSize) {
+    @Autowired(required = false)
+    private UserTomatoDao userTomatoDao;
+
+
+    public void setTomatoCorePoolSize(int coreSize) {
         this.tomatoClockPool.setCorePoolSize(coreSize);
     }
 
-    public void setTomatoMaxSize(int maxSize) {
+    public void setTomatoMaxPoolSize(int maxSize) {
         this.tomatoClockPool.setMaximumPoolSize(maxSize);
     }
+
 
     /**
      * 番茄类
@@ -50,19 +58,16 @@ public class TomatoClockComponent {
     private class Tomato implements Runnable {
         private String robotId;
         private String userId;
-        private Long tomatoCound = 0L;
 
         public Tomato(String robotId, String userId) {
             this.robotId = robotId;
             this.userId = userId;
         }
 
-        public Long getTomatoCound() {
-            return tomatoCound;
-        }
 
-        @SneakyThrows
         @Override
+        @SneakyThrows
+        @Transactional
         public void run() {
             privateMsgService.sendPrivateMsg(this.robotId, this.userId, "新的番茄时间开始啦！开始为你计时25分钟");
             userStatusMap.put(userId, 1);
@@ -85,10 +90,21 @@ public class TomatoClockComponent {
                 this.wait(1000 * 60 * 5);
             }
             privateMsgService.sendPrivateMsg(this.robotId, this.userId, "获得一个番茄");
-            this.tomatoCound += 1;
+
+            UserTomatoEntity userTomatoEntity = userTomatoDao.selectById(this.userId);
+            if (userTomatoEntity == null) {
+                UserTomatoEntity toInsertEntity = new UserTomatoEntity();
+                toInsertEntity.setTomato(1);
+                userTomatoDao.insert(toInsertEntity);
+            } else {
+                userTomatoEntity.setTomato(userTomatoEntity.getTomato() + 1);
+                userTomatoDao.updateById(userTomatoEntity);
+            }
+
             userStatusMap.put(userId, 0);
         }
     }
+
 
     /**
      * 为当前用户新增一个番茄钟
@@ -97,7 +113,7 @@ public class TomatoClockComponent {
      * @param params
      * @return
      */
-    @Instruction(name = "tomatoClock", description = "番茄钟")
+    @Instruction(description = "番茄钟")
     public String addTomatoClock(ReqMsg reqMsg, Map<String, String> params) {
         String userId = reqMsg.getUserId();
         Tomato userThread = tomatoMap.get(userId);
@@ -114,6 +130,7 @@ public class TomatoClockComponent {
         return "番茄闹钟设置成功";
     }
 
+
     /**
      * 为当前用户暂停番茄钟
      *
@@ -121,13 +138,14 @@ public class TomatoClockComponent {
      * @param params
      * @return
      */
-    @Instruction(name = "stopTomato", description = "暂停番茄钟", inMenu = false)
+    @Instruction(description = "暂停番茄钟", inMenu = false)
     public String unplanedEvent(ReqMsg reqMsg, Map<String, String> params) {
         String userId = reqMsg.getUserId();
         userInterruptePointMap.put(userId, System.currentTimeMillis());
         userStatusMap.put(userId, 2);
         return "番茄闹钟暂时停下来了";
     }
+
 
     /**
      * 为当前用户继续番茄钟
@@ -136,11 +154,12 @@ public class TomatoClockComponent {
      * @param params
      * @return
      */
-    @Instruction(name = "continueTomato", description = "继续番茄钟", inMenu = false)
+    @Instruction(description = "继续番茄钟", inMenu = false)
     public String continueEvent(ReqMsg reqMsg, Map<String, String> params) {
         userStatusMap.put(reqMsg.getUserId(), 1);    // 定时状态中
         return "番茄闹钟继续计时";
     }
+
 
     /**
      * 获取当前用户的番茄数
@@ -149,10 +168,13 @@ public class TomatoClockComponent {
      * @param params
      * @return
      */
-    @Instruction(name = "tomatoCount", description = "番茄数量", inMenu = false)
+    @Instruction(description = "番茄数量", inMenu = false)
     public String getTomatoCount(ReqMsg reqMsg, Map<String, String> params) {
-        Tomato tomato = tomatoMap.get(reqMsg.getUserId());
-        return "你现在有" + tomato.getTomatoCound() + "个番茄";
+        UserTomatoEntity userTomatoEntity = userTomatoDao.selectById(reqMsg.getUserId());
+        if(userTomatoEntity != null){
+            return "你现在有" + userTomatoEntity.getTomato() + "个番茄";
+        }
+        return "你现在还未获得过番茄，快使用番茄钟试试吧！";
     }
 
 }

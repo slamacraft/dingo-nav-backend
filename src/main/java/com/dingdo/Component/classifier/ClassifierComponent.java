@@ -1,6 +1,5 @@
 package com.dingdo.Component.classifier;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
@@ -14,6 +13,7 @@ import org.apache.spark.ml.linalg.Vectors;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PreDestroy;
 import java.util.Map;
@@ -27,45 +27,21 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
     // 分类器名称
     protected String classifierName = "defaultClassifier";
     // sparkSession
-    protected SparkSession spark = null;
+    @Autowired
+    protected SparkSession spark;
     // 预测索引与预测标签Map
-    protected Map<Object, Object> predictedLabelMap;
+    protected Map<Double, Object> predictedLabelMap;
     // 分类的模型
     protected Model model = null;
     // 模型管道
     private PipelineModel pipelineModel = null;
 
     public ClassifierComponent() {
-        initSpark();
     }
 
     public ClassifierComponent(String classifierName) {
-        this();
         this.classifierName = classifierName;
     }
-
-    /**
-     * 初始化SparkSession
-     *
-     * @return
-     */
-    private void initSpark() {
-        // 如果还没有初始化spark，创建sparkSession
-        this.spark = SparkSession
-                .builder()
-                .appName(this.classifierName)
-                .master("local[*]")
-                .config("spark.sql.warehouse.dir", "file///:G:/Projects/Java/Spark/spark-warehouse")
-                .getOrCreate();
-
-        // 屏蔽spark的INFO日志
-        Logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
-        Logger.getLogger("org.apache.hadoop").setLevel(Level.ERROR);
-        Logger.getLogger("org.apache.zookeeper").setLevel(Level.WARN);
-        Logger.getLogger("org.apache.hive").setLevel(Level.WARN);
-        SparkSession.builder().getOrCreate().sparkContext().setLogLevel("WARN");
-    }
-
 
     /**
      * 加载模型

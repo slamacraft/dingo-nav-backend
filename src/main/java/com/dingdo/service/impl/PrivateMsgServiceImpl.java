@@ -1,6 +1,5 @@
 package com.dingdo.service.impl;
 
-import com.dingdo.Component.MsgTypeComponent;
 import com.dingdo.extendService.musicService.impl.MusicServiceImpl;
 import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.model.msgFromMirai.ReqMsg;

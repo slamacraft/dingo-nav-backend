@@ -1,5 +1,6 @@
 package com.dingdo.Component.classifier;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dingdo.common.exception.ClassifierInitializeException;
 import com.dingdo.enums.ClassicEnum;
 import com.dingdo.util.FileUtil;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class NaiveBayesClassifierComponent
@@ -54,6 +56,7 @@ public class NaiveBayesClassifierComponent
 
     /**
      * 测试方法
+     *
      * @throws Exception
      */
     public void test() throws Exception {
@@ -74,16 +77,21 @@ public class NaiveBayesClassifierComponent
         }
         initVocabulary();
         // 如果模型加载路径不为空，则优先加载模型
-//        if (StringUtils.isNotBlank(modelLoadPath)) {
-//            try {
-//                this.load(modelLoadPath);
-//                return;
-//            }
-//            // 模型加载失败，重新准备训练数据进行训练
-//            catch (Exception e) {
-//                logger.error("加载模型" + modelLoadPath + "失败" + "，尝试重新训练模型");
-//            }
-//        }
+        if (StringUtils.isNotBlank(modelLoadPath)) {
+            try {
+                this.load(modelLoadPath);
+                String label = FileUtil.loadFile(modelSavePath + "/label.txt");
+                JSONObject jsonObject = JSONObject.parseObject(label);
+                super.predictedLabelMap = ((Map<String, Object>) jsonObject).entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(item -> Double.valueOf(item.getKey()), item -> item.getValue()));
+                return;
+            }
+            // 模型加载失败，重新准备训练数据进行训练
+            catch (Exception e) {
+                logger.error("加载模型" + modelLoadPath + "失败" + "，尝试重新训练模型");
+            }
+        }
         File trainDataFile = new File(trainDataPath);
         if (!trainDataFile.exists() || StringUtils.isBlank(FileUtil.loadFile(trainDataPath))) {
             trainDataFile.createNewFile();
@@ -94,6 +102,11 @@ public class NaiveBayesClassifierComponent
 
         fit(data);
         saveOrOverwrite(modelSavePath);
+
+        Map<String, Object> toSaveLabelMap = super.predictedLabelMap.entrySet()
+                .stream()
+                .collect(Collectors.toMap(item -> String.valueOf(item.getKey()), item -> item.getValue()));
+        FileUtil.writeFile(modelSavePath + "/label.txt", new JSONObject(toSaveLabelMap).toJSONString());
 
         logger.warn("朴素贝叶斯模型初始化完成");
     }

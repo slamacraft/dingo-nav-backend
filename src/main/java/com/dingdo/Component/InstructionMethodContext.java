@@ -8,6 +8,7 @@ import com.dingdo.common.aspect.VerifiAspect;
 import com.dingdo.common.exception.CheckException;
 
 import com.dingdo.dao.RobotManagerDao;
+import com.dingdo.entities.RobotManagerEntity;
 import com.dingdo.enums.ClassicEnum;
 import com.dingdo.extendService.MsgExtendService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
@@ -78,6 +79,7 @@ public class InstructionMethodContext {
         }
     }
 
+
     /**
      * 初始化容器
      * 这里主要将含有@Instruction注解的方法以及所在的实例保存至本地Map中
@@ -93,12 +95,9 @@ public class InstructionMethodContext {
                 // 正确的方式是使用注解工具在目标对象上查找注解
                 Instruction annotation = AnnotationUtils.findAnnotation(method, Instruction.class);
                 if (annotation != null) {
-                    String name = annotation.name();
                     String description = annotation.description();
                     String errorMsg = annotation.errorMsg();
-                    methodMap.put(name, method);
                     methodMap.put(description, method);
-                    beanMap.put(name, bean);
                     beanMap.put(description, bean);
                     errorMsgMap.put(method, errorMsg);
                 }
@@ -115,17 +114,22 @@ public class InstructionMethodContext {
      * @param params
      * @return
      */
-    @Instruction(name = "help", description = "菜单", inMenu = false)
+    @Instruction(description = "菜单", inMenu = false)
     public String help(ReqMsg reqMsg, Map<String, String> params) {
         StringBuffer result = new StringBuffer();
         List<Method> methodList = methodMap.values().stream().distinct().collect(Collectors.toList());
+
+        RobotManagerEntity robotManager = verifiAspect.getRobotManager(reqMsg.getUserId());
+
         int index = 1;
         for (int i = 0; i < methodList.size(); i++) {
             Method method = methodList.get(i);
             VerifiAnnotation verifiAnnotation = AnnotationUtils.findAnnotation(method, VerifiAnnotation.class);
-            if (verifiAnnotation != null && !verifiAspect.checkVerification(reqMsg, verifiAnnotation.level())) {
+
+            if (verifiAnnotation != null && !verifiAspect.checkVerification(reqMsg, verifiAnnotation.level(), robotManager)) {
                 continue;
             }
+
             Instruction instruction = AnnotationUtils.findAnnotation(method, Instruction.class);
             if (instruction.inMenu()) {
                 result.append(index + "、" + instruction.description() + "\n");
@@ -147,24 +151,6 @@ public class InstructionMethodContext {
         return result.toString();
     }
 
-    @VerifiAnnotation
-    @Instruction(name = "manager", description = "管理员", inMenu = false)
-    public String manager(ReqMsg reqMsg, Map<String, String> params) {
-        StringBuffer result = new StringBuffer();
-        List<Method> methodList = methodMap.values().stream().distinct().collect(Collectors.toList());
-        int index = 1;
-        for (int i = 0; i < methodList.size(); i++) {
-            Method method = methodList.get(i);
-            VerifiAnnotation verifiAnnotation = AnnotationUtils.findAnnotation(method, VerifiAnnotation.class);
-            if (verifiAnnotation == null) {
-                continue;
-            }
-            Instruction instruction = AnnotationUtils.findAnnotation(method, Instruction.class);
-            result.append(index + "、" + instruction.description() + "\n");
-            index++;
-        }
-        return result.toString();
-    }
 
     public Object getBeanByInstruction(String instruction) {
         return this.beanMap.get(instruction);

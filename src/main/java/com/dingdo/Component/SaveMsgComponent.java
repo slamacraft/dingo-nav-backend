@@ -11,10 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -50,7 +47,7 @@ public class SaveMsgComponent {
     }
 
     @VerifiAnnotation(level = VerificationEnum.DEVELOPER)
-    @Instruction(name = "setMsgListSize", description = "设置消息缓存大小",
+    @Instruction(description = "设置消息缓存大小",
             errorMsg = "设置错误，指令的参数格式为:\n消息列表大小=【数字】")
     public String setMsgListSize(ReqMsg reqMsg, Map<String, String> params) {
         String resultMsg = "设置成功";
@@ -77,8 +74,8 @@ public class SaveMsgComponent {
         @Override
         public void run() {
             String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            FileUtil.saveMsgToFile(groupId + " " + today + ".txt",
-                    msgList.toString().replaceAll("(\\[],)", ""));
+            String toWriteString = Arrays.stream(msgList).reduce((item1, item2) -> item1 + item2).get();
+            FileUtil.saveMsgToFile(groupId + " " + today + ".txt", toWriteString);
         }
     }
 

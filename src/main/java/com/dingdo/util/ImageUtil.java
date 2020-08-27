@@ -1,6 +1,5 @@
 package com.dingdo.util;
 
-import com.simbot.component.mirai.ImageCache;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;

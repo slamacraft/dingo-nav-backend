@@ -4,30 +4,24 @@ import com.dingdo.Component.TaskRegister;
 import com.dingdo.Schedule.SchedulingRunnable;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
+import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.ScheduledService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.dingdo.service.impl.GroupMsgServiceImpl;
 import com.dingdo.service.impl.PrivateMsgServiceImpl;
 import com.dingdo.util.InstructionUtils;
 import com.dingdo.util.NLPUtils;
-import com.forte.qqrobot.beans.messages.result.inner.GroupMember;
-import com.forte.qqrobot.bot.BotManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class ScheduledServiceImpl implements ScheduledService {
 
     @Autowired
     private TaskRegister taskRegister;
-
-    @Autowired
-    private BotManager botManager;
 
     /**
      * 添加定时提醒
@@ -37,8 +31,8 @@ public class ScheduledServiceImpl implements ScheduledService {
      * @return
      */
     @Override
-    @VerifiAnnotation
-    @Instruction(name = "addRemindTask", description = "设置提醒")
+    @VerifiAnnotation(level = VerificationEnum.FRIEND)
+    @Instruction(description = "设置提醒")
     public String addRemindTask(ReqMsg reqMsg, Map<String, String> params) {
         String cron = InstructionUtils.getParamValue(params, "cron", "表达式");
         String time = InstructionUtils.getParamValue(params, "time", "时间");
@@ -63,6 +57,7 @@ public class ScheduledServiceImpl implements ScheduledService {
         return "设置成功！\n" + "你可以使用‘移除提醒’命令关闭定时提醒";
     }
 
+
     /**
      * 移除定时提醒
      *
@@ -71,7 +66,7 @@ public class ScheduledServiceImpl implements ScheduledService {
      * @return
      */
     @Override
-    @Instruction(name = "removeRemindTask", description = "移除提醒", inMenu = false)
+    @Instruction(description = "移除提醒", inMenu = false)
     public String removeRemindTask(ReqMsg reqMsg, Map<String, String> params) {
         String message = InstructionUtils.getParamValue(params, "message", "提醒消息");
         if (StringUtils.isBlank(message)) {

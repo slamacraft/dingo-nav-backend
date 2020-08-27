@@ -40,7 +40,4 @@ public class PrivateMsgListener extends MsgListener{
 //        sender.reply(msg, msg.getMsg(), false);
     }
 
-
-
-
 }
