@@ -3,12 +3,12 @@ package com.dingdo.Component;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dingdo.Component.componentBean.MonitorInfoBean;
-import com.dingdo.Schedule.SchedulingRunnable;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.RedisEnum;
-
 import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.schedule.SystemTaskInfo;
+import com.dingdo.schedule.component.TaskRegister;
 import com.dingdo.util.InstructionUtils;
 import com.sun.management.OperatingSystemMXBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +54,14 @@ public class SystemListenComponent {
             errorMsg = "设置错误，指令的参数格式为:\n" + "时间间隔=【数字】")
     public String setUpdateSysInfoTime(ReqMsg reqMsg, Map<String, String> params) {
         int time = InstructionUtils.getParamValueOfInteger(params, "time", "时间间隔") * 1000;
-        SchedulingRunnable task = new SchedulingRunnable(SystemListenComponent.class,
-                    "updateSysInfo");
-        taskRegister.addCronTask(task, time, 0);
+//        SchedulingRunnable task = new SchedulingRunnable(SystemListenComponent.class,
+//                    "updateSysInfo");
+//        taskRegister.addCronTask(task, time, 0);
+        SystemTaskInfo systemTaskInfo = new SystemTaskInfo("设置更新系统信息间隔",
+                SystemListenComponent.class,
+                "updateSysInfo",
+                "0 0/" + time + " * * * ?");
+        taskRegister.addCronTask(systemTaskInfo);
         return "设置系统信息更新时间成功！";
     }
 

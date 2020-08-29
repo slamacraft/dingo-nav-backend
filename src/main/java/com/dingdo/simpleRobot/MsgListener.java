@@ -1,7 +1,7 @@
 package com.dingdo.simpleRobot;
 
 import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.dingdo.service.MsgService;
+import com.dingdo.msgHandler.service.MsgService;
 import com.dingdo.util.SpringContextUtils;
 
 /**

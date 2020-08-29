@@ -1,6 +1,5 @@
 package com.dingdo.Component;
 
-import com.dingdo.extendService.knowledgeService.impl.SearchServiceImpl;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import org.apache.log4j.Level;
@@ -12,7 +11,7 @@ import javax.annotation.PostConstruct;
 @Component
 public class WebClientComponent {
 
-    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SearchServiceImpl.class);
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(WebClientComponent.class);
 
     private WebClient webClient = new WebClient(BrowserVersion.CHROME);
 

@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  * @date: 2020/8/10 15:12
  * @since JDK 1.8
  */
-@MapperScan(value = "com.dingdo.dao")
+@MapperScan(basePackages = {"com.dingdo.dao", "com.dingdo.**.dao"})
 @EnableScheduling
 @SpringBootApplication
 @EnableWebMvc

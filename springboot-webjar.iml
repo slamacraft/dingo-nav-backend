@@ -25,7 +25,7 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: love.forte.simple-robot-component:component-mirai:1.6.0-1.16" level="project" />
+    <orderEntry type="library" name="Maven: love.forte.simple-robot-component:component-mirai:1.8.0-1.16" level="project" />
     <orderEntry type="library" name="Maven: io.github.ForteScarlet:simple-robot-core:1.16.3" level="project" />
     <orderEntry type="library" name="Maven: org.quartz-scheduler:quartz:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: com.mchange:mchange-commons-java:0.2.15" level="project" />

@@ -4,7 +4,7 @@ import com.dingdo.common.annotation.Instruction;
 import com.dingdo.dao.UserTomatoDao;
 import com.dingdo.entities.UserTomatoEntity;
 import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.dingdo.service.PrivateMsgService;
+import com.dingdo.msgHandler.service.PrivateMsgService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

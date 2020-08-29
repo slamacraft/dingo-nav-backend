@@ -2,7 +2,7 @@ package com.dingdo.extendService.otherService.impl;
 
 import com.dingdo.extendService.otherService.SpecialReplyService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.dingdo.service.impl.GroupMsgServiceImpl;
+import com.dingdo.msgHandler.service.impl.GroupMsgServiceImpl;
 import com.dingdo.util.FileUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;

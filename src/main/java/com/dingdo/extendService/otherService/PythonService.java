@@ -1,7 +1,5 @@
 package com.dingdo.extendService.otherService;
 
-import com.dingdo.model.params.VocabularyInfo;
-
 import java.awt.image.BufferedImage;
 
 public interface PythonService {
@@ -14,11 +12,4 @@ public interface PythonService {
      * @error 返回null
      */
     BufferedImage doWDSR(String imagePath);
-
-    /**
-     * 获取词典表信息
-     * @return
-     */
-    @Deprecated
-    VocabularyInfo getVocabularyInfo();
 }

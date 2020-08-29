@@ -1,7 +1,6 @@
 package com.dingdo.controller;
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.dingdo.service.MsgService;
+import com.dingdo.msgHandler.service.MsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

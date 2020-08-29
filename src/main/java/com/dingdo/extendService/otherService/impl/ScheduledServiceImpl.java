@@ -1,14 +1,15 @@
 package com.dingdo.extendService.otherService.impl;
 
-import com.dingdo.Component.TaskRegister;
-import com.dingdo.Schedule.SchedulingRunnable;
+import com.dingdo.schedule.component.TaskRegister;
+import com.dingdo.schedule.GroupMsgTaskInfo;
+import com.dingdo.schedule.interfacor.ITaskInfo;
+import com.dingdo.schedule.interfacor.ITaskList;
+import com.dingdo.schedule.PrivateMsgTaskInfo;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.ScheduledService;
 import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.dingdo.service.impl.GroupMsgServiceImpl;
-import com.dingdo.service.impl.PrivateMsgServiceImpl;
 import com.dingdo.util.InstructionUtils;
 import com.dingdo.util.NLPUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +23,7 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     @Autowired
     private TaskRegister taskRegister;
+
 
     /**
      * 添加定时提醒
@@ -51,10 +53,29 @@ public class ScheduledServiceImpl implements ScheduledService {
             message = "(｡･∀･)ﾉﾞ嗨，到点了";
         }
 
-        SchedulingRunnable task = this.getRemindRunnable(reqMsg, message);
+        ITaskInfo task = this.getRemindRunnable(reqMsg, message, cron);
 
-        taskRegister.addCronTask(task, cron);
+        taskRegister.addCronTaskAndSave(task);
         return "设置成功！\n" + "你可以使用‘移除提醒’命令关闭定时提醒";
+    }
+
+
+    /**
+     * 查看当前私聊/群聊窗口设置的定时提醒
+     *
+     * @param reqMsg
+     * @param params
+     * @return
+     */
+    @Instruction(description = "查看定时提醒")
+    public String getAllSchedulingTask(ReqMsg reqMsg, Map<String, String> params) {
+        ITaskInfo task = this.getRemindRunnable(reqMsg, null, null);
+        ITaskList taskList = taskRegister.getTaskList(task);
+        String result = taskList.toString();
+        if (StringUtils.isBlank(result)) {
+            return "很抱歉，你还没有设置定时任务";
+        }
+        return result;
     }
 
 
@@ -66,15 +87,13 @@ public class ScheduledServiceImpl implements ScheduledService {
      * @return
      */
     @Override
-    @Instruction(description = "移除提醒", inMenu = false)
+    @Instruction(description = "移除提醒", inMenu = false,
+            errorMsg = "指令规则：\n" + "序号=【数字】")
     public String removeRemindTask(ReqMsg reqMsg, Map<String, String> params) {
-        String message = InstructionUtils.getParamValue(params, "message", "提醒消息");
-        if (StringUtils.isBlank(message)) {
-            message = "(｡･∀･)ﾉﾞ嗨，到点了";
-        }
+        int index = InstructionUtils.getParamValueOfInteger(params, "id", "序号");
 
-        SchedulingRunnable task = this.getRemindRunnable(reqMsg, message);
-        boolean flag = taskRegister.removeCronTask(task);
+        ITaskInfo task = this.getRemindRunnable(reqMsg, null, null);
+        boolean flag = taskRegister.removeCronTaskAndSave(task, index - 1);
         if (flag) {
             return "移除定时提醒成功";
         } else {
@@ -89,16 +108,14 @@ public class ScheduledServiceImpl implements ScheduledService {
      * @param message
      * @return
      */
-    private SchedulingRunnable getRemindRunnable(ReqMsg reqMsg, String message) {
-        SchedulingRunnable task = null;
+    private ITaskInfo getRemindRunnable(ReqMsg reqMsg, String message, String cron) {
+        String taskName = "定时提醒";
+
+        ITaskInfo task = null;
         if (reqMsg.getMessageType().equals("private")) {
-            task = new SchedulingRunnable(PrivateMsgServiceImpl.class,
-                    "sendPrivateMsg",
-                    reqMsg.getSelfId(), reqMsg.getUserId(), message);
+            task = new PrivateMsgTaskInfo(reqMsg, taskName, cron, message);
         } else if (reqMsg.getMessageType().equals("group")) {
-            task = new SchedulingRunnable(GroupMsgServiceImpl.class,
-                    "sendGroupMsg",
-                    reqMsg.getSelfId(), reqMsg.getGroupId(), message);
+            task = new GroupMsgTaskInfo(reqMsg, taskName, cron, message);
         }
 
         return task;
