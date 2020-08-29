@@ -137,6 +137,9 @@ public class InstructionUtils {
         }
         String[] argsList = Arrays.copyOfRange(args, 1, args.length);
         for (String arg : argsList) {
+            if(StringUtils.isBlank(arg)){
+                continue;
+            }
             String[] split = arg.split("=");
             argsMap.put(split[0].trim(), split[1].trim());
         }

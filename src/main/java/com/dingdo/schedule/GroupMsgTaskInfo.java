@@ -46,6 +46,7 @@ public class GroupMsgTaskInfo implements IGroupTaskInfo, IScheduledRunnable {
     public GroupMsgTaskInfo(MessageTaskEntity entity) {
         this.botId = entity.getBotId();
         this.taskName = entity.getTaskName();
+        this.groupId = entity.getTargetId();
         this.creatorId = entity.getCreateBy();
         this.createTime = entity.getCreateTime();
         this.message = entity.getMessage();
