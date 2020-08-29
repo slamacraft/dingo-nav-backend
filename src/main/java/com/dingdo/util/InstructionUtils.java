@@ -1,5 +1,6 @@
 package com.dingdo.util;
 
+import cn.hutool.core.util.CharUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class InstructionUtils {
 //                }
 //                break;
                 case 1: {
-                    if (chars[i] != ' ' && chars[i] != '=') { // 数字/字符，转移到状态2
+                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，转移到状态2
                         status = 2;
                     } else {
                         status = 9; // 直接失败
@@ -45,7 +46,7 @@ public class InstructionUtils {
                     if (chars[i] == '=') {    // 输入=号，直接失败
                         status = 9;
                     }
-                    if (chars[i] == ' ') { // 空格字符，转移到状态3
+                    if (CharUtil.isBlankChar(chars[i])) { // 空格字符，转移到状态3
                         status = 3;
                     }
                 }
@@ -54,7 +55,7 @@ public class InstructionUtils {
                     if (chars[i] == '=') {    // 输入=号，直接失败
                         status = 9;
                     }
-                    if (chars[i] != ' ' && chars[i] != '=') { // 数字/字符，转移到状态4
+                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，转移到状态4
                         status = 4;
                     }
                 }
@@ -63,13 +64,13 @@ public class InstructionUtils {
                     if (chars[i] == '=') {    // 输入=号，转移到状态6
                         status = 6;
                     }
-                    if (chars[i] == ' ') { // 空格，转移到状态5
+                    if (CharUtil.isBlankChar(chars[i])) { // 空格，转移到状态5
                         status = 5;
                     }
                 }
                 break;
                 case 5: {
-                    if (chars[i] != ' ' && chars[i] != '=') { // 数字/字符，直接失败
+                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，直接失败
                         status = 9;
                     }
                     if (chars[i] == '=') {    // 输入=号，转移到状态6
@@ -81,10 +82,10 @@ public class InstructionUtils {
                     if (chars[i] == '=') {    // 输入=号，直接失败
                         status = 9;
                     }
-                    if (chars[i] == ' ') {    // 空格，转移到状态8
+                    if (CharUtil.isBlankChar(chars[i])) {    // 空格，转移到状态8
                         status = 7;
                     }
-                    if (chars[i] != ' ' && chars[i] != '=') { // 数字/字符，转移到状态8
+                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，转移到状态8
                         status = 2;
                     }
                 }
@@ -93,7 +94,7 @@ public class InstructionUtils {
                     if (chars[i] == '=') {    // 输入=号，直接失败
                         status = 9;
                     }
-                    if (chars[i] != ' ' && chars[i] != '=') { // 数字/字符，转移到状态8
+                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，转移到状态8
                         status = 2;
                     }
                 }

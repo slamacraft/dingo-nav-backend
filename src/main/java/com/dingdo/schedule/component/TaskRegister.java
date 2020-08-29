@@ -36,9 +36,6 @@ public class TaskRegister<TaskList extends ITaskList, TaskInfo extends ITaskInfo
     @Autowired
     private TaskFactory taskFactory;
 
-    @Autowired(required = false)
-    private MessageTaskMapper messageTaskMapper;
-
     @Autowired
     private MessageTaskService messageTaskService;
 

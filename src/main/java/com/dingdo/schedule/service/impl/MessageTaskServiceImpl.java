@@ -66,7 +66,7 @@ public class MessageTaskServiceImpl extends ServiceImpl<MessageTaskMapper, Messa
         MessageTaskEntity result = new MessageTaskEntity();
         if (taskInfo instanceof PrivateMsgTaskInfo) {
             return createEntityByPrivateTaskInfo(taskInfo);
-        } else if (taskInfo instanceof PrivateMsgTaskInfo) {
+        } else if (taskInfo instanceof GroupMsgTaskInfo) {
             return createEntityByGroupTaskInfo(taskInfo);
         }
         return null;
