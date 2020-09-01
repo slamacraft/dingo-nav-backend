@@ -15,16 +15,13 @@ import com.dingdo.util.SpringContextUtils;
 public class MsgListener {
 
     private static class MsgServiceInitalizer {
-        private static MsgService msgService;
-
-        static {
-            while (msgService == null){
-                msgService = (MsgService) SpringContextUtils.getBean(MsgService.class);
-            }
-        }
+        private static MsgService msgService = SpringContextUtils.getBean(MsgService.class);
     }
 
     public String getReplyFromRobot(ReqMsg reqMsg) {
+        if(MsgServiceInitalizer.msgService == null){
+            MsgServiceInitalizer.msgService = SpringContextUtils.getBean(MsgService.class);
+        }
         return MsgServiceInitalizer.msgService.handleMsg(reqMsg);
     }
 
