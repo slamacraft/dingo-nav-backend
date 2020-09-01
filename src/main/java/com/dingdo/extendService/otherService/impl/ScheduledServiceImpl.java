@@ -71,11 +71,10 @@ public class ScheduledServiceImpl implements ScheduledService {
     public String getAllSchedulingTask(ReqMsg reqMsg, Map<String, String> params) {
         ITaskInfo task = this.getRemindRunnable(reqMsg, null, null);
         ITaskList taskList = taskRegister.getTaskList(task);
-        String result = taskList.toString();
-        if (StringUtils.isBlank(result)) {
+        if (taskList == null || StringUtils.isBlank(taskList.toString())) {
             return "很抱歉，你还没有设置定时任务";
         }
-        return result;
+        return taskList.toString();
     }
 
 
