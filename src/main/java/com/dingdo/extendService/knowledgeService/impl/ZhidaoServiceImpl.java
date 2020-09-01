@@ -3,9 +3,8 @@ package com.dingdo.extendService.knowledgeService.impl;
 import com.dingdo.Component.WebClientComponent;
 import com.dingdo.enums.UrlEnum;
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.extendService.knowledgeService.ZhidaoService;
-import com.dingdo.model.msgFromMirai.ReqMsg;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HTMLParser;

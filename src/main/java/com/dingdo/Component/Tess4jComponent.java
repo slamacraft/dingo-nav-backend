@@ -6,7 +6,7 @@ import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.otherService.PythonService;
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.util.ImageUtil;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

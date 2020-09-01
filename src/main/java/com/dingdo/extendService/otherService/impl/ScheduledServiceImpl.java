@@ -9,7 +9,7 @@ import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.ScheduledService;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.util.InstructionUtils;
 import com.dingdo.util.NLPUtils;
 import org.apache.commons.lang3.StringUtils;

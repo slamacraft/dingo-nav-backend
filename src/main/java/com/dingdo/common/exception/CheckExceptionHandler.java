@@ -1,6 +1,5 @@
 package com.dingdo.common.exception;
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

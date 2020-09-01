@@ -1,7 +1,7 @@
 package com.dingdo.msgHandler.service.impl;
 
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.DissucsMsgService;
 import org.springframework.stereotype.Service;
 

@@ -6,7 +6,7 @@ import com.dingdo.common.exception.CheckException;
 import com.dingdo.dao.RobotManagerDao;
 import com.dingdo.entities.RobotManagerEntity;
 import com.dingdo.enums.VerificationEnum;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.forte.qqrobot.beans.messages.result.inner.Friend;
 import com.forte.qqrobot.beans.messages.result.inner.GroupMember;
 import com.forte.qqrobot.bot.BotManager;

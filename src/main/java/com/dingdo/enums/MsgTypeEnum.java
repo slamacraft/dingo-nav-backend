@@ -1,16 +1,11 @@
 package com.dingdo.enums;
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.forte.qqrobot.beans.messages.NickOrRemark;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.forte.qqrobot.beans.messages.NicknameAble;
 import com.forte.qqrobot.beans.messages.RemarkAble;
 import com.forte.qqrobot.beans.messages.msgget.GroupMsg;
 import com.forte.qqrobot.beans.messages.msgget.MsgGet;
 import com.forte.qqrobot.beans.messages.msgget.PrivateMsg;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 一些声明信息

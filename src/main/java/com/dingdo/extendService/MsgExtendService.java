@@ -1,8 +1,7 @@
 package com.dingdo.extendService;
 
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 
 /**
  * 功能服务接口

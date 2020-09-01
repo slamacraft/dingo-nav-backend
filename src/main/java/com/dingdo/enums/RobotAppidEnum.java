@@ -1,7 +1,7 @@
 package com.dingdo.enums;
 
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;

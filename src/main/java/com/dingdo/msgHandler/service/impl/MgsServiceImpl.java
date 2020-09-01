@@ -3,7 +3,7 @@ package com.dingdo.msgHandler.service.impl;
 import com.dingdo.Component.InstructionMethodContext;
 import com.dingdo.Component.SaveMsgComponent;
 import com.dingdo.Component.Tess4jComponent;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.MsgHandleService;
 import com.dingdo.msgHandler.service.MsgService;
 import com.dingdo.util.InstructionUtils;
@@ -41,6 +41,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
         return null;
     }
 
+
     @Override
     public String handleMsg(ReqMsg reqMsg) {
         // 消息预处理
@@ -54,6 +55,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
         return msgMap.get(reqMsg.getMessageType())
                 .handleMsg(reqMsg);
     }
+
 
     /**
      * 提取图中文字，保留中文
@@ -71,6 +73,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
         reqMsg.setRawMessage(reqMsg.getMessage().replaceAll("\\[CQ:.*?\\]", ""));
     }
 
+
     /**
      * 通过组件存储文本消息
      *
@@ -83,6 +86,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
                     reqMsg.getMessage().replaceAll("\\[CQ:.*?\\]", ""), reqMsg.getGroupId());
         }
     }
+
 
     /**
      * 指令处理方法
@@ -98,6 +102,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
         return "未知异常";
     }
 
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Map<String, MsgHandleService> beansOfType = applicationContext.getBeansOfType(MsgHandleService.class);
@@ -110,6 +115,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
             msgMap.put(msgType, item);
         }
     }
+
 
     /**
      * 由service实例的名称获取service类型的名称

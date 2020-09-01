@@ -135,12 +135,12 @@ public class InstructionUtils {
         if (args.length < 2) {
             return argsMap;
         }
-        String[] argsList = Arrays.copyOfRange(args, 1, args.length);
-        for (String arg : argsList) {
-            if(StringUtils.isBlank(arg)){
+
+        for (int i = 1; i < args.length; i++) {
+            if (StringUtils.isBlank(args[i])) {
                 continue;
             }
-            String[] split = arg.split("=");
+            String[] split = args[i].split("=");
             argsMap.put(split[0].trim(), split[1].trim());
         }
         return argsMap;

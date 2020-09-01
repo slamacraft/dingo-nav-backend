@@ -1,6 +1,6 @@
 package com.dingdo.msgHandler.service;
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 
 /**
  * 群消息处理接口

@@ -3,8 +3,7 @@ package com.dingdo.extendService.knowledgeService.impl;
 import com.dingdo.Component.WebClientComponent;
 import com.dingdo.extendService.knowledgeService.SougoService;
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.jsoup.Jsoup;
@@ -17,8 +16,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class SougoServiceImpl implements SougoService {

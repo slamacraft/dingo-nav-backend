@@ -1,7 +1,7 @@
 package com.dingdo.extendService.otherService;
 
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 
 import java.util.Map;
 

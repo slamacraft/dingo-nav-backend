@@ -6,7 +6,7 @@
 //import com.dingdo.enums.UrlEnum;
 //import com.dingdo.extendService.musicService.MusicService;
 //import com.dingdo.model.msgFromCQ.SearchMsg;
-//import com.dingdo.model.msgFromMirai.ReqMsg;
+//import com.dingdo.msgHandler.model.ReqMsg;
 //import com.dingdo.model.musicFromQQ.MusicQQ;
 //import com.dingdo.model.musicFromQQ.SongQQ;
 //import com.dingdo.util.PinyinUtil;

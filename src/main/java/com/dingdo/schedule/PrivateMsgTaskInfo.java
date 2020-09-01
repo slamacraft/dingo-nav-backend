@@ -1,7 +1,7 @@
 package com.dingdo.schedule;
 
 import com.dingdo.Component.InstructionMethodContext;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.schedule.entities.MessageTaskEntity;
 import com.dingdo.schedule.interfacor.IPrivateTaskInfo;
 import com.dingdo.schedule.interfacor.IScheduledRunnable;

@@ -1,4 +1,4 @@
-package com.dingdo.model.msgFromMirai;
+package com.dingdo.msgHandler.model;
 
 import com.dingdo.enums.MsgTypeEnum;
 import lombok.Data;

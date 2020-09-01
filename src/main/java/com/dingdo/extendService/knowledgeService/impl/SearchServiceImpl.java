@@ -3,7 +3,7 @@
 //import com.dingdo.enums.UrlEnum;
 //import com.dingdo.extendService.knowledgeService.SearchService;
 //import com.dingdo.model.msgFromCQ.SearchMsg;
-//import com.dingdo.model.msgFromMirai.ReqMsg;
+//import com.dingdo.msgHandler.model.ReqMsg;
 //import com.dingdo.util.NLPUtils;
 //import com.hankcs.hanlp.seg.common.Term;
 //import org.apache.commons.collections4.CollectionUtils;

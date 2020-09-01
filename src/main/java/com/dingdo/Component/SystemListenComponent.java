@@ -6,7 +6,7 @@ import com.dingdo.Component.componentBean.MonitorInfoBean;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.RedisEnum;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.schedule.SystemTaskInfo;
 import com.dingdo.schedule.component.TaskRegister;
 import com.dingdo.util.InstructionUtils;

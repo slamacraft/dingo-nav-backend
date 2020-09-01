@@ -1,12 +1,10 @@
 package com.dingdo.simpleRobot;
 
-import com.dingdo.model.msgFromMirai.ReqMsg;
-import com.forte.qqrobot.BotRuntime;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.forte.qqrobot.anno.Listen;
 import com.forte.qqrobot.beans.messages.msgget.GroupMsg;
 import com.forte.qqrobot.beans.messages.types.MsgGetTypes;
 import com.forte.qqrobot.sender.MsgSender;
-import com.simplerobot.modules.utils.KQCodeUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**

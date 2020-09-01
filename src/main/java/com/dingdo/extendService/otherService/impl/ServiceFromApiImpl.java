@@ -5,7 +5,7 @@ import com.dingdo.enums.RobotAppidEnum;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.model.MsgFromSiZhi.ChatMsg;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;

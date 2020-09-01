@@ -1,30 +1,24 @@
 package com.dingdo.Component;
 
 import com.dingdo.Component.classifier.NaiveBayesClassifierComponent;
-import com.dingdo.Component.classifier.NaiveBayesComponent;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.common.aspect.VerifiAspect;
 import com.dingdo.common.exception.CheckException;
 
-import com.dingdo.dao.RobotManagerDao;
 import com.dingdo.entities.RobotManagerEntity;
 import com.dingdo.enums.ClassicEnum;
 import com.dingdo.extendService.MsgExtendService;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.util.InstructionUtils;
-import com.forte.qqrobot.bot.BotManager;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;

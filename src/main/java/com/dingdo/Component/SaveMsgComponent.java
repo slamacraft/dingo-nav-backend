@@ -3,7 +3,7 @@ package com.dingdo.Component;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.VerificationEnum;
-import com.dingdo.model.msgFromMirai.ReqMsg;
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.util.FileUtil;
 import com.dingdo.util.InstructionUtils;
 import org.apache.commons.collections4.CollectionUtils;

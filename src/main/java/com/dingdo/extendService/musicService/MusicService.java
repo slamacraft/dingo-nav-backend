@@ -2,7 +2,7 @@
 //
 //import com.dingdo.extendService.MsgExtendService;
 //
-//import com.dingdo.model.msgFromMirai.ReqMsg;
+//import com.dingdo.msgHandler.model.ReqMsg;
 //
 ///**
 // * 点歌服务接口
