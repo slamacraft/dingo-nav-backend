@@ -1,5 +1,6 @@
 package com.dingdo.msgHandler.service.impl;
 
+import com.dingdo.Component.SaveMsgComponent;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.extendService.otherService.ServiceFromApi;
@@ -10,6 +11,7 @@ import com.dingdo.util.CQCodeUtil;
 import com.dingdo.util.InstructionUtils;
 import com.forte.qqrobot.bot.BotManager;
 import com.forte.qqrobot.bot.BotSender;
+import org.apache.pdfbox.contentstream.operator.state.Save;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class GroupMsgServiceImpl implements GroupMsgService {
 
     @Autowired
     private SpecialReplyService specialReplyService;
+
+    @Autowired
+    private SaveMsgComponent saveMsgComponent;
 
     // 在不at的情况下，机器人对群消息产生响应的几率，默认是0
     private int RANDOM_RATIO = 0;
@@ -58,7 +63,8 @@ public class GroupMsgServiceImpl implements GroupMsgService {
 
     @Override
     public String handleGroupMsg(ReqMsg reqMsg) {
-        String msg = reqMsg.getRawMessage();
+        // 存储群消息
+        saveMsgComponent.saveGroupMsg(reqMsg.getRawMessage(), reqMsg.getGroupId());
 
         /* ===========================复读模块============================ */
         specialReplyService.rereadGroupMsg(reqMsg);

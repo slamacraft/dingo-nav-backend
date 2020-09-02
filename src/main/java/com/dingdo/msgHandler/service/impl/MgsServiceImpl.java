@@ -3,9 +3,12 @@ package com.dingdo.msgHandler.service.impl;
 import com.dingdo.Component.InstructionMethodContext;
 import com.dingdo.Component.SaveMsgComponent;
 import com.dingdo.Component.Tess4jComponent;
+import com.dingdo.msgHandler.factory.CQCodeFactory;
+import com.dingdo.msgHandler.model.CQCode;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.MsgHandleService;
 import com.dingdo.msgHandler.service.MsgService;
+import com.dingdo.util.CQCodeUtil;
 import com.dingdo.util.InstructionUtils;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,8 +35,6 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
     @Autowired
     private Tess4jComponent tess4jComponent;
     @Autowired
-    private SaveMsgComponent saveMsgComponent;
-    @Autowired
     private InstructionMethodContext instructionMethodContext;
 
     @Override
@@ -44,16 +45,27 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
 
     @Override
     public String handleMsg(ReqMsg reqMsg) {
-        // 消息预处理
+        this.extractCQCode(reqMsg);
         this.msgOCR(reqMsg);    // 识别图中文字
-        this.saveMsg(reqMsg);   // 存储群消息
         if (InstructionUtils.DFA(reqMsg.getRawMessage())) {    // 使用DFA确定是否属于指令格式
             return this.instructionHandle(reqMsg);
         }
 
         // 根据请求的类型不同跳转☞不同的service实例的handleMsg方法处理
-        return msgMap.get(reqMsg.getMessageType())
-                .handleMsg(reqMsg);
+        return msgMap.get(reqMsg.getMessageType()).handleMsg(reqMsg);
+    }
+
+
+    /**
+     * 提取cq码
+     *
+     * @param reqMsg
+     */
+    public void extractCQCode(ReqMsg reqMsg) {
+        String msg = reqMsg.getMessage();
+        List<CQCode> cqCodeList = CQCodeFactory.getCQCodeList(msg);
+        reqMsg.setCqCodeList(cqCodeList);
+        reqMsg.setRawMessage(CQCodeUtil.removeAllCQCode(msg));
     }
 
 
@@ -64,27 +76,8 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
      * @return
      */
     public void msgOCR(ReqMsg reqMsg) {
-        String message = reqMsg.getMessage();
-        if (StringUtils.isNotBlank(message) && message.contains("[CQ:image,")) {
-            String imgChiInfo = tess4jComponent.tessOCR(message);
-            System.out.println("识别图中的文字为:" + imgChiInfo);
-            reqMsg.setRawMessage(message.replaceAll("\\[CQ:image,file=.*?\\]", imgChiInfo));
-        }
-        reqMsg.setRawMessage(reqMsg.getMessage().replaceAll("\\[CQ:.*?\\]", ""));
-    }
-
-
-    /**
-     * 通过组件存储文本消息
-     *
-     * @param reqMsg
-     */
-    public void saveMsg(ReqMsg reqMsg) {
-        // 存储群消息
-        if (reqMsg.getMessageType().equals("group")) {
-            saveMsgComponent.saveGroupMsg(
-                    reqMsg.getMessage().replaceAll("\\[CQ:.*?\\]", ""), reqMsg.getGroupId());
-        }
+        String imgChiInfo = tess4jComponent.tessOCR(reqMsg);
+        reqMsg.setRawMessage(reqMsg.getRawMessage() + imgChiInfo);
     }
 
 

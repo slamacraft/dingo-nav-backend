@@ -3,9 +3,11 @@ package com.dingdo.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
+import com.dingdo.enums.CQCodeEnum;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.otherService.PythonService;
 
+import com.dingdo.msgHandler.model.CQCode;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.util.ImageUtil;
 import net.sourceforge.tess4j.Tesseract;
@@ -27,7 +29,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * tess4j的图像文字提取组件
@@ -66,15 +70,22 @@ public class Tess4jComponent implements ApplicationRunner {
     /**
      * 通过消息CQ码获取图片，然后进行文字提取
      *
-     * @param imgCode
+     * @param reqMsg
      * @return
      */
-    public String tessOCR(String imgCode) {
+    public String tessOCR(ReqMsg reqMsg) {
 //        String imgUrl = imgCode.split("file=")[1].split("]")[0];
 //        String imageSrc = getImageSrc(imgUrl);
-        System.out.println("图片CQ码:" + imgCode);
-        String imgUrl = imgCode.split("url=")[1].split("]")[0];
-        String imgName = imgCode.split("image=")[1].split(",")[0];
+        Map<CQCodeEnum, CQCode> cqCodeMap = reqMsg.getCqCodeList()
+                .stream()
+                .collect(Collectors.toMap(CQCode::getCode, p -> p));
+        CQCode imageCQCode = cqCodeMap.get(CQCodeEnum.IMAGE);
+        if(imageCQCode == null){
+            return "";
+        }
+        System.out.println("图片CQ码:" + imageCQCode);
+        String imgUrl = imageCQCode.getValues().get("url");
+        String imgName = imageCQCode.getValues().get("image");
         // 去除{,},\,.mirai字符
         imgName = imgName.replaceAll("(\\{|\\}|\\\\|\\.mirai)", "");
         String imageSrc = ImageUtil.getImageAndSaveFromURL(imgUrl, imgName);
@@ -98,8 +109,9 @@ public class Tess4jComponent implements ApplicationRunner {
         } catch (TesseractException e) {
             logger.error(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
+
         return result.replaceAll("[^\\u4e00-\\u9fa5]", "");
     }
 
@@ -149,7 +161,7 @@ public class Tess4jComponent implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         initTess4j();
     }
 }

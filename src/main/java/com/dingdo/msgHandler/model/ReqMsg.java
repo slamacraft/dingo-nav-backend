@@ -3,6 +3,8 @@ package com.dingdo.msgHandler.model;
 import com.dingdo.enums.MsgTypeEnum;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 一些声明信息
  *
@@ -55,6 +57,12 @@ public class ReqMsg {
      * 而在上报请求的回复中，message 类型的字段允许接受字符串、消息段数组、单个消息段对象三种类型的数据。
      */
     private String message;
+
+    /**
+     * CQ码ji
+     */
+    private List<CQCode> cqCodeList;
+    
 
     /**
      * 消息内容

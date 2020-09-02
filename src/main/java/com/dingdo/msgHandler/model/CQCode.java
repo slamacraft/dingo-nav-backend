@@ -1,8 +1,6 @@
 package com.dingdo.msgHandler.model;
 
-import com.dingdo.common.exception.CQCodeConstructException;
 import com.dingdo.enums.CQCodeEnum;
-import com.dingdo.util.InstructionUtils;
 import lombok.Data;
 
 import java.util.Map;
@@ -20,15 +18,38 @@ public class CQCode {
 
     // CQ码类型
     private CQCodeEnum code;
+
     // CQ码的变量值
     private Map<String, String> values;
 
-    public CQCode(int index, String cqCode) throws CQCodeConstructException {
-        String[] params = cqCode.replaceAll("\\[CQ:|]", "").split(",");
-        if (params.length < 2) {
-            throw new CQCodeConstructException("提取CQ码失败");
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("[CQ:").append(code.getName());
+
+        for (Map.Entry<String, String> item : values.entrySet()) {
+            result.append(",").append(item.getKey()).append("=").append(item.getValue());
         }
-        this.code = CQCodeEnum.getCQCode(params[0]);
-        this.values = InstructionUtils.analysisInstruction(params);
+
+        return result.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj == null){
+            return false;
+        }
+        if(this == obj){
+            return true;
+        }
+        if(obj instanceof String){
+            return obj.equals(this.code.getName());
+        } else if(obj instanceof CQCode){
+            return ((CQCode) obj).getCode().equals(this.code);
+        } else if(obj instanceof CQCodeEnum){
+            return obj.equals(this.code);
+        }
+        return false;
     }
 }
