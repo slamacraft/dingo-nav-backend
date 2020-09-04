@@ -17,6 +17,7 @@ import com.dingdo.util.InstructionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
@@ -50,6 +51,9 @@ public class InstructionMethodContext {
     private static final Map<Double, MsgExtendService> extendServiceMap = new HashedMap();
     // 短路指令名称
     private Map<String, String> shortenedInstruction = new HashMap<>();
+
+    @Value("${resource.doc.helpPath}")
+    private String helpDocPath;
 
     @Autowired
     public InstructionMethodContext(NaiveBayesClassifierComponent naiveBayesClassifierComponent,
@@ -118,7 +122,7 @@ public class InstructionMethodContext {
      * 初始化帮助菜单
      */
     public void initHelpMenu() {
-        String label = FileUtil.loadFile("D:\\workspace\\springboot-webjar\\target\\help\\help.txt");
+        String label = FileUtil.loadFile(helpDocPath);
         JSONObject jsonObject = JSONObject.parseObject(label);
         this.helpMap = ((Map<String, Object>) jsonObject).entrySet()
                 .stream().collect(Collectors.toMap(item -> item.getKey(), item -> item.getValue().toString()));
