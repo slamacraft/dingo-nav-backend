@@ -1,4 +1,4 @@
-package com.dingdo.model.MsgFromSiZhi;
+package com.dingdo.extendService.model.MsgFromSiZhi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

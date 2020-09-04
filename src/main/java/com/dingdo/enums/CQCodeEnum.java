@@ -1,7 +1,5 @@
 package com.dingdo.enums;
 
-import com.dingdo.msgHandler.model.CQCode;
-
 /**
  * 一些声明信息
  *

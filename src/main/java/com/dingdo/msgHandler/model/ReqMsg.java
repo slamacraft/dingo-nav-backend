@@ -70,6 +70,13 @@ public class ReqMsg {
      */
     private String rawMessage;
 
+
+    /**
+     * 提取的图中文字
+     */
+    private String imageMessage;
+
+
     /**
      * 字体
      */

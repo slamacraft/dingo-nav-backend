@@ -1,6 +1,8 @@
 package com.dingdo.Component;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dingdo.Component.classifier.NaiveBayesClassifierComponent;
+import com.dingdo.Component.enums.CommonParamEnum;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.common.aspect.VerifiAspect;
@@ -10,6 +12,7 @@ import com.dingdo.entities.RobotManagerEntity;
 import com.dingdo.enums.ClassicEnum;
 import com.dingdo.extendService.MsgExtendService;
 import com.dingdo.msgHandler.model.ReqMsg;
+import com.dingdo.util.FileUtil;
 import com.dingdo.util.InstructionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +22,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -30,11 +34,8 @@ import java.util.stream.Collectors;
 @Component
 public class InstructionMethodContext {
 
-    @Autowired
-    private NaiveBayesClassifierComponent naiveBayesClassifierComponent;
-
-    @Autowired
-    private VerifiAspect verifiAspect;
+    private final NaiveBayesClassifierComponent naiveBayesClassifierComponent;
+    private final VerifiAspect verifiAspect;
 
     private static ApplicationContext applicationContext;
     // 指令对应的实例Map
@@ -43,8 +44,19 @@ public class InstructionMethodContext {
     private Map<String, Method> methodMap = new HashMap<>();
     // 指令对应方法的错误信息Map
     private Map<Method, String> errorMsgMap = new HashMap<>();
+    // 指令的帮助菜单集合
+    private Map<String, String> helpMap = new HashMap<>();
     // 功能策略集
     private static final Map<Double, MsgExtendService> extendServiceMap = new HashedMap();
+    // 短路指令名称
+    private Map<String, String> shortenedInstruction = new HashMap<>();
+
+    @Autowired
+    public InstructionMethodContext(NaiveBayesClassifierComponent naiveBayesClassifierComponent,
+                                    VerifiAspect verifiAspect) {
+        this.naiveBayesClassifierComponent = naiveBayesClassifierComponent;
+        this.verifiAspect = verifiAspect;
+    }
 
 
     /**
@@ -97,7 +109,46 @@ public class InstructionMethodContext {
                 }
             }
         }
+        initHelpMenu();
         System.out.println("方法容器准备完毕");
+    }
+
+
+    /**
+     * 初始化帮助菜单
+     */
+    public void initHelpMenu() {
+        String label = FileUtil.loadFile("D:\\workspace\\springboot-webjar\\target\\help\\help.txt");
+        JSONObject jsonObject = JSONObject.parseObject(label);
+        this.helpMap = ((Map<String, Object>) jsonObject).entrySet()
+                .stream().collect(Collectors.toMap(item -> item.getKey(), item -> item.getValue().toString()));
+    }
+
+
+    /**
+     * 获取指令的帮助文档
+     *
+     * @param reqMsg
+     * @param params
+     * @return
+     */
+    @Instruction(description = "帮助", inMenu = false)
+    public String help(ReqMsg reqMsg, Map<String, String> params) {
+        List<String> paramKeyList = new ArrayList<>(params.keySet());
+
+        StringBuilder result = new StringBuilder();
+
+        for (String param : paramKeyList) {
+            String helpInfo = helpMap.get(param);
+            if (StringUtils.isNotBlank(helpInfo)) {
+                result.append(param).append(":\n").append(helpInfo);
+            }
+        }
+
+        if (result.length() == 0) {
+            return "请问你想了解哪项服务呢";
+        }
+        return result.toString();
     }
 
 
@@ -109,7 +160,7 @@ public class InstructionMethodContext {
      * @return
      */
     @Instruction(description = "菜单", inMenu = false)
-    public String help(ReqMsg reqMsg, Map<String, String> params) {
+    public String menu(ReqMsg reqMsg, Map<String, String> params) {
         StringBuffer result = new StringBuffer();
         List<Method> methodList = methodMap.values().stream().distinct().collect(Collectors.toList());
 
@@ -154,6 +205,52 @@ public class InstructionMethodContext {
         return this.methodMap.get(instruction);
     }
 
+
+    /**
+     * 指令处理方法
+     *
+     * @param reqMsg
+     * @return
+     */
+    public String instructionHandle(ReqMsg reqMsg) {
+        String methodInstruction = shortenedInstruction.get(reqMsg.getUserId());
+        if (methodInstruction != null) {    // 执行短接方法
+            return (String)invokeShortenedMethod(methodInstruction, reqMsg);
+        }
+        if (!InstructionUtils.DFA(reqMsg.getRawMessage())) {    // 使用DFA确定是否属于指令格式
+            return null;
+        }
+        String result = (String) this.invokeMethodByMsg(reqMsg);
+        if (StringUtils.isNotBlank(result)) {
+            return result;
+        }
+        return "未知异常";
+    }
+
+
+    /**
+     * 执行短接方法
+     *      * 此方法执行时由于未进行指令格式验证，所以不对指令参数进行解析
+     *      * 转交由具体功能实现自行处理
+     * @param instruction
+     * @param reqMsg
+     * @return
+     */
+    public Object invokeShortenedMethod(String instruction, ReqMsg reqMsg){
+        Object target = this.getBeanByInstruction(instruction);
+        Method method = this.getMethodByInstruction(instruction);
+        Map<String, String> params = new HashMap();
+        params.put("短接", "启用");
+
+        String result = (String)this.invokeMethod(target, method, reqMsg, params);
+        if(StringUtils.isNotBlank(result)){
+            shortenedInstruction.remove(reqMsg.getUserId()); // 直到执行后有返回值，才算短接执行成功
+        }
+
+        return result;
+    }
+
+
     /**
      * 通过消息包含的指令执行对应的方法
      *
@@ -164,8 +261,16 @@ public class InstructionMethodContext {
         String rawMsg = reqMsg.getRawMessage().replaceAll("[\\s]", " ");
         String instruction = rawMsg.split(" ")[0].split("\\.|。")[1];
         Map<String, String> params = InstructionUtils.analysisInstruction(rawMsg.split("\\.|。")[1].split(" "));
+
+        CommonParamEnum paramEnum = CommonParamEnum.getParamEnum(params);
+        if (paramEnum != null) {
+            params.put(instruction, "开启");
+            instruction = paramEnum.getDescription();
+        }
+
         return this.invokeMethodByInstruction(instruction, reqMsg, params);
     }
+
 
     /**
      * 通过指令参数执行对应的方法
@@ -177,11 +282,18 @@ public class InstructionMethodContext {
     public Object invokeMethodByInstruction(String instruction, Object... params) {
         Object target = this.getBeanByInstruction(instruction);
         Method method = this.getMethodByInstruction(instruction);
+        ReqMsg reqMsg = (ReqMsg) params[0];
         if (method == null) {
-            ReqMsg reqMsg = (ReqMsg) params[0];
             return extendServiceMap.get(naiveBayesClassifierComponent.predict(reqMsg.getRawMessage()))
                     .sendReply(reqMsg);
         }
+
+        // 确认是否是短接指令
+        Instruction annotation = (Instruction)method.getAnnotation(Instruction.class);
+        if(annotation.isShortened()){
+            shortenedInstruction.put(reqMsg.getUserId(), annotation.description());
+        }
+
         return this.invokeMethod(target, method, params);
     }
 

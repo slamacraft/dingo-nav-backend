@@ -17,8 +17,12 @@ import java.util.Map;
 @Service
 public class ManagerServiceImpl implements ManagerService {
 
+    private final RobotManagerDao robotManagerDao;
+
     @Autowired(required = false)
-    private RobotManagerDao robotManagerDao;
+    public ManagerServiceImpl(RobotManagerDao robotManagerDao) {
+        this.robotManagerDao = robotManagerDao;
+    }
 
 
     /**

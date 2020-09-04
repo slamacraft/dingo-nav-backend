@@ -235,7 +235,7 @@ public class ImageUtil {
         int threshold = otsuThreshold(rgbArray, height, width, null, null);
 
         for (int i = 0; i < width; i++) {
-            PrintBarUtil.print("正在优化前景色", i, width, width / 100);
+//            PrintBarUtil.print("正在优化前景色", i, width, width / 100);
             for (int j = 0; j < height; j++) {
                 if (rgbArray[i][j] > threshold * 1.2) {   // 将前景色的像素点进行最大值池化
                     checkBlackPoint(bImage, image, 1.15f,

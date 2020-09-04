@@ -32,10 +32,15 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
 
     private Map<String, MsgHandleService> msgMap = new HashMap<>();
 
+    private final Tess4jComponent tess4jComponent;
+    private final InstructionMethodContext instructionMethodContext;
+
     @Autowired
-    private Tess4jComponent tess4jComponent;
-    @Autowired
-    private InstructionMethodContext instructionMethodContext;
+    public MgsServiceImpl(InstructionMethodContext instructionMethodContext,
+                          Tess4jComponent tess4jComponent) {
+        this.instructionMethodContext = instructionMethodContext;
+        this.tess4jComponent = tess4jComponent;
+    }
 
     @Override
     public String receive(HttpServletRequest httpServletRequest) {
@@ -47,8 +52,9 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
     public String handleMsg(ReqMsg reqMsg) {
         this.extractCQCode(reqMsg);
         this.msgOCR(reqMsg);    // 识别图中文字
-        if (InstructionUtils.DFA(reqMsg.getRawMessage())) {    // 使用DFA确定是否属于指令格式
-            return this.instructionHandle(reqMsg);
+        String instructResult = instructionMethodContext.instructionHandle(reqMsg);
+        if (StringUtils.isNotBlank(instructResult)) {    // 使用DFA确定是否属于指令格式
+            return instructResult;
         }
 
         // 根据请求的类型不同跳转☞不同的service实例的handleMsg方法处理
@@ -77,23 +83,11 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
      */
     public void msgOCR(ReqMsg reqMsg) {
         String imgChiInfo = tess4jComponent.tessOCR(reqMsg);
-        reqMsg.setRawMessage(reqMsg.getRawMessage() + imgChiInfo);
+        reqMsg.setImageMessage(imgChiInfo);
     }
 
 
-    /**
-     * 指令处理方法
-     *
-     * @param reqMsg
-     * @return
-     */
-    public String instructionHandle(ReqMsg reqMsg) {
-        String result = (String) instructionMethodContext.invokeMethodByMsg(reqMsg);
-        if (StringUtils.isNotBlank(result)) {
-            return result;
-        }
-        return "未知异常";
-    }
+
 
 
     @Override

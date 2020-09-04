@@ -1,6 +1,9 @@
 package com.dingdo.extendService.otherService;
 
+import com.dingdo.msgHandler.model.ReqMsg;
+
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 public interface PythonService {
 
@@ -12,4 +15,6 @@ public interface PythonService {
      * @error 返回null
      */
     BufferedImage doWDSR(String imagePath);
+
+    String getEnhanceImage(ReqMsg reqMsg, Map<String, String> params);
 }

@@ -107,9 +107,9 @@ public class Tess4jComponent implements ApplicationRunner {
             imgBuffer = ImageUtil.binaryImage(imgBuffer);   // 图片二值化
             result = tesseract.doOCR(imgBuffer);            // 图片文字提取
         } catch (TesseractException e) {
-            logger.error(e);
+            logger.error("识别异常",e);
         } catch (IOException e) {
-            logger.error(e);
+            logger.error("异常读取", e);
         }
 
         return result.replaceAll("[^\\u4e00-\\u9fa5]", "");

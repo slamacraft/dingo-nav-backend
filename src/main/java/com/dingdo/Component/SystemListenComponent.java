@@ -33,11 +33,14 @@ public class SystemListenComponent {
     private static final int FAULTLENGTH = 10;
     private static String linuxVersion = null;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
+    private final TaskRegister taskRegister;
 
     @Autowired
-    private TaskRegister taskRegister;
+    public SystemListenComponent(StringRedisTemplate stringRedisTemplate, TaskRegister taskRegister) {
+        this.stringRedisTemplate = stringRedisTemplate;
+        this.taskRegister = taskRegister;
+    }
 
     @VerifiAnnotation
     @Instruction(description = "获取系统信息")

@@ -1,11 +1,14 @@
 package com.dingdo.extendService.otherService.impl;
 
+import com.dingdo.extendService.model.specialReply.RereadMsgInfo;
+import com.dingdo.extendService.model.specialReply.RereadMsgQueue;
 import com.dingdo.extendService.otherService.SpecialReplyService;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.impl.GroupMsgServiceImpl;
 import com.dingdo.util.FileUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -23,38 +26,25 @@ import java.util.*;
 @Service
 public class SpecialReplyServiceImpl implements SpecialReplyService {
 
-    @Autowired
-    private GroupMsgServiceImpl groupMsgService;
+    private final GroupMsgServiceImpl groupMsgService;
 
     private Map<String, String[]> groupMsgMap = new HashMap<>();
 
     private Map<String, RereadMsgQueue> reReadGroupMsgMap = new HashMap<>();
 
-    private int MIN_REREAD_COUNT = 2;
+    private int MIN_REREAD_COUNT = 2;   // 产生复读的最小+1数量
 
-    @Data
-    class RereadMsgInfo {
-        private String userId;
-        private List<String> message = new ArrayList<>();
-        private int status = 0;
-        private boolean flag = false; // 是否参与复读
-
-        public RereadMsgInfo(ReqMsg reqMsg) {
-            this.userId = reqMsg.getUserId();
-            this.message.add(reqMsg.getMessage());
-        }
-    }
-
-    @Data
-    class RereadMsgQueue {
-        volatile private List<RereadMsgInfo> msgInfoList = new LinkedList<>();
-
-        public RereadMsgQueue(ReqMsg reqMsg) {
-            msgInfoList.add(new RereadMsgInfo(reqMsg));
-        }
+    @Autowired
+    public SpecialReplyServiceImpl(@Lazy GroupMsgServiceImpl groupMsgService) {
+        this.groupMsgService = groupMsgService;
     }
 
 
+    /**
+     * 复读群消息
+     *
+     * @param reqMsg
+     */
     public void rereadGroupMsg(ReqMsg reqMsg) {
         RereadMsgQueue rereadMsgQueue = reReadGroupMsgMap.get(reqMsg.getGroupId() + reqMsg.getSelfId());
 
@@ -131,7 +121,7 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
         else if (this.equals(startMsg.getMessage().get(status), reqMsg.getMessage())) {
             status += 1;
             startMsg.setStatus(status);
-        }else {
+        } else {
             return;
         }
 
@@ -148,11 +138,11 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
     }
 
     private boolean equals(String msg1, String msg2) {
-        if (msg1 == msg2) {
-            return true;
-        }
-        if (msg1 == null || msg2 == null) {
+        if (msg2 == null) {
             return false;
+        }
+        if (msg1.equals(msg2)) {
+            return true;
         }
         String textMsg1 = msg1.replaceAll("\\[CQ:image.*?\\]", "");
         String imageMsg1 = "";
@@ -181,7 +171,7 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
     public String getRandomGroupMsgYesterday(ReqMsg reqMsg) {
 
         String groupId = reqMsg.getGroupId();
-        String[] msgList = groupMsgMap.get(groupId + " "+ new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        String[] msgList = groupMsgMap.get(groupId + " " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         if (msgList == null || msgList.length < 3) {
             String filePath = reqMsg.getGroupId() + " " + getYesterdayDate() + ".txt";
             String msg = FileUtil.loadFileFromJarPath(filePath);

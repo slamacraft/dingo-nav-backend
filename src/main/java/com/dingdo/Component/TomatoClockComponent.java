@@ -33,14 +33,20 @@ public class TomatoClockComponent {
      */
     volatile private Map<String, Integer> userStatusMap = new HashMap<>();
 
-    @Autowired
-    private ThreadPoolExecutor tomatoClockPool;
+    private final ThreadPoolExecutor tomatoClockPool;
 
-    @Autowired
-    private PrivateMsgService privateMsgService;
+    private final PrivateMsgService privateMsgService;
+
+    private final UserTomatoDao userTomatoDao;
 
     @Autowired(required = false)
-    private UserTomatoDao userTomatoDao;
+    public TomatoClockComponent(ThreadPoolExecutor tomatoClockPool,
+                                PrivateMsgService privateMsgService,
+                                UserTomatoDao userTomatoDao) {
+        this.tomatoClockPool = tomatoClockPool;
+        this.privateMsgService = privateMsgService;
+        this.userTomatoDao = userTomatoDao;
+    }
 
 
     public void setTomatoCorePoolSize(int coreSize) {
@@ -95,6 +101,7 @@ public class TomatoClockComponent {
             if (userTomatoEntity == null) {
                 UserTomatoEntity toInsertEntity = new UserTomatoEntity();
                 toInsertEntity.setTomato(1);
+                toInsertEntity.setId(this.userId);
                 userTomatoDao.insert(toInsertEntity);
             } else {
                 userTomatoEntity.setTomato(userTomatoEntity.getTomato() + 1);

@@ -5,10 +5,10 @@
 //import com.dingdo.Component.WebClientComponent;
 //import com.dingdo.enums.UrlEnum;
 //import com.dingdo.extendService.musicService.MusicService;
-//import com.dingdo.model.msgFromCQ.SearchMsg;
+//import com.dingdo.extendService.model.msgFromCQ.SearchMsg;
 //import com.dingdo.msgHandler.model.ReqMsg;
-//import com.dingdo.model.musicFromQQ.MusicQQ;
-//import com.dingdo.model.musicFromQQ.SongQQ;
+//import com.dingdo.extendService.model.musicFromQQ.MusicQQ;
+//import com.dingdo.extendService.model.musicFromQQ.SongQQ;
 //import com.dingdo.util.PinyinUtil;
 //import com.gargoylesoftware.htmlunit.WebClient;
 //import com.gargoylesoftware.htmlunit.html.HtmlPage;

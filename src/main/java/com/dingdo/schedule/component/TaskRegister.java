@@ -1,6 +1,5 @@
 package com.dingdo.schedule.component;
 
-import com.dingdo.schedule.dao.MessageTaskMapper;
 import com.dingdo.schedule.ScheduledTask;
 import com.dingdo.schedule.factory.TaskFactory;
 import com.dingdo.schedule.interfacor.ITaskInfo;
@@ -30,14 +29,18 @@ public class TaskRegister<TaskList extends ITaskList, TaskInfo extends ITaskInfo
 
     private final List<TaskList> AllTaskList = new LinkedList<>();
 
-    @Autowired
-    private TaskScheduler taskScheduler;
+    private final TaskScheduler taskScheduler;
+    private final TaskFactory taskFactory;
+    private final MessageTaskService messageTaskService;
 
     @Autowired
-    private TaskFactory taskFactory;
-
-    @Autowired
-    private MessageTaskService messageTaskService;
+    public TaskRegister(TaskScheduler taskScheduler,
+                        TaskFactory taskFactory,
+                        MessageTaskService messageTaskService) {
+        this.taskScheduler = taskScheduler;
+        this.taskFactory = taskFactory;
+        this.messageTaskService = messageTaskService;
+    }
 
 
     @PostConstruct

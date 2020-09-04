@@ -1,4 +1,4 @@
-package com.dingdo.model.weather;
+package com.dingdo.extendService.model.weather;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

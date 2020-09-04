@@ -11,8 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/msg")
 public class MsgController {
 
+    private final MsgService msgService;
+
     @Autowired
-    MsgService msgService;
+    public MsgController(MsgService msgService) {
+        this.msgService = msgService;
+    }
 
     /**
      * 消息上报接口

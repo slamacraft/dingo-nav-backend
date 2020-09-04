@@ -1,4 +1,4 @@
-package com.dingdo.model.musicFromQQ;
+package com.dingdo.extendService.model.musicFromQQ;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

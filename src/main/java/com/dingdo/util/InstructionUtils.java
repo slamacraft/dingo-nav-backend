@@ -3,9 +3,7 @@ package com.dingdo.util;
 import cn.hutool.core.util.CharUtil;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 指令分析工具类
@@ -35,7 +33,7 @@ public class InstructionUtils {
 //                }
 //                break;
                 case 1: {
-                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，转移到状态2
+                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=' && chars[i] != '-') { // 数字/字符，转移到状态2
                         status = 2;
                     } else {
                         status = 9; // 直接失败
@@ -43,19 +41,19 @@ public class InstructionUtils {
                 }
                 break;
                 case 2: {
-                    if (chars[i] == '=') {    // 输入=号，直接失败
-                        status = 9;
-                    }
                     if (CharUtil.isBlankChar(chars[i])) { // 空格字符，转移到状态3
                         status = 3;
+                    } else if (chars[i] == '=' || chars[i] == '-') {    // 输入=/-号，直接失败
+                        status = 9;
                     }
                 }
                 break;
                 case 3: {
                     if (chars[i] == '=') {    // 输入=号，直接失败
                         status = 9;
-                    }
-                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，转移到状态4
+                    } else if (chars[i] == '-') {
+                        status = 7;
+                    } else if (!CharUtil.isBlankChar(chars[i])) { // 数字/字符，转移到状态4
                         status = 4;
                     }
                 }
@@ -63,38 +61,35 @@ public class InstructionUtils {
                 case 4: {
                     if (chars[i] == '=') {    // 输入=号，转移到状态6
                         status = 6;
-                    }
-                    if (CharUtil.isBlankChar(chars[i])) { // 空格，转移到状态5
+                    } else if (chars[i] == '-') {    // 输入=号，转移到状态6
+                        status = 9;
+                    } else if (CharUtil.isBlankChar(chars[i])) { // 空格，转移到状态5
                         status = 5;
                     }
                 }
                 break;
                 case 5: {
-                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，直接失败
-                        status = 9;
-                    }
                     if (chars[i] == '=') {    // 输入=号，转移到状态6
                         status = 6;
+                    } else if (!CharUtil.isBlankChar(chars[i])) { // 数字/字符/=号，直接失败
+                        status = 9;
                     }
                 }
                 break;
                 case 6: {
-                    if (chars[i] == '=') {    // 输入=号，直接失败
-                        status = 9;
-                    }
-                    if (CharUtil.isBlankChar(chars[i])) {    // 空格，转移到状态8
+                    if (CharUtil.isBlankChar(chars[i])) {    // 空格，转移到状态7
                         status = 7;
-                    }
-                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，转移到状态8
+                    } else if (chars[i] == '=' || chars[i] == '-') {    // 输入=号，直接失败
+                        status = 9;
+                    } else { // 数字/字符，转移到状态8
                         status = 2;
                     }
                 }
                 break;
                 case 7: {
-                    if (chars[i] == '=') {    // 输入=号，直接失败
+                    if (chars[i] == '=' || chars[i] == '-') {    // 输入=号，直接失败
                         status = 9;
-                    }
-                    if (!CharUtil.isBlankChar(chars[i]) && chars[i] != '=') { // 数字/字符，转移到状态8
+                    } else if (!CharUtil.isBlankChar(chars[i])) { // 数字/字符，转移到状态8
                         status = 2;
                     }
                 }
@@ -108,10 +103,9 @@ public class InstructionUtils {
 //                    }
 //                }
 //                break;
-                case 9: {
-                    // 失败状态，什么也不做
+                case 9: {   // 失败状态
+                    return false;
                 }
-                break;
             }
         }
 
@@ -124,7 +118,7 @@ public class InstructionUtils {
 
 
     /**
-     * 解析指令参数
+     * 解析指令变量
      * 指令规则 args = value
      *
      * @param args
@@ -140,8 +134,14 @@ public class InstructionUtils {
             if (StringUtils.isBlank(args[i])) {
                 continue;
             }
-            String[] split = args[i].split("=");
-            argsMap.put(split[0].trim(), split[1].trim());
+            String[] values = args[i].split("=");
+            if(values.length>=2){
+                argsMap.put(values[0].trim(), values[1].trim());
+            }else {
+                String[] arg = args[i].split("-");
+                argsMap.put(arg[1].trim(), "开启");
+            }
+
         }
         return argsMap;
     }

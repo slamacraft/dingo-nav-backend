@@ -21,22 +21,29 @@ import java.util.Random;
 @Service
 public class GroupMsgServiceImpl implements GroupMsgService {
 
-    @Autowired
-    private ServiceFromApi serviceFromApi;
+    private final ServiceFromApi serviceFromApi;
 
-    @Autowired
-    private BotManager botManager;
+    private final BotManager botManager;
 
-    @Autowired
-    private SpecialReplyService specialReplyService;
+    private final SpecialReplyService specialReplyService;
 
-    @Autowired
-    private SaveMsgComponent saveMsgComponent;
+    private final SaveMsgComponent saveMsgComponent;
 
     // 在不at的情况下，机器人对群消息产生响应的几率，默认是0
     private int RANDOM_RATIO = 0;
 
     private Random random = new Random();
+
+    @Autowired
+    public GroupMsgServiceImpl(SaveMsgComponent saveMsgComponent,
+                               ServiceFromApi serviceFromApi,
+                               BotManager botManager,
+                               SpecialReplyService specialReplyService) {
+        this.saveMsgComponent = saveMsgComponent;
+        this.serviceFromApi = serviceFromApi;
+        this.botManager = botManager;
+        this.specialReplyService = specialReplyService;
+    }
 
 
     /**

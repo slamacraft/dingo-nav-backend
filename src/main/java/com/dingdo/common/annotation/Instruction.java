@@ -27,4 +27,11 @@ public @interface Instruction {
      * 指令是否在菜单上显示
      */
     boolean inMenu() default true;  // 是否在菜单上显示该指令
+
+    /**
+     * 是否是短接指令
+     * 例如：在用户调用这一指令后，将指令容器的接收入口与该方法进行短接，
+     * 不对其进行指令命令调用识别，默认用户的下一次调用的为该指令
+     */
+    boolean isShortened() default false;
 }

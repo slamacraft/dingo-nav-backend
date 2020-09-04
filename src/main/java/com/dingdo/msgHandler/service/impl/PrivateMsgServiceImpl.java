@@ -13,10 +13,14 @@ public class PrivateMsgServiceImpl implements PrivateMsgService {
     // 使用log4j打印日志
     private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(PrivateMsgServiceImpl.class);
 
+    private final ServiceFromApi serviceFromApi;
+    private final BotManager botManager;
+
     @Autowired
-    private ServiceFromApi serviceFromApi;
-    @Autowired
-    private BotManager botManager;
+    public PrivateMsgServiceImpl(BotManager botManager, ServiceFromApi serviceFromApi) {
+        this.botManager = botManager;
+        this.serviceFromApi = serviceFromApi;
+    }
 
     @Override
     public void sendPrivateMsg(String robotId, String userId, String msg) {

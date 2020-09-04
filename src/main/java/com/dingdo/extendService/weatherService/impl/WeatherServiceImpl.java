@@ -4,7 +4,7 @@ import com.dingdo.extendService.weatherService.AbstractWeatherService;
 import com.dingdo.extendService.weatherService.WeatherService;
 
 import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.model.weather.Weather;
+import com.dingdo.extendService.model.weather.Weather;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 

@@ -31,7 +31,7 @@ public class FileUtil {
             File jarFile = home.getSource();
             if (jarFile == null || StringUtils.isBlank(jarFile.getParentFile().toString())) {
                 jarUrl = "/python/CQPython/static";
-            }else {
+            } else {
                 jarUrl = jarFile.getParentFile().toString();
             }
             System.out.println("获取的jar包路径为:" + jarUrl);
@@ -95,15 +95,15 @@ public class FileUtil {
         StringBuffer result = new StringBuffer();
 
         if (file.isFile() && file.exists()) { //判断文件是否存在
-            try{
+            try {
                 BufferedReader br = new BufferedReader(
                         new InputStreamReader(new FileInputStream(file), "UTF-8"));//构造一个BufferedReader类来读取文件
                 String s = null;
-                while((s = br.readLine())!=null){//使用readLine方法，一次读一行
-                    result.append(System.lineSeparator()+s);
+                while ((s = br.readLine()) != null) {//使用readLine方法，一次读一行
+                    result.append(System.lineSeparator() + s);
                 }
                 br.close();
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return result.toString();
@@ -148,7 +148,7 @@ public class FileUtil {
      * @param text
      */
     public static void writeFile(String path, String text) throws IOException {
-        if(StringUtils.isBlank(text)){
+        if (StringUtils.isBlank(text)) {
             return;
         }
         File file = new File(path);// 要写入的文件路径
@@ -171,7 +171,7 @@ public class FileUtil {
             logger.error(e);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             writer.flush();
             writer.close();
         }
@@ -201,18 +201,29 @@ public class FileUtil {
 
     public static String saveImage(String imageURL, String fileName) {
         BufferedImage imageFromURL = ImageUtil.getImageFromURL(imageURL);
-        System.out.println("图片名称:" + fileName +", 图片url:" + imageURL);
-        File file = new File(JarPathUtil.jarUrl + "/image/" + fileName);
+        System.out.println("获取的图片名称:" + fileName + ", 图片url:" + imageURL);
+        return saveImage(imageFromURL, fileName);
+    }
+
+    public static String saveImage(BufferedImage image, String fileName) {
+        File file = new File(JarPathUtil.jarUrl + "/image/" + fileName + ".jpg");
         if (!file.exists()) {
             try {
                 file.createNewFile();
-                ImageIO.write(imageFromURL, "jpg", file);
-                System.out.println("图片保存至:" + JarPathUtil.jarUrl + "/image/" + fileName);
-                return JarPathUtil.jarUrl + "/image/" + fileName;
+                ImageIO.write(image, "jpg", file);
+                System.out.println("图片保存至:" + JarPathUtil.jarUrl + "/image/" + fileName + ".jpg");
+                return JarPathUtil.jarUrl + "/image/" + fileName + ".jpg";
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else {
+            return JarPathUtil.jarUrl + "/image/" + fileName + ".jpg";
         }
         return null;
+    }
+
+
+    public static String getImagePath(String imageName) {
+        return JarPathUtil.jarUrl + "/image/" + imageName + ".jpg";
     }
 }
