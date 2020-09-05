@@ -45,6 +45,23 @@ public class Tess4jComponent implements ApplicationRunner {
     // 超分辨率功能启用开关
     private boolean enableWDSR = false;
 
+    // 是否开启图片文字提取
+    private boolean enableOCR = false;
+
+    @VerifiAnnotation
+    @Instruction(description = "开启图片文字提取")
+    public String enableOCR(ReqMsg reqMsg, Map<String, String> params) {
+        this.enableOCR = true;
+        return "图片文字提取已开启";
+    }
+
+    @VerifiAnnotation
+    @Instruction(description = "关闭图片文字提取")
+    public String disableOCR(ReqMsg reqMsg, Map<String, String> params) {
+        this.enableOCR = false;
+        return "图片文字提取已关闭";
+    }
+
     @VerifiAnnotation
     @Instruction(description = "开启超分辨率识别")
     public String enableWDSR(ReqMsg reqMsg, Map<String, String> params) {
@@ -74,8 +91,6 @@ public class Tess4jComponent implements ApplicationRunner {
      * @return
      */
     public String tessOCR(ReqMsg reqMsg) {
-//        String imgUrl = imgCode.split("file=")[1].split("]")[0];
-//        String imageSrc = getImageSrc(imgUrl);
         Map<CQCodeEnum, CQCode> cqCodeMap = reqMsg.getCqCodeList()
                 .stream()
                 .collect(Collectors.toMap(CQCode::getCode, p -> p));
@@ -95,6 +110,9 @@ public class Tess4jComponent implements ApplicationRunner {
 
         String result = null;
         try {
+            if(!enableOCR){
+                return "";
+            }
             // 是否启用超分辨率服务
             BufferedImage imgBuffer = ImageIO.read(new File(imageSrc));
             if (enableWDSR) {
