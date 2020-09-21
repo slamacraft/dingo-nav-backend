@@ -1,6 +1,5 @@
-package com.dingdo.config;
+package com.dingdo.config.configuration;
 
-import com.forte.qqrobot.anno.depend.Beans;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SparkSession;

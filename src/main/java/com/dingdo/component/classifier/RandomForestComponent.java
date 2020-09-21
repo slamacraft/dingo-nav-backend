@@ -1,8 +1,8 @@
-package com.dingdo.Component.classifier;//package com.dingdo.Component;
+package com.dingdo.component.classifier;//package com.dingdo.component;
 //
 //import com.dingdo.enums.ClassicEnum;
 //import com.dingdo.util.FileUtil;
-//import com.dingdo.util.NLPUtils;
+//import com.dingdo.util.nlp.NLPUtils;
 //import com.hankcs.hanlp.seg.Segment;
 //import com.hankcs.hanlp.seg.common.Term;
 //import org.apache.commons.lang3.StringUtils;
@@ -22,7 +22,7 @@ package com.dingdo.Component.classifier;//package com.dingdo.Component;
 //import org.apache.spark.sql.SparkSession;
 //import org.springframework.boot.ApplicationArguments;
 //import org.springframework.boot.ApplicationRunner;
-//import org.springframework.stereotype.Component;
+//import org.springframework.stereotype.component;
 //
 //import java.io.IOException;
 //import java.util.HashMap;
@@ -30,7 +30,7 @@ package com.dingdo.Component.classifier;//package com.dingdo.Component;
 //import java.util.Map;
 //import java.util.function.Function;
 //
-//@Component
+//@component
 //public class RandomForestComponent implements ApplicationRunner {
 //    // 使用log4j打印日志
 //    private static Logger logger = Logger.getLogger(RandomForestComponent.class);

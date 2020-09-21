@@ -1,4 +1,4 @@
-package com.dingdo.entities;
+package com.dingdo.mvc.entities;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;

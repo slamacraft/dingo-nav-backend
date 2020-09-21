@@ -1,41 +1,33 @@
 package com.example.demo;
 
-import com.dingdo.Component.classifier.NaiveBayesClassifierComponent;
+import com.dingdo.component.classifier.NaiveBayesClassifierComponent;
+import com.dingdo.util.SpringContextUtils;
+import com.forte.qqrobot.bot.BotManager;
 import lombok.Data;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.StructType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@SpringBootConfiguration
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DemoApplicationTests {
 
     @Test
-    public void test() throws Exception {
-        NaiveBayesClassifierComponent naiveBayesClassifierComponent = new NaiveBayesClassifierComponent();
-        naiveBayesClassifierComponent.test();
-
-        naiveBayesClassifierComponent.predict("长沙今天气温多少度");
-        naiveBayesClassifierComponent.predict("长沙今天适合钓鱼吗");
-        naiveBayesClassifierComponent.predict("长沙适合洗车吗");
-        naiveBayesClassifierComponent.predict("长沙今天好热");
-        naiveBayesClassifierComponent.predict("长沙今天要防晒吗");
-        naiveBayesClassifierComponent.predict("长沙今天要穿什么衣服");
-
+    public void testKQ(){
+        String msg = "[CQ:app,content={ \"app\": \"com.tencent.structmsg\"&#44; \"config\": { \"autosize\": true&#44; \"ctime\": 1600045277&#44; \"forward\": true&#44; \"token\": \"84ff3e04d8f04a446510631fb3afbfca\"&#44; \"type\": \"normal\" }&#44; \"desc\": \"音乐\"&#44; \"meta\": { \"music\": { \"action\": \"\"&#44; \"android_pkg_name\": \"\"&#44; \"app_type\": 1&#44; \"appid\": 100495085&#44; \"desc\": \"RAM WIRE\"&#44; \"jumpUrl\": \"\"&#44; \"musicUrl\": \"http:\\/\\/music.163.com\\/song\\/media\\/outer\\/url?id=32317208&amp;userid=111277112\"&#44; \"preview\": \"http:\\/\\/p2.music.126.net\\/V1o9XDhAnI1ayWW5elJwFQ==\\/109951163338252165.jpg\"&#44; \"sourceMsgId\": \"0\"&#44; \"source_icon\": \"\"&#44; \"source_url\": \"\"&#44; \"tag\": \"网易云音乐\"&#44; \"title\": \"僕らの手には何もないけど、 (尽管我们手中空无一物)\" } }&#44; \"prompt\": \"&#91;分享&#93;僕らの手には何もないけど、 (尽管我们手中空无一物)\"&#44; \"ver\": \"0.0.0.1\"&#44; \"view\": \"music\" }]收到&#91;&#91;分享&#93;僕らの手には何もないけど、 (尽管我们手中空无一物)&#93;消息，请升级QQ版本查看";
+        BotManager bean = SpringContextUtils.getBean(BotManager.class);
+        bean.getBot("3087687530").getSender().SENDER.sendPrivateMsg("1114951452", msg);
     }
+
 
     @Test
     public void test2() {
@@ -99,6 +91,12 @@ public class DemoApplicationTests {
         dataFrame.withColumn("testCol", new Column("list"));
 
         dataFrame.show();
+    }
+
+    @Test
+    public void reidsTemplateTest(){
+        RedisTemplate redisTemplate = new RedisTemplate();
+
     }
 
 }

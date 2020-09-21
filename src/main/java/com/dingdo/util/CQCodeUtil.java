@@ -1,7 +1,5 @@
 package com.dingdo.util;
 
-import com.simplerobot.modules.utils.KQCodeUtils;
-
 /**
  * 酷q码工具类
  *

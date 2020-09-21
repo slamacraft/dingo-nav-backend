@@ -12,10 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 一些声明信息
+ * 好友添加事件监听器
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/8/25 11:22
  * @since JDK 1.8
  */
@@ -24,9 +23,9 @@ public class FriendAddListener {
     /**
      * 只允许群内的成员添加机器人为好友
      *
-     * @param friendAddRequest
-     * @param sender
-     * @return
+     * @param friendAddRequest  好友添加请求
+     * @param sender    机器人送信器
+     * @return  机器人响应结果
      */
     @Listen(MsgGetTypes.friendAddRequest)
     public Reply friendAddRequestListener(FriendAddRequest friendAddRequest, MsgSender sender) {

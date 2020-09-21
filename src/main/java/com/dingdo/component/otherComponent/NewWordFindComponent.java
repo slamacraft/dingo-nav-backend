@@ -1,4 +1,4 @@
-package com.dingdo.component;
+package com.dingdo.component.otherComponent;
 
 import com.dingdo.util.FileUtil;
 import org.apache.commons.collections.CollectionUtils;

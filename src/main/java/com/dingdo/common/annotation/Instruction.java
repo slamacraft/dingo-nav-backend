@@ -1,12 +1,22 @@
 package com.dingdo.common.annotation;
 
+import com.dingdo.msgHandler.model.ReqMsg;
+
 import java.lang.annotation.*;
+import java.util.Map;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 将方法注解为指令可执行方法，并注入到InstructionMethodContext中
- * 注意：要求该方法的实例存在于applicationContext中，因此无法加载未在applicationContext中注册实例的方法
+ * 指令方法注解
+ * <p>
+ *      将方法注解为指令方法，并注入到InstructionMethodContext中<br>
+ *      需要该方法的实例存在于applicationContext中，因此无法加载未在applicationContext中
+ *      注册实例的方法<br>
+ *      并且要求方法的参数固定为({@link ReqMsg}, {@link Map}), 需要的其他参数需从Map中获取
+ * </p>
+ *
+ *
  */
 @Documented
 @Retention(RUNTIME)

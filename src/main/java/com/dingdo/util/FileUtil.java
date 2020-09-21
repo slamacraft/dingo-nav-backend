@@ -199,12 +199,27 @@ public class FileUtil {
         }
     }
 
+
+    /**
+     * 保存图片
+     *
+     * @param imageURL 图片的url
+     * @param fileName 图片名称
+     * @return
+     */
     public static String saveImage(String imageURL, String fileName) {
         BufferedImage imageFromURL = ImageUtil.getImageFromURL(imageURL);
         System.out.println("获取的图片名称:" + fileName + ", 图片url:" + imageURL);
         return saveImage(imageFromURL, fileName);
     }
 
+    /**
+     * 保存图片
+     *
+     * @param image    图片
+     * @param fileName 图片名称
+     * @return
+     */
     public static String saveImage(BufferedImage image, String fileName) {
         File file = new File(JarPathUtil.jarUrl + "/image/" + fileName + ".jpg");
         if (!file.exists()) {
@@ -216,7 +231,7 @@ public class FileUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             return JarPathUtil.jarUrl + "/image/" + fileName + ".jpg";
         }
         return null;

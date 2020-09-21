@@ -6,10 +6,9 @@ import com.dingdo.msgHandler.model.ReqMsg;
 public interface MsgHandleService {
 
     /**
-     * 消息的预处理层
-     * 所有对消息的预处理，固定消息的返回都在这里
-     * @param reqMsg
-     * @return
+     * 
+     * @param reqMsg    收到的消息请求
+     * @return  响应的消息
      */
     String handleMsg(ReqMsg reqMsg);
 }

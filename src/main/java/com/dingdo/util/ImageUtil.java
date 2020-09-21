@@ -1,18 +1,12 @@
 package com.dingdo.util;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.log4j.Logger;
-import org.springframework.lang.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -196,6 +190,32 @@ public class ImageUtil {
         return new int[]{r, g, b};
     }
 
+    public static BufferedImage foregroundSmooth(BufferedImage bImage) {
+        BufferedImage backImage = new BufferedImage(bImage.getWidth(), bImage.getHeight(), bImage.getType());
+
+        Graphics2D graphics2D = backImage.createGraphics();
+        graphics2D.drawImage(bImage, 0, 0, backImage.getWidth(), backImage.getHeight(), null);
+        graphics2D.dispose();
+
+        BufferedImage smooth = smooth(bImage);
+
+        int w = bImage.getWidth(null);
+        int h = bImage.getHeight(null);
+        int rgbArray[][] = getImageGrayArray(bImage);
+        // 获取前景色阈值
+        int threshold = otsuThreshold(rgbArray, h, w, null, null);
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (rgbArray[i][j] <= threshold) {
+                    smooth.setRGB(i, j, backImage.getRGB(i, j));
+                }
+            }
+        }
+
+        return smooth;
+    }
+
     /**
      * 前景色钝化
      *
@@ -223,8 +243,7 @@ public class ImageUtil {
         int w = bImage.getWidth(null);
         int h = bImage.getHeight(null);
         // 复制图片
-        BufferedImage image = new BufferedImage(w, h,
-                5);
+        BufferedImage image = new BufferedImage(w, h, 5);
         Graphics2D g2 = image.createGraphics();
         g2.drawImage(bImage, 0, 0, null);
 
@@ -454,31 +473,31 @@ public class ImageUtil {
         return rs / 9;
     }
 
-    /**
-     * 改变图片DPI
-     *
-     * @param file
-     * @param xDensity
-     * @param yDensity
-     */
-    public static BufferedImage getImgAndSetDpi(File file, int xDensity, int yDensity) {
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(file);
-            JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder(new FileOutputStream(file));
-            JPEGEncodeParam jpegEncodeParam = jpegEncoder.getDefaultJPEGEncodeParam(image);
-            jpegEncodeParam.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
-            jpegEncoder.setJPEGEncodeParam(jpegEncodeParam);
-            jpegEncodeParam.setQuality(0.75f, false);
-            jpegEncodeParam.setXDensity(xDensity);
-            jpegEncodeParam.setYDensity(yDensity);
-            jpegEncoder.encode(image, jpegEncodeParam);
-            image.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
-    }
+//    /**
+//     * 改变图片DPI
+//     *
+//     * @param file
+//     * @param xDensity
+//     * @param yDensity
+//     */
+//    public static BufferedImage getImgAndSetDpi(File file, int xDensity, int yDensity) {
+//        BufferedImage image = null;
+//        try {
+//            image = ImageIO.read(file);
+//            JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder(new FileOutputStream(file));
+//            JPEGEncodeParam jpegEncodeParam = jpegEncoder.getDefaultJPEGEncodeParam(image);
+//            jpegEncodeParam.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
+//            jpegEncoder.setJPEGEncodeParam(jpegEncodeParam);
+//            jpegEncodeParam.setQuality(0.75f, false);
+//            jpegEncodeParam.setXDensity(xDensity);
+//            jpegEncodeParam.setYDensity(yDensity);
+//            jpegEncoder.encode(image, jpegEncodeParam);
+//            image.flush();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return image;
+//    }
 
     /**
      * 通过OTSU大津算法计算分割阈值
@@ -490,8 +509,11 @@ public class ImageUtil {
      * @param type           分割阈值的类型， type < 0 =>小于thresholdValue  type > 0 =>小于thresholdValue
      * @return
      */
-    public static int otsuThreshold(int grayArray[][], int height, int width,
-                                    @Nullable Integer thresholdValue, @Nullable Integer type) {
+    public static int otsuThreshold(int grayArray[][],
+                                    int height,
+                                    int width,
+                                    Integer thresholdValue,
+                                    Integer type) {
         final int GrayScale = 256;
         // 每个灰度像素的数量
         int[] pixelCount = new int[GrayScale];

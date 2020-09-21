@@ -1,7 +1,7 @@
-package com.dingdo.schedule.dao;
+package com.dingdo.mvc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dingdo.schedule.entities.MessageTaskEntity;
+import com.dingdo.mvc.entities.MessageTaskEntity;
 
 /**
  * 一些声明信息

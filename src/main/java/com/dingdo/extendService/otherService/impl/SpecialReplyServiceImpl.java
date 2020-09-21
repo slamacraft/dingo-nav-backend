@@ -45,6 +45,7 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
      *
      * @param reqMsg
      */
+    @Override
     public void rereadGroupMsg(ReqMsg reqMsg) {
         RereadMsgQueue rereadMsgQueue = reReadGroupMsgMap.get(reqMsg.getGroupId() + reqMsg.getSelfId());
 
@@ -71,7 +72,7 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
      * @param reqMsg
      * @param rereadMsgQueue
      */
-    public void toReread(ReqMsg reqMsg, RereadMsgQueue rereadMsgQueue) {
+    private void toReread(ReqMsg reqMsg, RereadMsgQueue rereadMsgQueue) {
         List<RereadMsgInfo> msgInfoList = rereadMsgQueue.getMsgInfoList();
 
         // 最少也要2句话才算复读吧

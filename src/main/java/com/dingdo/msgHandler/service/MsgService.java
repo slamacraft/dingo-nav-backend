@@ -7,14 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 消息转发服务接口
  */
-public interface MsgService {
+public interface MsgService extends MsgHandleService{
 
     /**
      * 将接受到的消息反序列化为对象
-     * @param httpServletRequest
+     * @param request
      * @return
      */
-    String receive(HttpServletRequest httpServletRequest);
-
-    String handleMsg(ReqMsg reqMsg);
+    String receive(ReqMsg request);
 }

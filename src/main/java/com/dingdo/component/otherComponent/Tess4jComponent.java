@@ -1,4 +1,4 @@
-package com.dingdo.component;
+package com.dingdo.component.otherComponent;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dingdo.common.annotation.Instruction;
@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
  * tess4j的图像文字提取组件
  */
 @Component
+@Deprecated
 public class Tess4jComponent implements ApplicationRunner {
 
     // 使用log4j打印日志
@@ -49,14 +50,16 @@ public class Tess4jComponent implements ApplicationRunner {
     @Value("${config.tessdata.languagePath}")
     private String languagePath;
 
-    @Autowired
-    private PythonService pythonService;
+    private final PythonService pythonService;
 
     // 超分辨率功能启用开关
     private boolean enableWDSR = false;
-
     // 是否开启图片文字提取
     private boolean enableOCR = false;
+
+    public Tess4jComponent(PythonService pythonService) {
+        this.pythonService = pythonService;
+    }
 
     @VerifiAnnotation(level = VerificationEnum.MANAGER)
     @Instruction(description = "图片文字提取")

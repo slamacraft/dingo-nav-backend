@@ -11,7 +11,7 @@ import java.util.*;
 public class InstructionUtils {
 
     /**
-     * 验证语句是否是符合规范的指令
+     * 验证语句是否是符合指令规范
      *
      * @param instruction 语句
      * @return

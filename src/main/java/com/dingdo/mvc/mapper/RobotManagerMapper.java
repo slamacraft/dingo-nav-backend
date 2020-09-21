@@ -1,7 +1,7 @@
-package com.dingdo.dao;
+package com.dingdo.mvc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dingdo.entities.RobotManagerEntity;
+import com.dingdo.mvc.entities.RobotManagerEntity;
 
-public interface RobotManagerDao extends BaseMapper<RobotManagerEntity> {
+public interface RobotManagerMapper extends BaseMapper<RobotManagerEntity> {
 }

@@ -1,27 +1,26 @@
 package com.dingdo;
 
-import com.dingdo.Listener.ApplicationRunListener;
-import com.dingdo.config.SimpleRobotConfig;
+import com.dingdo.config.configuration.SimpleRobotConfig;
+import com.dingdo.config.runListener.ApplicationRunListener;
 import com.forte.qqrobot.SimpleRobotApplication;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * 一些声明信息
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/8/10 15:12
  * @since JDK 1.8
  */
-@MapperScan(basePackages = {"com.dingdo.dao", "com.dingdo.**.dao"})
+@MapperScan(basePackages = {"com.dingdo.**.mapper"})
 @EnableScheduling
 @SpringBootApplication
-@EnableWebMvc
 @SimpleRobotApplication
+@EnableSwagger2
 public class DingDoRobot {
 
     public static void main(String[] args) {

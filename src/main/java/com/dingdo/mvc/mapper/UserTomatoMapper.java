@@ -1,7 +1,7 @@
-package com.dingdo.dao;
+package com.dingdo.mvc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dingdo.entities.UserTomatoEntity;
+import com.dingdo.mvc.entities.UserTomatoEntity;
 
 /**
  * 一些声明信息
@@ -11,5 +11,5 @@ import com.dingdo.entities.UserTomatoEntity;
  * @date: 2020/8/25 11:09
  * @since JDK 1.8
  */
-public interface UserTomatoDao extends BaseMapper<UserTomatoEntity> {
+public interface UserTomatoMapper extends BaseMapper<UserTomatoEntity> {
 }

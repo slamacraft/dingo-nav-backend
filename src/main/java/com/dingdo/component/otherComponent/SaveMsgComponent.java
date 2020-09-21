@@ -1,4 +1,4 @@
-package com.dingdo.component;
+package com.dingdo.component.otherComponent;
 
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;

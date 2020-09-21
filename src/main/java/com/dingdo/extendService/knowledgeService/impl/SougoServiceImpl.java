@@ -1,6 +1,5 @@
 package com.dingdo.extendService.knowledgeService.impl;
 
-import com.dingdo.Component.WebClientComponent;
 import com.dingdo.extendService.knowledgeService.SougoService;
 
 import com.dingdo.msgHandler.model.ReqMsg;
@@ -21,7 +20,7 @@ import java.util.logging.Logger;
 public class SougoServiceImpl implements SougoService {
 
     @Autowired
-    private WebClientComponent webClientComponent;
+    private WebClient webClient;
 
     @Override
     public String sendReply(ReqMsg reqMsg) {
@@ -53,7 +52,6 @@ public class SougoServiceImpl implements SougoService {
             System.out.println("Loading page now-----------------------:\n " + url);
 
             // HtmlUnit 模拟浏览器
-            WebClient webClient = webClientComponent.getWebClient();
             HtmlPage page = webClient.getPage(url);
             webClient.waitForBackgroundJavaScript(0 * 100);     // 等待js后台执行3秒
 

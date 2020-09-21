@@ -10,7 +10,7 @@ package com.dingdo.enums;
  */
 public enum CQCodeEnum {
 
-    AT("at", new String[]{"id"}),
+    AT("at", new String[]{"id", "qq"}),
     IMAGE("image", new String[]{"url"});
 
     private String name;    // CQ码的名称

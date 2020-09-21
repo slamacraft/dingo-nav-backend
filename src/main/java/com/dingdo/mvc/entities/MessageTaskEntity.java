@@ -1,4 +1,4 @@
-package com.dingdo.schedule.entities;
+package com.dingdo.mvc.entities;
 
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -13,35 +13,35 @@ import java.time.LocalDateTime;
 @TableName("message_task")
 public class MessageTaskEntity {
 
-  @TableField("id")
-  private String id;
+    @TableField("id")
+    private String id;
 
-  @TableField("task_name")
-  private String taskName;
+    @TableField("task_name")
+    private String taskName;
 
-  @TableField("cron")
-  private String cron;
+    @TableField("cron")
+    private String cron;
 
-  /**
-   * 0-私聊定时任务
-   * 1-群聊定时任务
-   */
-  @TableField("type")
-  private String type;
+    /**
+     * 0-私聊定时任务
+     * 1-群聊定时任务
+     */
+    @TableField("type")
+    private String type;
 
-  @TableField("bot_id")
-  private String botId;
+    @TableField("bot_id")
+    private String botId;
 
-  @TableField("target_id")
-  private String targetId;
+    @TableField("target_id")
+    private String targetId;
 
-  @TableField("message")
-  private String message;
+    @TableField("message")
+    private String message;
 
-  @TableField("create_by")
-  private String createBy;
+    @TableField("create_by")
+    private String createBy;
 
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone ="GMT+8")
-  @TableField(value = "create_time", fill = FieldFill.INSERT)
-  private LocalDateTime createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
 }

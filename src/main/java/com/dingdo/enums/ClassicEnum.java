@@ -11,20 +11,20 @@ import java.util.Objects;
  */
 public enum ClassicEnum {
     //========================================================================================================
-    KNOWLEDGE_SRC("python/CQPython/static/question/knowledgeQA/",
+    KNOWLEDGE_SRC("static/question/knowledgeQA/",
             null, 1, "知识问答语料库路径"),
     BAIDU_BAIKE("BaiduBaike.txt", null, 1.1, "百度百科搜索"),
     BAIDU_ZHIDAO("BaiduZhidao.txt", null, 1.2, "搜狗问问搜索"),
     SOUGOU_WENWEN("SougouWenWen.txt", null, 1.3, "搜狗问问搜索"),
 
     //========================================================================================================
-    MUSIC_SRC("python/CQPython/static/question/musicQA/",
+    MUSIC_SRC("static/question/musicQA/",
             null, 2, "点歌服务语料路径"),
     //    MUSIC_FROM_QQ("MusicFromQQ.txt", "MusicServiceImpl", 2.1, "QQ音乐点歌"),
     RANDOM_MUSIC("RandomMusic.txt", "", 2.2, "网易云随机音乐"),
 
     //========================================================================================================
-    WEATHER_SRC("python/CQPython/static/question/weatherQA/",
+    WEATHER_SRC("static/question/weatherQA/",
             null, 3, ""),
     WEATHER_NOW("WeatherNow.txt", "WeatherServiceImpl", 3.1, "【询问地区的实时气温】"),
     WEATHER_DAILY_FORECAST("WeatherDailyForecast.txt", null, 3.2, "获取天气预测"),

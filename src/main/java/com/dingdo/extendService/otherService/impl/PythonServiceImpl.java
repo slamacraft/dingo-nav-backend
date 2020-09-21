@@ -84,11 +84,14 @@ public class PythonServiceImpl implements PythonService {
 
         BufferedImage resultImage = null;
         try {
+            logger.info("开始进行超分辨率放大");
             byte[] bytes = restTemplate.postForObject("http://106.53.85.24:8000/predict_by_util/", request, byte[].class);
 //            byte[] bytes = restTemplate.postForObject("http://localhost:8000/predict_by_util/", request, byte[].class);
             ByteArrayInputStream in = new ByteArrayInputStream(bytes);    //将b作为输入流；
             resultImage = ImageIO.read(in);
+            logger.info("超分辨率已完成，开始优化前景色");
             resultImage = ImageUtil.foregroundSmooth(resultImage, 3, ImageUtil.MEAN_MAXPOINT);
+            logger.info("前景色优化已完成");
         } catch (Exception e) {
             logger.error("获取超分辨图像时出现错误:", e);
         }

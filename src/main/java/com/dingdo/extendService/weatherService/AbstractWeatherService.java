@@ -3,7 +3,7 @@ package com.dingdo.extendService.weatherService;
 import com.alibaba.fastjson.JSONObject;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.model.weather.Weather;
-import com.dingdo.util.NLPUtils;
+import com.dingdo.util.nlp.NLPUtils;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import org.springframework.beans.factory.annotation.Autowired;

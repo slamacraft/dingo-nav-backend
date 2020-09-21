@@ -1,10 +1,10 @@
-package com.dingdo.schedule.component;
+package com.dingdo.component.schedule;
 
-import com.dingdo.schedule.model.ScheduledTask;
-import com.dingdo.schedule.factory.TaskFactory;
-import com.dingdo.schedule.model.interfacor.ITaskInfo;
-import com.dingdo.schedule.model.interfacor.ITaskList;
-import com.dingdo.schedule.service.MessageTaskService;
+import com.dingdo.component.schedule.model.ScheduledTask;
+import com.dingdo.component.schedule.factory.TaskFactory;
+import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
+import com.dingdo.component.schedule.model.interfacor.ITaskList;
+import com.dingdo.mvc.service.MessageTaskService;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
@@ -12,6 +12,7 @@ import org.springframework.scheduling.config.CronTask;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +41,7 @@ public class TaskRegister<TaskList extends ITaskList, TaskInfo extends ITaskInfo
         this.taskScheduler = taskScheduler;
         this.taskFactory = taskFactory;
         this.messageTaskService = messageTaskService;
-    }
 
-
-    @PostConstruct
-    public void initScheduler(){
         List<ITaskInfo> allTaskInfo = messageTaskService.getAllTaskInfo();
         for(ITaskInfo taskInfo : allTaskInfo){
             addCronTask((TaskInfo) taskInfo);
@@ -52,19 +49,22 @@ public class TaskRegister<TaskList extends ITaskList, TaskInfo extends ITaskInfo
     }
 
 
+    /**
+     * 获取springboot的定时任务器
+     * @return  定时任务器
+     */
     public TaskScheduler getScheduler() {
         return this.taskScheduler;
     }
 
 
     /**
-     * 从当前的定时任务列表中获取定时任务实例
-     *
-     * @param instance
-     * @return
+     * 从当前的定时任务列表中是否包含指定的TaskInfo实例
+     * @param instance  TaskInfo实例
+     * @return  是否包含实例
      */
     public boolean containTaskInfo(TaskInfo instance) {
-        return getTaskInfo(instance) != null ? true : false;
+        return getTaskInfo(instance) != null;
     }
 
 
@@ -76,9 +76,9 @@ public class TaskRegister<TaskList extends ITaskList, TaskInfo extends ITaskInfo
      */
     public TaskInfo getTaskInfo(TaskInfo instance) {
         Map<Class<TaskInfo>, List<TaskList>> taskListByClazzMap = AllTaskList.stream()
-                .collect(Collectors.groupingBy(item -> item.getInfoType()));
+                .collect(Collectors.groupingBy(ITaskList::getInfoType));
 
-        List<Class<TaskInfo>> clazzList = taskListByClazzMap.keySet().stream().collect(Collectors.toList());
+        List<Class<TaskInfo>> clazzList = new ArrayList<>(taskListByClazzMap.keySet());
 
         List<TaskList> taskList = null;
         for (Class<TaskInfo> clazz : clazzList) {

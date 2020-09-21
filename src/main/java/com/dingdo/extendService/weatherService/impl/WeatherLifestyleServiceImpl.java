@@ -15,7 +15,7 @@ public class WeatherLifestyleServiceImpl extends AbstractWeatherService implemen
 
     @Override
     public String sendReply(ReqMsg reqMsg) {
-        StringBuffer reply = new StringBuffer();
+        StringBuilder reply = new StringBuilder();
         List<String> locationList = getLocation(reqMsg.getRawMessage());
         if (CollectionUtils.isEmpty(locationList)) {
             return "请问你要查询哪个地方呢";

@@ -1,17 +1,16 @@
 package com.dingdo.msgHandler.service.impl;
 
-import com.dingdo.Component.InstructionMethodContext;
-import com.dingdo.Component.SaveMsgComponent;
-import com.dingdo.Component.Tess4jComponent;
+import com.dingdo.config.customContext.InstructionMethodContext;
+import com.dingdo.component.otherComponent.Tess4jComponent;
 import com.dingdo.msgHandler.factory.CQCodeFactory;
 import com.dingdo.msgHandler.model.CQCode;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.MsgHandleService;
 import com.dingdo.msgHandler.service.MsgService;
 import com.dingdo.util.CQCodeUtil;
-import com.dingdo.util.InstructionUtils;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -28,7 +27,7 @@ import java.util.*;
 public class MgsServiceImpl implements MsgService, ApplicationContextAware {
 
     // 使用log4j打印日志
-    private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(MgsServiceImpl.class);
+    private static Logger logger = Logger.getLogger(MgsServiceImpl.class);
 
     private Map<String, MsgHandleService> msgMap = new HashMap<>();
 
@@ -43,17 +42,17 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
     }
 
     @Override
-    public String receive(HttpServletRequest httpServletRequest) {
+    public String receive(ReqMsg request) {
         return null;
     }
 
 
     @Override
     public String handleMsg(ReqMsg reqMsg) {
-        this.extractCQCode(reqMsg);
+        this.extractCQCode(reqMsg); // 提取cq码
         this.msgOCR(reqMsg);    // 识别图中文字
         String instructResult = instructionMethodContext.instructionHandle(reqMsg);
-        if (StringUtils.isNotBlank(instructResult)) {    // 使用DFA确定是否属于指令格式
+        if (StringUtils.isNotBlank(instructResult)) {    // 如果指令调用服务有返回结果
             return instructResult;
         }
 
@@ -67,7 +66,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
      *
      * @param reqMsg
      */
-    public void extractCQCode(ReqMsg reqMsg) {
+    private void extractCQCode(ReqMsg reqMsg) {
         String msg = reqMsg.getMessage();
         List<CQCode> cqCodeList = CQCodeFactory.getCQCodeList(msg);
         reqMsg.setCqCodeList(cqCodeList);
@@ -79,15 +78,10 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
      * 提取图中文字，保留中文
      *
      * @param reqMsg
-     * @return
      */
-    public void msgOCR(ReqMsg reqMsg) {
+    private void msgOCR(ReqMsg reqMsg) {
         String imgChiInfo = tess4jComponent.tessOCR(reqMsg);
-        reqMsg.setImageMessage(imgChiInfo);
     }
-
-
-
 
 
     @Override

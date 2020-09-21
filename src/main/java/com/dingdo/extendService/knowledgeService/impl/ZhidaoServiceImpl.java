@@ -1,6 +1,5 @@
 package com.dingdo.extendService.knowledgeService.impl;
 
-import com.dingdo.Component.WebClientComponent;
 import com.dingdo.enums.UrlEnum;
 
 import com.dingdo.msgHandler.model.ReqMsg;
@@ -24,7 +23,7 @@ import java.util.logging.Logger;
 public class ZhidaoServiceImpl implements ZhidaoService {
 
     @Autowired
-    private WebClientComponent webClientComponent;
+    private WebClient webClient;
 
     @Override
     public String sendReply(ReqMsg reqMsg) {
@@ -70,7 +69,6 @@ public class ZhidaoServiceImpl implements ZhidaoService {
             System.out.println("Loading page now-----------------------------------------------:\n " + url);
 
             // HtmlUnit 模拟浏览器
-            WebClient webClient = webClientComponent.getWebClient();
             Page page = webClient.getPage(url);
             HtmlPage tmpPage = HTMLParser.parseHtml(page.getWebResponse(), webClient.getCurrentWindow());
             // use tmpPage here

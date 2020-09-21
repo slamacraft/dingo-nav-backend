@@ -1,50 +1,52 @@
-package com.dingdo.Component.stopwatch;
+package com.dingdo.component.tomatoClock;
 
-import com.dingdo.dao.UserTomatoDao;
-import com.dingdo.entities.UserTomatoEntity;
+import com.dingdo.component.stopwatch.StopWatchFuture;
+import com.dingdo.component.stopwatch.StopWatchTask;
+import com.dingdo.mvc.mapper.UserTomatoMapper;
+import com.dingdo.mvc.entities.UserTomatoEntity;
 import com.dingdo.msgHandler.service.PrivateMsgService;
+import com.dingdo.mvc.service.UserTomatoService;
 
 /**
- * 一些声明信息
+ * 番茄钟任务类
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/9/17 10:55
  * @since JDK 1.8
+ * @see StopWatchFuture
  */
 public class TomatoFuture extends StopWatchFuture {
 
+    // 机器人id
     private String robotId;
-
+    // 用户id
     private String userId;
 
     private final PrivateMsgService privateMsgService;
-
-    private final UserTomatoDao userTomatoDao;
+    private final UserTomatoService userTomatoService;
 
     public TomatoFuture(String id,
                         Long count,
                         String robotId,
                         String userId,
                         PrivateMsgService privateMsgService,
-                        UserTomatoDao userTomatoDao) {
+                        UserTomatoService userTomatoMapper) {
         super();
         super.id = id;
         super.count = count;
-        StopWatchTask[] tasks = new StopWatchTask[]{
+        super.taskList = new StopWatchTask[]{
                 new StopWatchTask(this::start, 0),
                 new StopWatchTask(this::calculate, 25 * 60),
                 new StopWatchTask(this::end, 5 * 60)
         };
-        super.taskList = tasks;
         this.robotId = robotId;
         this.userId = userId;
         this.privateMsgService = privateMsgService;
-        this.userTomatoDao = userTomatoDao;
+        this.userTomatoService = userTomatoMapper;
     }
 
     public int getTomato() {
-        return userTomatoDao.selectById(userId).getTomato();
+        return userTomatoService.getById(userId).getTomato();
     }
 
     private void start() {
@@ -56,7 +58,7 @@ public class TomatoFuture extends StopWatchFuture {
     }
 
     private void end() {
-        UserTomatoEntity userTomatoEntity = userTomatoDao.selectById(userId);
+        UserTomatoEntity userTomatoEntity = userTomatoService.getById(userId);
         userTomatoEntity.setTomato(userTomatoEntity.getTomato() + 1);
         privateMsgService.sendPrivateMsg(this.robotId, this.userId, "获得一个番茄");
     }

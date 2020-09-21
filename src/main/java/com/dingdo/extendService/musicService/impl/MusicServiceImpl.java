@@ -2,7 +2,7 @@
 //
 //import com.alibaba.fastjson.JSONObject;
 //import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-//import com.dingdo.Component.WebClientComponent;
+//import com.dingdo.component.otherComponent.WebClientComponent;
 //import com.dingdo.enums.UrlEnum;
 //import com.dingdo.extendService.musicService.MusicService;
 //import com.dingdo.extendService.model.msgFromCQ.SearchMsg;

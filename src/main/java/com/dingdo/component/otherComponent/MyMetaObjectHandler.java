@@ -1,4 +1,4 @@
-package com.dingdo.component;
+package com.dingdo.component.otherComponent;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 
 /**
  * mybatis-plus的sql后置处理器
+ * 用于对指定字段进行自动填充
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/8/26 16:54
  * @since JDK 1.8
  */

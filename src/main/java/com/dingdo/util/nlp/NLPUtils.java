@@ -1,6 +1,5 @@
-package com.dingdo.util;
+package com.dingdo.util.nlp;
 
-import com.dingdo.util.enums.ChiNumEnum;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.dingdo.util.enums.TimeEnum.*;
+import static com.dingdo.util.nlp.TimeEnum.*;
 
 /**
  * 自然语言处理工具类

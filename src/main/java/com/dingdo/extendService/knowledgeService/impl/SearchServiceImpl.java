@@ -4,7 +4,7 @@
 //import com.dingdo.extendService.knowledgeService.SearchService;
 //import com.dingdo.extendService.model.msgFromCQ.SearchMsg;
 //import com.dingdo.msgHandler.model.ReqMsg;
-//import com.dingdo.util.NLPUtils;
+//import com.dingdo.util.nlp.NLPUtils;
 //import com.hankcs.hanlp.seg.common.Term;
 //import org.apache.commons.collections4.CollectionUtils;
 //import org.apache.commons.lang3.StringUtils;

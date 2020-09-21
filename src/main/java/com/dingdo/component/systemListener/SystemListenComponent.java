@@ -1,14 +1,13 @@
-package com.dingdo.Component;
+package com.dingdo.component.systemListener;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.dingdo.Component.componentBean.MonitorInfoBean;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.RedisEnum;
 import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.schedule.SystemTaskInfo;
-import com.dingdo.schedule.component.TaskRegister;
+import com.dingdo.component.schedule.model.SystemTaskInfo;
+import com.dingdo.component.schedule.TaskRegister;
 import com.dingdo.util.InstructionUtils;
 import com.sun.management.OperatingSystemMXBean;
 import org.springframework.beans.factory.annotation.Autowired;

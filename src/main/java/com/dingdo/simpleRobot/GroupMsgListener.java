@@ -8,10 +8,9 @@ import com.forte.qqrobot.sender.MsgSender;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * 一些声明信息
+ * 群消息监听器
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/8/10 15:28
  * @since JDK 1.8
  */

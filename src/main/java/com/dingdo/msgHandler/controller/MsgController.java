@@ -1,14 +1,17 @@
-package com.dingdo.controller;
+package com.dingdo.msgHandler.controller;
 
+import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.MsgService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/msg")
+@Api(tags = {"消息接收接口"})
 public class MsgController {
 
     private final MsgService msgService;
@@ -18,13 +21,10 @@ public class MsgController {
         this.msgService = msgService;
     }
 
-    /**
-     * 消息上报接口
-     *
-     * @param request
-     */
-    @RequestMapping("/receive")
-    public String receive(HttpServletRequest request) {
+
+    @ApiOperation("消息上报接口")
+    @GetMapping("/receive")
+    public String receive(@RequestAttribute ReqMsg request) {
         String receive = msgService.receive(request);
         System.out.println(receive);
         return receive;

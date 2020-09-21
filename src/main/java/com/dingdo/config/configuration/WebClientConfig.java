@@ -1,4 +1,4 @@
-package com.dingdo.config;
+package com.dingdo.config.configuration;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;

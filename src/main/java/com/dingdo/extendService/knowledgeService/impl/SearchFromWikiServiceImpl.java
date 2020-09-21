@@ -1,6 +1,5 @@
 package com.dingdo.extendService.knowledgeService.impl;
 
-import com.dingdo.Component.WebClientComponent;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.extendService.knowledgeService.SearchFromWikiService;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -22,7 +21,7 @@ import java.util.List;
 public class SearchFromWikiServiceImpl implements SearchFromWikiService {
 
     @Autowired
-    private WebClientComponent webClientComponent;
+    private WebClient webClient;
     @Autowired
     private RestTemplate restTemplate;
 
@@ -34,7 +33,6 @@ public class SearchFromWikiServiceImpl implements SearchFromWikiService {
             String wordsGBK = java.net.URLEncoder.encode(words, "GBK");
             String url = UrlEnum.GBF_WIKI + "?search=" + wordsGBK;
 
-            WebClient webClient = webClientComponent.getWebClient();
             HtmlPage page = webClient.getPage(url);
             webClient.waitForBackgroundJavaScript(1 * 1000);     // 等待js后台执行3秒
 

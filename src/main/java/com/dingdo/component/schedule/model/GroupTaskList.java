@@ -1,8 +1,8 @@
-package com.dingdo.schedule.model;
+package com.dingdo.component.schedule.model;
 
-import com.dingdo.schedule.model.interfacor.IGroupTaskInfo;
-import com.dingdo.schedule.model.interfacor.ITaskInfo;
-import com.dingdo.schedule.model.interfacor.ITaskList;
+import com.dingdo.component.schedule.model.interfacor.IGroupTaskInfo;
+import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
+import com.dingdo.component.schedule.model.interfacor.ITaskList;
 
 import java.util.ArrayList;
 import java.util.List;

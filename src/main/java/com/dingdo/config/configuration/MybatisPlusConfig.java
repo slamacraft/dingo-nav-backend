@@ -1,4 +1,4 @@
-package com.dingdo.config;
+package com.dingdo.config.configuration;
 
 import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
 import com.baomidou.mybatisplus.extension.incrementer.H2KeyGenerator;

@@ -6,10 +6,9 @@ import com.forte.qqrobot.beans.messages.types.MsgGetTypes;
 import com.forte.qqrobot.sender.MsgSender;
 
 /**
- * 一些声明信息
+ * 群主成员新增监听器
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/8/11 17:02
  * @since JDK 1.8
  */

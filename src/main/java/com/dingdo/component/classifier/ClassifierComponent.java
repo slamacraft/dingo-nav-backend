@@ -1,4 +1,4 @@
-package com.dingdo.Component.classifier;
+package com.dingdo.component.classifier;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.Pipeline;
@@ -20,12 +20,22 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
+/**
+ * 一个抽象化的基于spark{@code ProbabilisticClassifier}的分类器，
+ * 该分类器集成了load,save,fit,predict,evaluate等方法，将构造一个简单的
+ * 语义分类器的过程抽取出来作为单独的父类，继承本类后按照需求构建分类器与
+ * 训练的数据即可完成分类模型的构建
+ *
+ * @param <Classifier>  分类器类型
+ * @param <Model>   分类器模型
+ * @see ProbabilisticClassifier
+ * @see ProbabilisticClassificationModel
+ */
 public abstract class ClassifierComponent<Classifier extends ProbabilisticClassifier, Model extends ProbabilisticClassificationModel> {
 
     // 使用log4j打印日志
     private static Logger logger = Logger.getLogger(ClassifierComponent.class);
-    // 分类器名称
-    protected String classifierName = "defaultClassifier";
     // sparkSession
     @Autowired
     protected SparkSession spark;
@@ -36,18 +46,14 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
     // 模型管道
     private PipelineModel pipelineModel = null;
 
-    public ClassifierComponent() {
-    }
-
-    public ClassifierComponent(String classifierName) {
-        this.classifierName = classifierName;
+    protected ClassifierComponent() {
     }
 
     /**
      * 加载模型
-     *
-     * @param path 模型路径
-     * @return
+     * @param path  模型的路径
+     * @param loadFunction  具体的模型加载方法
+     * @return  加载完成的模型
      */
     public Model load(String path, Function<String, Model> loadFunction) {
         return (Model) loadFunction.apply(path);
@@ -59,7 +65,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      *
      * @param filePath 文件路径
      * @param format   文件数据格式
-     * @return
+     * @return  Dataset数据集
      */
     public Dataset<Row> getDataFromFileByFormat(String filePath, String format) {
         return this.spark.read().format(format).load(filePath);
@@ -72,8 +78,8 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      *
      * @param trainDataPath   训练数据的地址
      * @param classifierClass 训练的模型类型
-     * @throws InstantiationException   Classifier实例化失败
-     * @throws IllegalAccessException   非法访问异常
+     * @throws InstantiationException Classifier实例化失败
+     * @throws IllegalAccessException 非法访问异常
      */
     public void fit(String trainDataPath, String dataFormat, Class<Classifier> classifierClass) throws IllegalAccessException, InstantiationException {
         this.fit(this.getDataFromFileByFormat(trainDataPath, dataFormat), classifierClass);
@@ -85,8 +91,8 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      *
      * @param trainData       训练数据集
      * @param classifierClass 训练的模型类型
-     * @throws InstantiationException   Classifier实例化失败
-     * @throws IllegalAccessException   非法访问异常
+     * @throws InstantiationException Classifier实例化失败
+     * @throws IllegalAccessException 非法访问异常
      */
     public void fit(Dataset<Row> trainData, Class<Classifier> classifierClass) throws InstantiationException, IllegalAccessException {
 
@@ -144,7 +150,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      *
      * @param testDataPath 测试数据地址
      * @param dataFormat   测试数据的格式
-     * @return  预测的分类标签
+     * @return 预测的分类标签
      */
     public double evaluate(String testDataPath, String dataFormat) {
         return this.evaluate(this.getDataFromFileByFormat(testDataPath, dataFormat));
@@ -154,7 +160,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      * 测试模型
      *
      * @param testData 测试数据集
-     * @return  预测的分类标签
+     * @return 预测的分类标签
      */
     public double evaluate(Dataset<Row> testData) {
 
@@ -174,7 +180,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      * 预测分类
      *
      * @param object 待预测分类的项
-     * @return  预测的分类标签
+     * @return 预测的分类标签
      */
     public abstract double predict(Object object);
 
@@ -183,7 +189,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      * 预测分类
      *
      * @param vectors 待预测分类的向量数组
-     * @return  预测的分类标签
+     * @return 预测的分类标签
      */
     public double predict(double[] vectors) {
         Vector predictVector = Vectors.dense(vectors);
@@ -195,7 +201,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      * 预测分类
      *
      * @param predictVector 待预测分类的向量
-     * @return  预测的分类标签
+     * @return 预测的分类标签
      */
     public double predict(Vector predictVector) {
         double predict = model.predict(predictVector);
@@ -204,14 +210,6 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
 
     private Classifier getInstanceOfT(Class<Classifier> aClass) throws IllegalAccessException, InstantiationException {
         return aClass.newInstance();
-    }
-
-    public String getClassifierName() {
-        return classifierName;
-    }
-
-    public void setClassifierName(String classifierName) {
-        this.classifierName = classifierName;
     }
 
     protected Model getModel() {

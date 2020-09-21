@@ -1,4 +1,4 @@
-package com.dingdo.config;
+package com.dingdo.config.configuration;
 
 import com.forte.qqrobot.BaseApplication;
 import com.forte.qqrobot.BotRuntime;

@@ -1,8 +1,9 @@
 package com.dingdo.msgHandler.service.impl;
 
-import com.dingdo.Component.SaveMsgComponent;
+import com.dingdo.component.otherComponent.SaveMsgComponent;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
+import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.extendService.otherService.SpecialReplyService;
 import com.dingdo.msgHandler.model.ReqMsg;
@@ -11,7 +12,6 @@ import com.dingdo.util.CQCodeUtil;
 import com.dingdo.util.InstructionUtils;
 import com.forte.qqrobot.bot.BotManager;
 import com.forte.qqrobot.bot.BotSender;
-import org.apache.pdfbox.contentstream.operator.state.Save;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +22,26 @@ import java.util.Random;
 public class GroupMsgServiceImpl implements GroupMsgService {
 
     private final ServiceFromApi serviceFromApi;
-
     private final BotManager botManager;
-
     private final SpecialReplyService specialReplyService;
-
     private final SaveMsgComponent saveMsgComponent;
 
     // 在不at的情况下，机器人对群消息产生响应的几率，默认是0
     private int RANDOM_RATIO = 0;
 
     private Random random = new Random();
+
+
+    @Override
+    public String handleMsg(ReqMsg reqMsg) {
+        saveMsgComponent.saveGroupMsg(reqMsg.getRawMessage(), reqMsg.getGroupId()); // 存储群消息
+        specialReplyService.rereadGroupMsg(reqMsg); // 复读消息
+        if(!reqMsg.getMessage().contains("CQ:at,qq=" + reqMsg.getSelfId())){
+            return randomSendMsg(reqMsg);
+        }
+        return CQCodeUtil.atTarget(serviceFromApi.sendMsgFromApi(reqMsg), reqMsg.getUserId());
+    }
+
 
     @Autowired
     public GroupMsgServiceImpl(SaveMsgComponent saveMsgComponent,
@@ -53,7 +62,7 @@ public class GroupMsgServiceImpl implements GroupMsgService {
      * @param params
      * @return
      */
-    @VerifiAnnotation
+    @VerifiAnnotation(level = VerificationEnum.MANAGER)
     @Instruction(description = "设置随机响应几率")
     public String setRandomReplyRatio(ReqMsg reqMsg, Map<String, String> params) {
         this.RANDOM_RATIO = InstructionUtils.getParamValueOfInteger(params, "randomRatio", "概率");
@@ -68,32 +77,21 @@ public class GroupMsgServiceImpl implements GroupMsgService {
     }
 
 
-    @Override
-    public String handleGroupMsg(ReqMsg reqMsg) {
-        // 存储群消息
-        saveMsgComponent.saveGroupMsg(reqMsg.getRawMessage(), reqMsg.getGroupId());
-
-        /* ===========================复读模块============================ */
-        specialReplyService.rereadGroupMsg(reqMsg);
-
-        /* ===========================随机回答模块============================ */
-        //没有at机器人就不回答
+    /**
+     * 没有at机器人就根据设定的概率随机回答
+     * @param reqMsg    请求消息
+     */
+    private String randomSendMsg(ReqMsg reqMsg){
+        String reply = "";
         if (!reqMsg.getMessage().contains("CQ:at,qq=" + reqMsg.getSelfId())) {
             if (random.nextInt(100) < RANDOM_RATIO) {
                 if (random.nextInt(100) < 10) {
-                    return specialReplyService.getRandomGroupMsgYesterday(reqMsg);
+                    reply= specialReplyService.getRandomGroupMsgYesterday(reqMsg);
                 } else {
-                    return serviceFromApi.sendMsgFromApi(reqMsg);
+                    reply = serviceFromApi.sendMsgFromApi(reqMsg);
                 }
             }
-            return null;
         }
-
-        return CQCodeUtil.atTarget(serviceFromApi.sendMsgFromApi(reqMsg), reqMsg.getUserId());
-    }
-
-    @Override
-    public String handleMsg(ReqMsg reqMsg) {
-        return this.handleGroupMsg(reqMsg);
+        return reply;
     }
 }

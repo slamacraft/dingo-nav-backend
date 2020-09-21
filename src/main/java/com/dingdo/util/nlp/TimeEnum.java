@@ -1,4 +1,4 @@
-package com.dingdo.util.enums;
+package com.dingdo.util.nlp;
 
 /**
  * 一些声明信息

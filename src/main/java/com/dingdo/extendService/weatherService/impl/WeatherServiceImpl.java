@@ -15,12 +15,12 @@ public class WeatherServiceImpl extends AbstractWeatherService implements Weathe
 
     @Override
     public String sendReply(ReqMsg reqMsg) {
-        StringBuffer reply = new StringBuffer();
-        List<String> loactionList = getLocation(reqMsg.getRawMessage());
-        if (CollectionUtils.isEmpty(loactionList)){
+        StringBuilder reply = new StringBuilder();
+        List<String> locationList = getLocation(reqMsg.getRawMessage());
+        if (CollectionUtils.isEmpty(locationList)){
             return "至少告诉我是哪个地方吧啊喂！";
         }
-        for (String location:loactionList){
+        for (String location:locationList){
             Weather weatherInfoFromApi = getWeatherInfoFromApi(location, "now");
             reply.append(location);
             reply.append(weatherInfoFromApi.getHeWeather6().get(0).getNow().toString());
