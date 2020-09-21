@@ -14,6 +14,6 @@
 ~~emmmm，只能说没有特点。~~<br>
 这只是处于兴趣所搭建的一个简易的qq机器人，上面所搭载的功能只是出于~~有意思的需要【迫真】和~~对新学知识的理解与实践所开发的一个小东西，
 和大佬们搭载了各种五花八门的功能的机器人在功能性上没法比。
-##友情链接
+## 友情链接
 [simple-bot机器人](https://github.com/ForteScarlet/simple-robot-component-mirai)<br>
 [mirai机器人](https://github.com/mamoe/mirai)
