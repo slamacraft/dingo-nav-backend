@@ -1,0 +1,29 @@
+{
+  "app": "com.tencent.structmsg",
+  "desc": "新闻",
+  "view": "news",
+  "ver": "0.0.0.1",
+  "prompt": "&#91;分享&#93;&#91;闲聊杂谈&#93;结果我还是打不过16",
+  "meta": {
+    "news": {
+      "action": "",
+      "android_pkg_name": "",
+      "app_type": 1,
+      "appid": 101053870,
+      "desc": "&#91;闲聊杂谈&#93;结果我还是打不过16",
+      "jumpUrl": "https:\/\/ngabbs.com\/read.php?tid=23456502&amp;_fu=60434573%2C1",
+      "preview": "https:\/\/external-30160.picsz.qpic.cn\/02aea2128fa4d90d6c2efbd60d31cae1\/jpg1",
+      "source_icon": "",
+      "source_url": "",
+      "tag": "NGA玩家社区",
+      "title": "&#91;闲聊杂谈&#93;结果我还是打不过16"
+    }
+  },
+  "config": {
+    "autosize": true,
+    "ctime": 1600909236,
+    "forward": true,
+    "token": "eb83bb23302b325cdb49f08731db2b78",
+    "type": "normal"
+  }
+}

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<msg templateID="123" url="https://www.bilibili.com/video/BV1wi4y1E7Q9/?p=1" serviceID="1" action="web" brief="&#91;QQ小程序&#93;哔哩哔哩" flag="0">
+    <item layout="2">
+        <picture cover="http://external-30160.picsz.qpic.cn/3921a54b88ce7615bf16279f97c4c949/jpg1"/>
+        <title>哔哩哔哩</title>
+        <summary>【碧蓝幻想】光方黄龙一键牛</summary>
+    </item>
+    <source url="https://www.bilibili.com/video/BV1wi4y1E7Q9/?p=1"
+            icon="http://miniapp.gtimg.cn/public/appicon/432b76be3a548fc128acaa6c1ec90131_200.jpg" name="哔哩哔哩"/>
+</msg>
