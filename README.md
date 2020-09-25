@@ -6,7 +6,7 @@
 * 能够设定一些迎新消息
 * 能够为动态设定一些定时提醒
 * 内置小番茄钟
-* 可以在qq里查询天气（基于[和风天气api](https://dev.heweather.com/docs/api/overview)）
+* 可以在qq里查询天气（基于[和风天气api](https://dev.heweather.com/docs/api/overview) ）
 * 内置非常非常简单的语义分类模型（基于spark的mllib库，可以按需要进行简单的扩展）
 * 有一些小巧的复读功能
 * （未完待续）
@@ -15,5 +15,7 @@
 这只是处于兴趣所搭建的一个简易的qq机器人，上面所搭载的功能只是出于~~有意思的需要【迫真】和~~对新学知识的理解与实践所开发的一个小东西，
 和大佬们搭载了各种五花八门的功能的机器人在功能性上没法比。
 ## 友情链接
-[simple-bot机器人](https://github.com/ForteScarlet/simple-robot-component-mirai)<br>
+[simple-bot机器人](https://github.com/ForteScarlet/simple-robot-component-mirai) <br>
 [mirai机器人](https://github.com/mamoe/mirai)
+## 鸣谢
+特别感谢[JetBrains](https://www.jetbrains.com/idea) 为开源项目提供免费的[IntelliJ IDEA](https://www.jetbrains.com/idea/) 授权
