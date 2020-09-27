@@ -28,8 +28,4 @@ public class WeatherLifestyleServiceImpl extends AbstractWeatherService implemen
         return reply.toString();
     }
 
-    @Override
-    public String getReply(ReqMsg reqMsg) {
-        return null;
-    }
 }

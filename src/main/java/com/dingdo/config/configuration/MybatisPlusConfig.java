@@ -5,12 +5,17 @@ import com.baomidou.mybatisplus.extension.incrementer.H2KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
+/**
+ * mybatis配置类
+ */
 @Configuration
 public class MybatisPlusConfig {
 
     /**
-     * 就是一个主键生成器
-     * @return
+     * mybatis-plus主键生成器
+     *
+     * @return {@link IKeyGenerator}
      */
     @Bean
     public IKeyGenerator keyGenerator() {

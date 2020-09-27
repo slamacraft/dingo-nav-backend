@@ -14,7 +14,7 @@ import static com.dingdo.util.nlp.TimeEnum.*;
 /**
  * 自然语言处理工具类
  */
-public class NLPUtils {
+public final class NLPUtils {
 
     // 简易分词器
     private static Segment nativeSegment = HanLP.newSegment();

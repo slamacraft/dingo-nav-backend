@@ -3,7 +3,7 @@ package com.dingdo.component.classifier;
 import com.alibaba.fastjson.JSONObject;
 import com.dingdo.common.exception.ClassifierInitializeException;
 import com.dingdo.enums.ClassicEnum;
-import com.dingdo.util.FileUtil;
+import com.dingdo.util.FileUtils;
 import com.dingdo.util.nlp.NLPUtils;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
@@ -14,7 +14,6 @@ import org.apache.spark.ml.classification.NaiveBayesModel;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -33,18 +32,20 @@ public class NaiveBayesClassifierComponent
         extends ClassifierComponent<NaiveBayes, NaiveBayesModel> {
 
     // 使用log4j打印日志
-    private static Logger logger = Logger.getLogger(NaiveBayesClassifierComponent.class);
+    private static final Logger logger = Logger.getLogger(NaiveBayesClassifierComponent.class);
 
     // 词典路径
-    private String vocabularyPath;
+    private final String vocabularyPath;
     // 训练数据路径
-    private String trainDataPath;
+    private final String trainDataPath;
     // 模型保存路径
-    private String modelSavePath;
+    private final String modelSavePath;
     // 模型加载路径
-    private String modelLoadPath;
+    private final String modelLoadPath;
     // 词典集
-    private Map<String, Integer> vocabulary = new HashMap<>();
+    private final Map<String, Integer> vocabulary = new HashMap<>();
+    // 词典中的非同意词类别数
+    private int vocabularyLayers;
 
     public NaiveBayesClassifierComponent(String vocabularyPath, String trainDataPath, String modelSavePath, String modelLoadPath) {
         super();
@@ -63,21 +64,9 @@ public class NaiveBayesClassifierComponent
     }
 
     @PostConstruct
-    public void run() throws IOException, InstantiationException, IllegalAccessException {
-        if (!new File(vocabularyPath).exists()) {
-            throw new ClassifierInitializeException("分类器初始化异常，文件" + vocabularyPath + "不存在");
-        }
-
+    public void run() {
         initVocabulary();
-
-        if (StringUtils.isNotBlank(modelLoadPath)) {    // 如果模型加载路径不为空，则优先加载模型
-            try {
-                this.load(modelLoadPath);
-            } catch (Exception e) {
-                retrainModel();
-            }
-        }
-
+        initModel();
         logger.info("朴素贝叶斯模型初始化完成");
     }
 
@@ -88,13 +77,35 @@ public class NaiveBayesClassifierComponent
      * @param path 模型的路径
      */
     public void load(String path) {
-        String label = FileUtil.loadFile(modelSavePath + "/label.txt");
+        String label = FileUtils.loadFile(modelSavePath + "/label.txt");
         JSONObject jsonObject = JSONObject.parseObject(label);
 
         super.predictedLabelMap = ((Map<String, Object>) jsonObject).entrySet().stream()
                 .collect(Collectors.toMap(item -> Double.valueOf(item.getKey()), Map.Entry::getValue));
 
         this.model = super.load(path, NaiveBayesModel::load);
+    }
+
+
+    /**
+     * 初始化模型
+     * <p>
+     * 从{@code modelLoadPath}路径加载模型，如果加载失败，
+     * 则调用{@link #retrainModel}重新训练一个模型
+     * </p>
+     */
+    public void initModel() {
+        if (StringUtils.isNotBlank(modelLoadPath)) {    // 如果模型加载路径不为空，则优先加载模型
+            try {
+                this.load(modelLoadPath);
+            } catch (Exception e) {
+                try {
+                    retrainModel();
+                } catch (IOException | InstantiationException | IllegalAccessException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        }
     }
 
 
@@ -107,7 +118,7 @@ public class NaiveBayesClassifierComponent
      */
     public void retrainModel() throws IOException, InstantiationException, IllegalAccessException {
         File trainDataFile = new File(trainDataPath);
-        if (!trainDataFile.exists() || StringUtils.isBlank(FileUtil.loadFile(trainDataPath))) {
+        if (!trainDataFile.exists() || StringUtils.isBlank(FileUtils.loadFile(trainDataPath))) {
             trainDataFile.createNewFile();
             initTrainData(trainDataPath);
         }
@@ -123,7 +134,7 @@ public class NaiveBayesClassifierComponent
                         item -> String.valueOf(item.getKey()), Map.Entry::getValue)
                 );
 
-        FileUtil.writeFile(modelSavePath + "/label.txt", new JSONObject(toSaveLabelMap).toJSONString());
+        FileUtils.appendText(modelSavePath + "/label.txt", new JSONObject(toSaveLabelMap).toJSONString());
     }
 
 
@@ -180,6 +191,7 @@ public class NaiveBayesClassifierComponent
         super.fit(trainData, NaiveBayes.class);
     }
 
+
     @Override
     public double predict(Object object) {
         double[] vectors = this.sentenceToArrays((String) object, NaiveBayesClassifierComponent::queryPlaceAbstract);
@@ -191,66 +203,93 @@ public class NaiveBayesClassifierComponent
 
     /**
      * 训练数据预处理
+     * <p>
+     * 以每行为标准加载语料
+     * 将语料依照词典表转换为libsvm格式文件
+     * for example:
+     * label    key1:value1,    key2:value2,    key3:value3
+     * 1.0      1:0.0      ,    2:1.0      ,    3:2.0
      *
      * @param trainDataPath 训练数据路径
      */
     private void initTrainData(String trainDataPath) {
-        FileUtil.clearFile(trainDataPath);
+        FileUtils.clearFile(trainDataPath);
 
-        Map<String, String> filePath2NameMap = ClassicEnum.getAllFileSrc();
+        Map<Double, String> allLayerFileMap = ClassicEnum.getAllLayerFileMap();
 
         StringBuilder toWriteString = new StringBuilder();
-        for (Map.Entry<String, String> file : filePath2NameMap.entrySet()) {
-            String trainDataFile = FileUtil.loadFileFromResourse(file.getKey());
-            if (StringUtils.isBlank(trainDataFile)) {  // 不计入空文件
-                continue;
+
+        allLayerFileMap.forEach((key, value) -> {
+            // 获取不为空的文件
+            String trainDataFile = FileUtils.loadFileFromResource(value);
+            if (StringUtils.isBlank(trainDataFile)) {
+                return;
             }
 
-            // 按换行符加载语料
-            // 将语料依照词典表转换为libsvm格式文件
-            // for example: label key1:value1, key2:value2, key3:value3
-            //              1.0   1:0.0      , 2:1.0      , 3:2.0
-            double label = 0;
-            ClassicEnum enumByFileName = ClassicEnum.getEnumByFileName(file.getValue());
-            if (enumByFileName != null) {
-                label = enumByFileName.getValue();
-            }
-
-            String[] trainDataList = trainDataFile.split("\n");
-            for (String trainData : trainDataList) {
-                double[] questionVector = sentenceToArrays(trainData, null);
-
-                // 忽视0向量
-                double sum = Arrays.stream(questionVector).sum();
-                if (sum <= 0) {
-                    continue;
-                }
-
-                // 将向量构建成稀疏矩阵
-                toWriteString.append(label);
-                for (int i = 0; i < questionVector.length; i++) {
-                    if (questionVector[i] == 0) {
+            // 将文件按行拆分为句子，并将句子提取为特征向量
+            Arrays.stream(trainDataFile.split("\n"))
+                    .map(this::sentenceToArrays)
+                    .filter(item -> Arrays.stream(item).sum() > 0
+                    ).forEach(item -> {
+                toWriteString.append(key);
+                // 将特征向量保存为稀疏矩阵
+                for (int i = 0; i < item.length; i++) {
+                    if (item[i] == 0) {
                         continue;
                     }
-                    toWriteString.append(" ").append(i + 1).append(":").append(questionVector[i]);
+                    toWriteString.append(" ").append(i + 1).append(":").append(item[i]);
                 }
                 toWriteString.append("\n");
-            }
-        }
-
-        try {
-            FileUtil.writeFile(trainDataPath, toWriteString.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            });
+        });
+        FileUtils.appendText(trainDataPath, toWriteString.toString());
+//
+//        Map<String, String> filePath2NameMap = ClassicEnum.getAllFileSrc();
+//
+//        for (Map.Entry<String, String> file : filePath2NameMap.entrySet()) {
+//            String trainDataFile = FileUtils.loadFileFromResource(file.getKey());
+//            if (StringUtils.isBlank(trainDataFile)) {  // 不计入空文件
+//                continue;
+//            }
+//
+//            double label = 0;
+//            ClassicEnum enumByFileName = ClassicEnum.getEnumByFileName(file.getValue());
+//            if (enumByFileName != null) {
+//                label = enumByFileName.getValue();
+//            }
+//
+//            String[] trainDataList = trainDataFile.split("\n");
+//            for (String trainData : trainDataList) {
+//                double[] questionVector = sentenceToArrays(trainData, null);
+//
+//                // 忽视0向量
+//                double sum = Arrays.stream(questionVector).sum();
+//                if (sum <= 0) {
+//                    continue;
+//                }
+//
+//                // 将向量构建成稀疏矩阵
+//                toWriteString.append(label);
+//                for (int i = 0; i < questionVector.length; i++) {
+//                    if (questionVector[i] == 0) {
+//                        continue;
+//                    }
+//                    toWriteString.append(" ").append(i + 1).append(":").append(questionVector[i]);
+//                }
+//                toWriteString.append("\n");
+//            }
+//        }
     }
 
     /**
      * 初始化词典表
      */
     private void initVocabulary() {
+        if (!new File(vocabularyPath).exists()) {
+            throw new ClassifierInitializeException("分类器初始化异常，文件" + vocabularyPath + "不存在");
+        }
         // 初始化字典表
-        String scoreVocabulary = FileUtil.loadFile(vocabularyPath);
+        String scoreVocabulary = FileUtils.loadFile(vocabularyPath);
         String[] vocabularies = scoreVocabulary.split("\n");
 
         for (int i = 0; i < vocabularies.length; i++) {
@@ -259,8 +298,24 @@ public class NaiveBayesClassifierComponent
                 this.vocabulary.put(vocabulary, i);
             }
         }
+
+        this.vocabularyLayers = vocabulary.values().stream().distinct().max(Integer::compareTo).get();
     }
 
+
+    /**
+     * 根据词典将语句分解为特征向量
+     * <p>
+     * 本方法为{@link #sentenceToArrays(String, Function)}方法{@code toAbstractFunction}
+     * 默认值为{@code null}的重载入口
+     *
+     * @param sentence 语句
+     * @return 特征向量
+     * @see #sentenceToArrays(String, Function)
+     */
+    private double[] sentenceToArrays(String sentence) {
+        return sentenceToArrays(sentence, null);
+    }
 
     /**
      * 根据词典将训练数据初始化为向量
@@ -271,22 +326,16 @@ public class NaiveBayesClassifierComponent
      */
     private double[] sentenceToArrays(String sentence, Function<String, List<Term>> toAbstractFunction) {
         // 构建一个维度为词典行数的向量vector，表示语句在该词典下的特征向量
-        Integer max = vocabulary.values().stream().distinct().max(Integer::compareTo).get();
-        double[] vector = new double[max];
+        double[] vector = new double[vocabularyLayers];
 
         // 进行分词,如果传入了抽象化方法，则将分词结果抽象化
         Segment segment = NLPUtils.getNativeSegment();
-        List<Term> terms = null;
-        if (toAbstractFunction != null) {
-            terms = toAbstractFunction.apply(sentence);
-        } else {
-            terms = segment.seg(sentence);
-        }
+        List<Term> terms = toAbstractFunction != null ? toAbstractFunction.apply(sentence) : segment.seg(sentence);
 
         // 特征向量构建
         for (Term term : terms) {
             Integer vectorIndex = vocabulary.get(term.word);
-            if ((vectorIndex) != null && vectorIndex < max) {
+            if ((vectorIndex) != null && vectorIndex < vocabularyLayers) {
                 vector[vectorIndex] += 1;
             }
         }

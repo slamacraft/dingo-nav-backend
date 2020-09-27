@@ -1,6 +1,6 @@
 package com.dingdo.component.otherComponent;
 
-import com.dingdo.util.FileUtil;
+import com.dingdo.util.FileUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +30,7 @@ public class NewWordFindComponent {
     private Map<String, Long> count_words(String path_url) {
         Map<String, Long> word_freq;
 
-        String text = FileUtil.loadFile(path_url).replaceAll("[\\pP\\pS\\pZ]", "");
+        String text = FileUtils.loadFile(path_url).replaceAll("[\\pP\\pS\\pZ]", "");
         String[] line_text = text.split("\n");
 
         StringBuffer word = new StringBuffer("");
@@ -260,7 +260,7 @@ public class NewWordFindComponent {
     }
 
     private void toStopWord(Map<String, Long> words, String stopwordPath) {
-        String text = FileUtil.loadFile(stopwordPath);
+        String text = FileUtils.loadFile(stopwordPath);
         String[] line_text = text.split("\n");
 
         StringBuffer word = new StringBuffer("");

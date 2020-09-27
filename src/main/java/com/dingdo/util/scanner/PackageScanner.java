@@ -17,7 +17,7 @@ public class PackageScanner {
 
     private Set<Class<?>> classes = new HashSet<Class<?>>();
 
-    private ClassLoader classLoader;
+    private final ClassLoader classLoader;
 
     /**
      * 无参构造方法，默认加载上下文类加载器。

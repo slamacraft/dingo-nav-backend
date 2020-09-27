@@ -12,8 +12,8 @@ import com.dingdo.mvc.service.UserTomatoService;
  *
  * @author slamacraft
  * @date: 2020/9/17 10:55
- * @since JDK 1.8
  * @see StopWatchFuture
+ * @since JDK 1.8
  */
 public class TomatoFuture extends StopWatchFuture {
 

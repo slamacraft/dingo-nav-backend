@@ -108,7 +108,7 @@ public class StopWatchFuture {
 
     /**
      * 获取下次执行的时间戳
-     * @return
+     * @return  下次执行的时间戳
      */
     public Long getStartTime() {
         return startTime;
@@ -117,7 +117,7 @@ public class StopWatchFuture {
 
     /**
      * 获取剩余的执行次数
-     * @return
+     * @return  剩余的执行次数
      */
     public Long getCount() {
         return count;

@@ -32,10 +32,6 @@ public class SougoServiceImpl implements SougoService {
         return "好像什么也没找到";
     }
 
-    @Override
-    public String getReply(ReqMsg reqMsg) {
-        return null;
-    }
 
     @Override
     public String getReplyFromSougo(String words) {

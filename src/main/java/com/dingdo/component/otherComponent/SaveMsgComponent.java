@@ -4,10 +4,9 @@ import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.util.FileUtil;
+import com.dingdo.util.FileUtils;
 import com.dingdo.util.InstructionUtils;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
@@ -20,10 +19,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * 聊天消息存储组件件
  */
-@Component
+@Deprecated
 public class SaveMsgComponent {
     // 群消息列表(不一定线程安全)
-    volatile private Map<String, List<String>> groupMsgList = new ConcurrentHashMap<>();
+    private final Map<String, List<String>> groupMsgList = new ConcurrentHashMap<>();
 
     // 消息存储池
     private ThreadPoolExecutor msgStorePool;
@@ -58,11 +57,11 @@ public class SaveMsgComponent {
     /**
      * 消息存储的线程类
      */
-    private class msgStoreThread implements Runnable {
-        private String groupId;
-        private String[] msgList;
+    private class MsgStoreThread implements Runnable {
+        private final String groupId;
+        private final String[] msgList;
 
-        msgStoreThread(String groupId, String[] msgList) {
+        MsgStoreThread(String groupId, String[] msgList) {
             this.groupId = groupId;
             this.msgList = msgList;
         }
@@ -75,13 +74,17 @@ public class SaveMsgComponent {
         public void run() {
             String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             String toWriteString = Arrays.stream(msgList).reduce((item1, item2) -> item1 + item2).get();
-            FileUtil.saveMsgToFile(groupId + " " + today + ".txt", toWriteString);
+            FileUtils.appendTextRelativeToJar("/message/" + groupId + " " + today + ".txt", toWriteString);
         }
     }
 
 
     /**
-     * 存储群聊信息
+     * 存储群聊消息的方法
+     * <p>
+     *     本方法会为每个群聊都赋予一个消息缓冲队列，当缓冲区{@code msgListSize}
+     *     满后，会启动一个{@link MsgStoreThread}线程将消息异步存储到对应的
+     * </p>
      *
      * @param msg
      * @param groupId
@@ -99,7 +102,7 @@ public class SaveMsgComponent {
         if (msgList.size() >= msgListSize) {
             String[] messageList = msgList.toArray(new String[0]);
             msgList.clear();
-            msgStorePool.execute(new msgStoreThread(groupId, messageList));
+            msgStorePool.execute(new MsgStoreThread(groupId, messageList));
         }
     }
 }

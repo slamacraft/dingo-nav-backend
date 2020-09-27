@@ -11,9 +11,8 @@ import com.dingdo.enums.ClassicEnum;
 import com.dingdo.extendService.MsgExtendService;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.mvc.entities.RobotManagerEntity;
-import com.dingdo.util.FileUtil;
+import com.dingdo.util.FileUtils;
 import com.dingdo.util.InstructionUtils;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,24 +34,26 @@ import java.util.stream.Collectors;
 public class InstructionMethodContext {
 
     // 使用log4j打印日志
-    private static Logger logger = Logger.getLogger(InstructionMethodContext.class);
+    private static final Logger logger = Logger.getLogger(InstructionMethodContext.class);
 
     private final NaiveBayesClassifierComponent naiveBayesClassifierComponent;
     private final VerifiAspect verifiAspect;
 
     private static ApplicationContext applicationContext;
     // 指令对应的实例Map
-    private Map<String, Object> beanMap = new HashMap<>();
+    private final Map<String, Object> beanMap = new HashMap<>();
     // 指令对应的方法Map
-    private Map<String, Method> methodMap = new HashMap<>();
+    private final Map<String, Method> methodMap = new HashMap<>();
+    // 指令默认的参数
+    private final Map<String, Map<String, String>> methodDefaultParamsMap = new HashMap<>();
     // 指令对应方法的错误信息Map
-    private Map<Method, String> errorMsgMap = new HashMap<>();
+    private final Map<Method, String> errorMsgMap = new HashMap<>();
     // 指令的帮助菜单集合
     private Map<String, String> helpMap = new HashMap<>();
     // 功能策略集
-    private static final Map<Double, MsgExtendService> extendServiceMap = new HashedMap();
+    private static final Map<Double, MsgExtendService> extendServiceMap = new HashMap<>();
     // 短路指令名称
-    private Map<String, String> shortenedInstruction = new HashMap<>();
+    private final Map<String, String> shortenedInstruction = new HashMap<>();
     // 指令帮助文档路径
     @Value("${resource.doc.helpPath}")
     private String helpDocPath;
@@ -105,6 +106,11 @@ public class InstructionMethodContext {
                     methodMap.put(description, method);
                     beanMap.put(description, bean);
                     errorMsgMap.put(method, errorMsg);
+                    try {
+                        methodDefaultParamsMap.put(description, InstructionUtils.analysisInstruction(annotation.defaultParams()));
+                    } catch (Exception e) {
+                        logger.error("指令" + description + "默认参数异常，请检查", e);
+                    }
                 }
             }
         }
@@ -120,7 +126,7 @@ public class InstructionMethodContext {
      * @param helpDocPath 帮助文档地址
      */
     private void initHelpMenu(String helpDocPath) {
-        String label = FileUtil.loadFile(helpDocPath);
+        String label = FileUtils.loadFile(helpDocPath);
         JSONObject jsonObject = JSONObject.parseObject(label);
 
         this.helpMap = ((Map<String, Object>) jsonObject).entrySet()
@@ -287,7 +293,7 @@ public class InstructionMethodContext {
     private Object invokeShortenedMethod(String instruction, ReqMsg reqMsg) {
         Object target = this.getBeanByInstruction(instruction);
         Method method = this.getMethodByInstruction(instruction);
-        HashMap<String, String> params = new HashMap();
+        HashMap<String, String> params = new HashMap<>();
         params.put("短接", "启用");
 
         String result = (String) this.invokeMethod(target, method, reqMsg, params);
@@ -302,10 +308,11 @@ public class InstructionMethodContext {
     /**
      * 解析消息中包含的指令参数，并执行指令对应的方法
      * <p>
-     * 本方法会将指令进行拆解，使用{@link InstructionUtils}工具对拆解的指令进行
-     * 解析，将{@code key=value}形式的参数提取为参数集合，同时将后缀表达式{@code -xxx}
-     * 提取为{@code xxx=开启}形式的参数，并将指令与参数传递给
-     * {@link #invokeMethodByInstruction(String, Object...)}执行
+     * 本方法将会从{@code methodDefaultParamsMap}中获取指令的默认参数值，
+     * 然后使用{@link InstructionUtils}工具对拆解的指令进行解析，
+     * 将{@code key=value}形式的参数提取为参数集合，同时将后缀表达式{@code -xxx}
+     * 提取为{@code xxx=开启}形式的参数。之后将提取的指令参数覆盖掉之前获取的默认参数
+     * 并将指令与参数传递给{@link #invokeMethodByInstruction(String, Object...)}
      * </p>
      *
      * @param reqMsg 请求消息
@@ -315,7 +322,9 @@ public class InstructionMethodContext {
     private Object invokeMethodByMsg(ReqMsg reqMsg) {
         String rawMsg = reqMsg.getRawMessage().replaceAll("[\\s]", " ");
         String instruction = rawMsg.split(" ")[0].split("[.。]")[1];
-        Map<String, String> params = InstructionUtils.analysisInstruction(rawMsg.split("[.。]")[1].split(" "));
+
+        Map<String, String> params = methodDefaultParamsMap.get(instruction);
+        params.putAll(InstructionUtils.analysisInstruction(rawMsg.split("[.。]")[1].split(" ")));
 
         CommonParamEnum paramEnum = CommonParamEnum.getParamEnum(params);
         if (paramEnum != null) {
@@ -348,8 +357,8 @@ public class InstructionMethodContext {
         }
 
         // 确认是否是短接指令
-        Instruction annotation = method.getAnnotation(Instruction.class);
-        if (annotation.isShortened()) {
+        Instruction annotation = AnnotationUtils.findAnnotation(method, Instruction.class);
+        if (Objects.requireNonNull(annotation).isShortened()) {
             shortenedInstruction.put(reqMsg.getUserId(), annotation.description());
         }
 
@@ -359,15 +368,15 @@ public class InstructionMethodContext {
     /**
      * 反射执行方法
      * <p>
-     *      通过具体的方法与实例，以及方法参数，反射调用方法<br>
-     *      如果方法执行异常，则将方法执行的异常消息作为返回值返回
-     *      否则将方法{@link Instruction}注解中的{@code errorMsg}作为返回值返回
+     * 通过具体的方法与实例，以及方法参数，反射调用方法<br>
+     * 如果方法执行异常，则将方法执行的异常消息作为返回值返回
+     * 否则将方法{@link Instruction}注解中的{@code errorMsg}作为返回值返回
      * </p>
      *
      * @param target 方法所在的实例
      * @param method 执行的方法
      * @param params 方法执行的参数（必须为{@link ReqMsg}, {@link Map}）
-     * @return  方法执行的返回结果
+     * @return 方法执行的返回结果
      */
     private Object invokeMethod(Object target, Method method, Object... params) {
         Object returnValue = null;
@@ -402,15 +411,15 @@ public class InstructionMethodContext {
     /**
      * 通过反射执行方法的静态方法
      *
-     * @param target    执行的实体
-     * @param methodName    执行的方法
-     * @param params    方法参数
-     * @return  方法执行结果
+     * @param target     执行的实体
+     * @param methodName 执行的方法
+     * @param params     方法参数
+     * @return 方法执行结果
      */
     public static Object invokeMethodByName(Object target, String methodName, Object... params) {
         Object returnValue = null;
 
-        Method method = null;
+        Method method;
         try {
             if (null != params && params.length > 0) {
                 Class<?>[] paramCls = new Class[params.length];

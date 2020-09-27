@@ -38,11 +38,6 @@ public class ZhidaoServiceImpl implements ZhidaoService {
     }
 
     @Override
-    public String getReply(ReqMsg reqMsg) {
-        return null;
-    }
-
-    @Override
     public String stdReplyFromBaidu(ReqMsg reqMsg) {
         String String = new String();
 

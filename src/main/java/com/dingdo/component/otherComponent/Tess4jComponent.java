@@ -7,7 +7,6 @@ import com.dingdo.enums.CQCodeEnum;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.PythonService;
-
 import com.dingdo.msgHandler.model.CQCode;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.util.ImageUtil;
@@ -16,7 +15,6 @@ import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -93,6 +91,9 @@ public class Tess4jComponent implements ApplicationRunner {
      * @return
      */
     public String tessOCR(ReqMsg reqMsg) {
+        if(!enableOCR){
+            return "";
+        }
         Map<CQCodeEnum, List<CQCode>> cqCodeMap = reqMsg.getCqCodeList()
                 .stream()
                 .collect(Collectors.groupingBy(CQCode::getCode));
@@ -100,7 +101,7 @@ public class Tess4jComponent implements ApplicationRunner {
         if(CollectionUtils.isEmpty(imageCQCodeList)){
             return "";
         }
-        System.out.println("图片CQ码:" + imageCQCodeList.get(0));
+
         String imgUrl = imageCQCodeList.get(0).getValues().get("url");
         String imgName = imageCQCodeList.get(0).getValues().get("image");
         // 去除{,},\,.mirai字符
@@ -112,9 +113,6 @@ public class Tess4jComponent implements ApplicationRunner {
 
         String result = null;
         try {
-            if(!enableOCR){
-                return "";
-            }
             // 是否启用超分辨率服务
             BufferedImage imgBuffer = ImageIO.read(new File(imageSrc));
             if (enableWDSR) {

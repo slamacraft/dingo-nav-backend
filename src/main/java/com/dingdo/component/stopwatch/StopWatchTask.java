@@ -10,9 +10,9 @@ package com.dingdo.component.stopwatch;
  */
 public class StopWatchTask{
 
-    private Runnable task;
+    private final Runnable task;
 
-    private long waitTime;
+    private final long waitTime;
 
 
     /**
@@ -34,7 +34,7 @@ public class StopWatchTask{
 
     /**
      * 获取等待时间
-     * @return
+     * @return  等待时间
      */
     public long getWaitTime() {
         return waitTime;

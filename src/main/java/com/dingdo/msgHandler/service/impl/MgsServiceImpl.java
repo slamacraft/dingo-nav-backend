@@ -1,8 +1,7 @@
 package com.dingdo.msgHandler.service.impl;
 
 import com.dingdo.config.customContext.InstructionMethodContext;
-import com.dingdo.component.otherComponent.Tess4jComponent;
-import com.dingdo.msgHandler.factory.CQCodeFactory;
+import com.dingdo.msgHandler.factory.RobotMsgFactory;
 import com.dingdo.msgHandler.model.CQCode;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.MsgHandleService;
@@ -17,7 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -27,18 +25,16 @@ import java.util.*;
 public class MgsServiceImpl implements MsgService, ApplicationContextAware {
 
     // 使用log4j打印日志
-    private static Logger logger = Logger.getLogger(MgsServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(MgsServiceImpl.class);
 
-    private Map<String, MsgHandleService> msgMap = new HashMap<>();
+    private final Map<String, MsgHandleService> msgMap = new HashMap<>();
 
-    private final Tess4jComponent tess4jComponent;
+//    private final Tess4jComponent tess4jComponent;
     private final InstructionMethodContext instructionMethodContext;
 
     @Autowired
-    public MgsServiceImpl(InstructionMethodContext instructionMethodContext,
-                          Tess4jComponent tess4jComponent) {
+    public MgsServiceImpl(InstructionMethodContext instructionMethodContext) {
         this.instructionMethodContext = instructionMethodContext;
-        this.tess4jComponent = tess4jComponent;
     }
 
     @Override
@@ -49,6 +45,7 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
 
     @Override
     public String handleMsg(ReqMsg reqMsg) {
+        logger.info("收到消息:" + reqMsg.getMessage());
         this.extractCQCode(reqMsg); // 提取cq码
         this.msgOCR(reqMsg);    // 识别图中文字
         String instructResult = instructionMethodContext.instructionHandle(reqMsg);
@@ -63,12 +60,17 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
 
     /**
      * 提取cq码
+     * <p>
+     * 从{@code reqMsg.message}中将cq码提取出来，并保存到
+     * {@code reqMsg.cqCodeList}中，提取完cq码后的消息保存至
+     * {@code reqMsg.rawMessage}中。
+     * </p>
      *
-     * @param reqMsg
+     * @param reqMsg 请求消息
      */
     private void extractCQCode(ReqMsg reqMsg) {
         String msg = reqMsg.getMessage();
-        List<CQCode> cqCodeList = CQCodeFactory.getCQCodeList(msg);
+        List<CQCode> cqCodeList = RobotMsgFactory.getCQCodeList(msg);
         reqMsg.setCqCodeList(cqCodeList);
         reqMsg.setRawMessage(CQCodeUtil.removeAllCQCode(msg));
     }
@@ -77,10 +79,10 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
     /**
      * 提取图中文字，保留中文
      *
-     * @param reqMsg
+     * @param reqMsg 请求消息
      */
     private void msgOCR(ReqMsg reqMsg) {
-        String imgChiInfo = tess4jComponent.tessOCR(reqMsg);
+//        String imgChiInfo = tess4jComponent.tessOCR(reqMsg);
     }
 
 
@@ -102,8 +104,8 @@ public class MgsServiceImpl implements MsgService, ApplicationContextAware {
      * 由service实例的名称获取service类型的名称
      * 例如：postService -> post
      *
-     * @param simpleName
-     * @return
+     * @param simpleName service的实例简单名称
+     * @return 消息的类型
      */
     private String getMsgType(String simpleName) {
         // 通过大小写获取字符串第一个单词

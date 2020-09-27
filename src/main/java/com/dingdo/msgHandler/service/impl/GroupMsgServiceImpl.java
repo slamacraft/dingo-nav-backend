@@ -1,8 +1,8 @@
 package com.dingdo.msgHandler.service.impl;
 
-import com.dingdo.component.otherComponent.SaveMsgComponent;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
+import com.dingdo.component.otherComponent.SaveGroupMsgComponent;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.extendService.otherService.SpecialReplyService;
@@ -24,19 +24,18 @@ public class GroupMsgServiceImpl implements GroupMsgService {
     private final ServiceFromApi serviceFromApi;
     private final BotManager botManager;
     private final SpecialReplyService specialReplyService;
-    private final SaveMsgComponent saveMsgComponent;
+    private final SaveGroupMsgComponent saveMsgComponent;
 
     // 在不at的情况下，机器人对群消息产生响应的几率，默认是0
     private int RANDOM_RATIO = 0;
 
-    private Random random = new Random();
-
+    private final Random random = new Random();
 
     @Override
     public String handleMsg(ReqMsg reqMsg) {
         saveMsgComponent.saveGroupMsg(reqMsg.getRawMessage(), reqMsg.getGroupId()); // 存储群消息
         specialReplyService.rereadGroupMsg(reqMsg); // 复读消息
-        if(!reqMsg.getMessage().contains("CQ:at,qq=" + reqMsg.getSelfId())){
+        if (!reqMsg.getMessage().contains("CQ:at,qq=" + reqMsg.getSelfId())) {
             return randomSendMsg(reqMsg);
         }
         return CQCodeUtil.atTarget(serviceFromApi.sendMsgFromApi(reqMsg), reqMsg.getUserId());
@@ -44,7 +43,7 @@ public class GroupMsgServiceImpl implements GroupMsgService {
 
 
     @Autowired
-    public GroupMsgServiceImpl(SaveMsgComponent saveMsgComponent,
+    public GroupMsgServiceImpl(SaveGroupMsgComponent saveMsgComponent,
                                ServiceFromApi serviceFromApi,
                                BotManager botManager,
                                SpecialReplyService specialReplyService) {
@@ -58,9 +57,9 @@ public class GroupMsgServiceImpl implements GroupMsgService {
     /**
      * 设置每次群里发送消息，不通过at机器人使机器人产生响应的几率
      *
-     * @param reqMsg
-     * @param params
-     * @return
+     * @param reqMsg 请求消息
+     * @param params 请求参数
+     * @return 请求结果
      */
     @VerifiAnnotation(level = VerificationEnum.MANAGER)
     @Instruction(description = "设置随机响应几率")
@@ -79,14 +78,16 @@ public class GroupMsgServiceImpl implements GroupMsgService {
 
     /**
      * 没有at机器人就根据设定的概率随机回答
-     * @param reqMsg    请求消息
+     *
+     * @param reqMsg 请求消息
+     * @return 响应的聊天消息
      */
-    private String randomSendMsg(ReqMsg reqMsg){
+    private String randomSendMsg(ReqMsg reqMsg) {
         String reply = "";
         if (!reqMsg.getMessage().contains("CQ:at,qq=" + reqMsg.getSelfId())) {
             if (random.nextInt(100) < RANDOM_RATIO) {
                 if (random.nextInt(100) < 10) {
-                    reply= specialReplyService.getRandomGroupMsgYesterday(reqMsg);
+                    reply = specialReplyService.getRandomGroupMsgYesterday(reqMsg);
                 } else {
                     reply = serviceFromApi.sendMsgFromApi(reqMsg);
                 }

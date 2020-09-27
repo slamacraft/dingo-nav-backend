@@ -18,9 +18,6 @@ public class WebClientConfig {
 
     @Bean
     public WebClient initWebClient(){
-        Logger.getLogger("com.gargoylesoftware").setLevel(Level.WARN);
-        Logger.getLogger("org.apache.http.client").setLevel(Level.WARN);
-
         // HtmlUnit 模拟浏览器
         WebClient webClient = new WebClient(BrowserVersion.CHROME);
         webClient.getOptions().setJavaScriptEnabled(true);              // 启用JS解释器，默认为true

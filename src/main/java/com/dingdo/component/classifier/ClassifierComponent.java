@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public abstract class ClassifierComponent<Classifier extends ProbabilisticClassifier, Model extends ProbabilisticClassificationModel> {
 
     // 使用log4j打印日志
-    private static Logger logger = Logger.getLogger(ClassifierComponent.class);
+    private static final Logger logger = Logger.getLogger(ClassifierComponent.class);
     // sparkSession
     @Autowired
     protected SparkSession spark;
@@ -56,7 +56,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      * @return  加载完成的模型
      */
     public Model load(String path, Function<String, Model> loadFunction) {
-        return (Model) loadFunction.apply(path);
+        return loadFunction.apply(path);
     }
 
 
@@ -205,7 +205,7 @@ public abstract class ClassifierComponent<Classifier extends ProbabilisticClassi
      */
     public double predict(Vector predictVector) {
         double predict = model.predict(predictVector);
-        return Double.valueOf((String) predictedLabelMap.get(predict));
+        return Double.parseDouble((String) predictedLabelMap.get(predict));
     }
 
     private Classifier getInstanceOfT(Class<Classifier> aClass) throws IllegalAccessException, InstantiationException {

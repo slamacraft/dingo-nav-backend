@@ -28,11 +28,11 @@ public class SparkConfig {
                 .getOrCreate();
 
         // 屏蔽spark的INFO日志
-        Logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
-        Logger.getLogger("org.apache.hadoop").setLevel(Level.ERROR);
-        Logger.getLogger("org.apache.zookeeper").setLevel(Level.WARN);
-        Logger.getLogger("org.apache.hive").setLevel(Level.WARN);
-        SparkSession.builder().getOrCreate().sparkContext().setLogLevel("WARN");
+//        Logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
+//        Logger.getLogger("org.apache.hadoop").setLevel(Level.ERROR);
+//        Logger.getLogger("org.apache.zookeeper").setLevel(Level.WARN);
+//        Logger.getLogger("org.apache.hive").setLevel(Level.WARN);
+        SparkSession.builder().getOrCreate().sparkContext();
 
         return spark;
     }

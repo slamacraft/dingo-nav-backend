@@ -22,13 +22,13 @@ public class StopWatchRegister implements Destroyable {
      * key：id，value：StopWatchFuture
      * 通过秒表任务设定的id确定唯一性
      */
-    private Map<String, StopWatchFuture> futureMap = new HashMap<>();
+    private final Map<String, StopWatchFuture> futureMap = new HashMap<>();
 
     /**
      * 秒表任务处理器
      * 负责对从本注册器实例注册的秒表任务进行管理
      */
-    private StopWatchHandler handler = new StopWatchHandler();
+    private final StopWatchHandler handler = new StopWatchHandler();
 
     /**
      * 通过id获取注册过的秒表任务

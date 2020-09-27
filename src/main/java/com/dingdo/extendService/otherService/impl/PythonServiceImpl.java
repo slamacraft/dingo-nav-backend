@@ -5,7 +5,7 @@ import com.dingdo.enums.CQCodeEnum;
 import com.dingdo.extendService.otherService.PythonService;
 import com.dingdo.msgHandler.model.CQCode;
 import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.util.FileUtil;
+import com.dingdo.util.FileUtils;
 import com.dingdo.util.ImageUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,13 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class PythonServiceImpl implements PythonService {
 
     // 使用log4j打印日志
-    private static Logger logger = Logger.getLogger(PythonServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(PythonServiceImpl.class);
 
     private final RestTemplate restTemplate;
 
@@ -41,29 +42,29 @@ public class PythonServiceImpl implements PythonService {
 
     @Override
     @Instruction(description = "图片增强", isShortened = true)
-    public String getEnhanceImage(ReqMsg reqMsg, Map<String, String> params){
+    public String getEnhanceImage(ReqMsg reqMsg, Map<String, String> params) {
         List<CQCode> cqCodeList = reqMsg.getCqCodeList();
 
-        for(CQCode cqCode : cqCodeList){
-            if(cqCode.getCode() == CQCodeEnum.IMAGE){
-                String imgName = cqCode.getValues().get("image");
-                // 去除{,},\,.mirai字符
-                imgName = imgName.replaceAll("(\\{|\\}|\\\\|\\.mirai)", "");
-                String imageSrc = FileUtil.getImagePath(imgName);
-                if (imageSrc == null) {
-                    return "";
-                }
+        for (CQCode cqCode : cqCodeList) {
+            if (cqCode.getCode() == CQCodeEnum.IMAGE) {
+                String imgName = cqCode.getValues().get("file");
+                imgName = imgName.replaceAll("(\\{|}|\\\\|\\.mirai)", "");
+                String url = cqCode.getValues().get("url");
+
+                String imageSrc = FileUtils.saveImageFromUrl(url,
+                        FileUtils.getJarPath() + "/image/" + imgName);
+
                 BufferedImage imgBuffer = this.doWDSR(imageSrc);
-                if(imgBuffer == null){
+                if (imgBuffer == null) {
                     return "我觉得这张图有问题【";
                 }
-                String resultSrc = FileUtil.saveImage(imgBuffer, imgName + "X4");
+                String resultSrc = FileUtils.saveImage(imgBuffer, imgName + "X4");
 
                 return "[CQ:image,image=" + resultSrc + "]";
             }
         }
 
-        if(params.get("短接") == null){
+        if (params.get("短接") == null) {
             return "你发送的下一张图片会被我施加魔法！";
         }
 
@@ -72,7 +73,7 @@ public class PythonServiceImpl implements PythonService {
 
 
     @Override
-    public BufferedImage doWDSR(String imagePath){
+    public BufferedImage doWDSR(String imagePath) {
         MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
         bodyMap.add("image", new FileSystemResource(new File(imagePath)));
 
@@ -87,10 +88,10 @@ public class PythonServiceImpl implements PythonService {
             logger.info("开始进行超分辨率放大");
             byte[] bytes = restTemplate.postForObject("http://106.53.85.24:8000/predict_by_util/", request, byte[].class);
 //            byte[] bytes = restTemplate.postForObject("http://localhost:8000/predict_by_util/", request, byte[].class);
-            ByteArrayInputStream in = new ByteArrayInputStream(bytes);    //将b作为输入流；
+            ByteArrayInputStream in = new ByteArrayInputStream(Objects.requireNonNull(bytes));    //将b作为输入流；
             resultImage = ImageIO.read(in);
             logger.info("超分辨率已完成，开始优化前景色");
-            resultImage = ImageUtil.foregroundSmooth(resultImage, 3, ImageUtil.MEAN_MAXPOINT);
+            resultImage = ImageUtil.foregroundSmooth(resultImage, 3, ImageUtil.MEAN_MAX_POINT);
             logger.info("前景色优化已完成");
         } catch (Exception e) {
             logger.error("获取超分辨图像时出现错误:", e);

@@ -4,11 +4,15 @@ package com.dingdo.util;
  * 酷q码工具类
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/8/31 8:40
  * @since JDK 1.8
  */
 public class CQCodeUtil {
+
+
+    public static boolean isCQCode(String msg){
+        return msg.startsWith("[CQ:") && msg.endsWith("]");
+    }
 
     /**
      * 移除句子中的CQ码
@@ -38,7 +42,7 @@ public class CQCodeUtil {
      * @return
      */
     public static String atTarget(String msg, String userId, int index){
-        return msg.substring(0, index) + atTarget(msg.substring(index, msg.length()), userId);
+        return msg.substring(0, index) + atTarget(msg.substring(index), userId);
     }
 
 
@@ -49,7 +53,7 @@ public class CQCodeUtil {
      * @param userId    用户qq
      */
     public static String removeAtUser(String msg, String userId) {
-        return msg.replaceAll("\\[CQ:at,qq=" + userId + ".*?\\]", "");
+        return msg.replaceAll("\\[CQ:at,qq=" + userId + ".*?]", "");
     }
 
 
@@ -59,7 +63,7 @@ public class CQCodeUtil {
      * @param msg   句子
      */
     private String removeAtUser(String msg) {
-        return msg.replaceAll("\\[CQ:at,qq=.*?\\]", "");
+        return msg.replaceAll("\\[CQ:at,qq=.*?]", "");
     }
 
 }

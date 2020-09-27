@@ -8,11 +8,6 @@ public enum UrlEnum {
 
     /*===============================================思知机器人============================================*/
     SI_ZHI_API("https://api.ownthink.com/bot", "思知机器人api地址"), //思知机器人api地址
-    SEND_PRIVATE_MSG("/send_private_msg", "发送私聊消息"),
-    SEND_GROUP_MSG("/send_group_msg", "发送群消息"),
-    GET_GROUP_LIST("/get_group_list", "获取群列表"),
-    GET_FRIEND_LIST("/get_friend_list", "获取好友列表"),
-    GET_LOGIN_INFO("/get_login_info", "获取登录用户信息"),
     APPID("cebaf94c551f180d5c6847cf1ccaa1fa", "思知机器人的appid"),
     GET_IMAGE("/get_image", "获取图片"),
 
@@ -25,9 +20,11 @@ public enum UrlEnum {
     GBF_WIKI("http://gbf.huijiwiki.com/index.php", "碧蓝幻想wiki地址"),
 
     /*===============================================音乐api============================================*/
-    WANGYI_MUSIC("https://api.uomg.com/api/rand.music", "网易云音乐随机点歌"),
-    WANGYI_RAND_MUISC("https://music.163.com/#/search/m/?id=1397345903&type=1", "网易云音乐点歌（暂时未能爬取到）"),
-    QQ_MUSIC("https://y.qq.com/portal/search.html#page=1&searchid=1&remoteplace=txt.yqq.top&t=song&w=", "qq音乐点歌"),
+    QQ_MUSIC_SEARCH("https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&new_json=1&remoteplace=txt.yqq.center&searchid=46307684634141409&t=0&aggr=1&cr=1&catZhida=1&lossless=0&flag_qc=0&p=1&n=10&w=", "qq音乐点歌"),
+    QQ_MUSIC_SONG("https://y.qq.com/n/yqq/song/", "QQ音乐歌曲界面"),
+    MUSIC_163_SEARCH("https://v1.alapi.cn/api/music/search?keyword=", "网易云音乐搜索"),
+    MUSIC_163_SONG("http://music.163.com/song/media/outer/url?id=", "网易云音乐直接地址"),
+    MUSIC_163_RAND_MUSIC("https://api.uomg.com/api/rand.music?sort=热歌榜&format=json", "网易云音乐随机点歌"),
 
     /*===============================================和风天气api=================================================*/
     WEATHER("https://free-api.heweather.net/s6/weather/", "和风天气api地址"),

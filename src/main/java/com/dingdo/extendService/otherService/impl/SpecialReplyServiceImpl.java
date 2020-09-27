@@ -5,8 +5,7 @@ import com.dingdo.extendService.model.specialReply.RereadMsgQueue;
 import com.dingdo.extendService.otherService.SpecialReplyService;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.impl.GroupMsgServiceImpl;
-import com.dingdo.util.FileUtil;
-import lombok.Data;
+import com.dingdo.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,7 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
     /**
      * 复读群消息
      *
-     * @param reqMsg
+     * @param reqMsg    请求消息
      */
     @Override
     public void rereadGroupMsg(ReqMsg reqMsg) {
@@ -69,8 +68,8 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
     }
 
     /**
-     * @param reqMsg
-     * @param rereadMsgQueue
+     * @param reqMsg    请求消息
+     * @param rereadMsgQueue    群消息队列
      */
     private void toReread(ReqMsg reqMsg, RereadMsgQueue rereadMsgQueue) {
         List<RereadMsgInfo> msgInfoList = rereadMsgQueue.getMsgInfoList();
@@ -175,7 +174,7 @@ public class SpecialReplyServiceImpl implements SpecialReplyService {
         String[] msgList = groupMsgMap.get(groupId + " " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         if (msgList == null || msgList.length < 3) {
             String filePath = reqMsg.getGroupId() + " " + getYesterdayDate() + ".txt";
-            String msg = FileUtil.loadFileFromJarPath(filePath);
+            String msg = FileUtils.loadFileRelativeToJar("/message/"+filePath);
             msgList = msg.split("\n");
 
             groupMsgMap.put(reqMsg.getGroupId(), msgList);

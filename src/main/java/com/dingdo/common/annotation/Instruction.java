@@ -44,4 +44,6 @@ public @interface Instruction {
      * 不对其进行指令命令调用识别，默认用户的下一次调用的为该指令
      */
     boolean isShortened() default false;
+
+    String[] defaultParams() default {};
 }

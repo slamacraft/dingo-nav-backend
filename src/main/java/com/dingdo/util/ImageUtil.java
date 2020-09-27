@@ -24,18 +24,18 @@ import static org.apache.commons.math3.util.FastMath.pow;
  */
 public class ImageUtil {
 
-    private static Logger logger = Logger.getLogger(ImageUtil.class);
+    private static final Logger logger = Logger.getLogger(ImageUtil.class);
 
     /**
      * 去除黑线时的中点赋值方式
      * 使用范围内灰度最大的随机一个点的颜色值赋值给该点
      */
-    public static final int RANDOM_MAXPOINT = 0;
+    public static final int RANDOM_MAX_POINT = 0;
     /**
      * 去除黑线时的中点赋值方式
      * 使用范围内灰度最大的点的颜色均值赋值给该点
      */
-    public static final int MEAN_MAXPOINT = 1;
+    public static final int MEAN_MAX_POINT = 1;
 
 //    static {
 //        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  //加载动态链接库
@@ -83,7 +83,7 @@ public class ImageUtil {
      * @return
      */
     public static String getImageAndSaveFromURL(String imageURL, String filePath) {
-        return FileUtil.saveImage(imageURL, filePath);
+        return FileUtils.saveImageFromUrl(imageURL, filePath);
     }
 
 
@@ -361,9 +361,9 @@ public class ImageUtil {
         }
 
         Color color = null;
-        if (checkType == ImageUtil.RANDOM_MAXPOINT) {
+        if (checkType == ImageUtil.RANDOM_MAX_POINT) {
             color = randomCheckBlackPoint(source, list);
-        } else if (checkType == ImageUtil.MEAN_MAXPOINT) {
+        } else if (checkType == ImageUtil.MEAN_MAX_POINT) {
             color = meanCheckBlackPoint(source, list);
         }
 

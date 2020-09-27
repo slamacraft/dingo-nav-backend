@@ -1,12 +1,12 @@
 package com.dingdo.extendService.otherService.impl;
 
-import com.dingdo.component.schedule.TaskRegister;
-import com.dingdo.component.schedule.model.GroupMsgTaskInfo;
-import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
-import com.dingdo.component.schedule.model.interfacor.ITaskList;
-import com.dingdo.component.schedule.model.PrivateMsgTaskInfo;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
+import com.dingdo.component.schedule.TaskRegister;
+import com.dingdo.component.schedule.model.GroupMsgTaskInfo;
+import com.dingdo.component.schedule.model.PrivateMsgTaskInfo;
+import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
+import com.dingdo.component.schedule.model.interfacor.ITaskList;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.ScheduledService;
 import com.dingdo.msgHandler.model.ReqMsg;
@@ -21,36 +21,57 @@ import java.util.Map;
 @Service
 public class ScheduledServiceImpl implements ScheduledService {
 
+    private final TaskRegister taskRegister;
+
+
     @Autowired
-    private TaskRegister taskRegister;
+    public ScheduledServiceImpl(TaskRegister taskRegister) {
+        this.taskRegister = taskRegister;
+    }
 
 
     /**
      * 添加定时提醒
+     * <p>
+     * 通过用户的指令请求为当前聊天框设置一个定时提醒，并将该定时提醒注册到
+     * {@link TaskRegister}，这个定时提醒可以是私聊也可以是群聊。输入的参数
+     * 中{@code 表达式}和{@code 时间}必须有一个，如果都存在，则以{@code 表达式}
+     * 为准。</p>
      *
-     * @param reqMsg
-     * @param params
-     * @return
+     * <p>
+     * {@code 表达式}为cron表达式，不同的是原生cron表达式的空格需要以下划线 "_"
+     * 代替，以避免在解析指令参数时发生错误，例如：<br>
+     * <code>
+     * cron = "0 1 0 * * *"
+     * this_cron = "0_1_0_*_*_*"
+     * </code>
+     * </p>
+     *
+     * <p>
+     * {@code 时间}参数为简易的表示时间的中文自然语言，例如：<br>
+     * 时间1 = "今天中午12点"
+     * 时间2 = "星期天晚上7点30"<br>
+     * 本方法会通过{@link NLPUtils}将自然语言提取为cron表达式然后执行上述操作
+     * </p>
+     *
+     * @param reqMsg 请求消息
+     * @param params 请求参数
+     * @return 请求结果
      */
     @Override
     @VerifiAnnotation(level = VerificationEnum.FRIEND)
-    @Instruction(description = "设置提醒")
+    @Instruction(description = "设置提醒"
+            , defaultParams = {"message=(｡･∀･)ﾉﾞ嗨，到点了"})
     public String addRemindTask(ReqMsg reqMsg, Map<String, String> params) {
         String cron = InstructionUtils.getParamValue(params, "cron", "表达式");
         String time = InstructionUtils.getParamValue(params, "time", "时间");
+        String message = InstructionUtils.getParamValue(params, "message", "提醒内容");
         if (!StringUtils.isBlank(cron)) {
             cron = cron.replaceAll("_", " ");
         } else if (StringUtils.isNotBlank(time)) {
             cron = NLPUtils.getCronFromString(time);
         } else {
             return "至少告诉我是什么时候吧";
-        }
-
-        System.out.println("cron表达式为:" + cron);
-
-        String message = InstructionUtils.getParamValue(params, "message", "提醒内容");
-        if (StringUtils.isBlank(message)) {
-            message = "(｡･∀･)ﾉﾞ嗨，到点了";
         }
 
         ITaskInfo task = this.getRemindRunnable(reqMsg, message, cron);
@@ -63,9 +84,9 @@ public class ScheduledServiceImpl implements ScheduledService {
     /**
      * 查看当前私聊/群聊窗口设置的定时提醒
      *
-     * @param reqMsg
-     * @param params
-     * @return
+     * @param reqMsg    请求消息
+     * @param params    请求参数
+     * @return  请求结果
      */
     @Instruction(description = "查看定时提醒")
     public String getAllSchedulingTask(ReqMsg reqMsg, Map<String, String> params) {
@@ -81,9 +102,9 @@ public class ScheduledServiceImpl implements ScheduledService {
     /**
      * 移除定时提醒
      *
-     * @param reqMsg
-     * @param params
-     * @return
+     * @param reqMsg    请求消息
+     * @param params    请求参数
+     * @return  请求结果
      */
     @Override
     @Instruction(description = "移除提醒", inMenu = false,
@@ -103,9 +124,9 @@ public class ScheduledServiceImpl implements ScheduledService {
     /**
      * 获取定时消息提醒的任务实例
      *
-     * @param reqMsg
-     * @param message
-     * @return
+     * @param reqMsg    请求消息
+     * @param message   消息文本
+     * @return  请求结果
      */
     private ITaskInfo getRemindRunnable(ReqMsg reqMsg, String message, String cron) {
         String taskName = "定时提醒";

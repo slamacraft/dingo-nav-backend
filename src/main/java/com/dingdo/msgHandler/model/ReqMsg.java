@@ -1,36 +1,26 @@
 package com.dingdo.msgHandler.model;
 
-import com.dingdo.enums.MsgTypeEnum;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * 一些声明信息
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/8/10 16:07
  * @since JDK 1.8
  */
-@Data
 @ApiModel("qq机器人消息请求dto")
 public class ReqMsg {
-
-    public ReqMsg(Object msg) {
-        MsgTypeEnum.createReqMsg(msg, this);
-    }
 
     /**
      * 消息类型
      * private  私聊消息
      * group    群组消息
      */
-    @ApiModelProperty("消息类型：private 私聊, group 群聊")
+    @ApiModelProperty("消息类型：private-私聊, group-群聊")
     private String messageType;
 
     /**
@@ -121,5 +111,101 @@ public class ReqMsg {
                 ", nickname='" + nickname + '\'' +
                 ", card='" + card + '\'' +
                 '}';
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public List<CQCode> getCqCodeList() {
+        return cqCodeList;
+    }
+
+    public void setCqCodeList(List<CQCode> cqCodeList) {
+        this.cqCodeList = cqCodeList;
+    }
+
+    public String getRawMessage() {
+        return rawMessage;
+    }
+
+    public void setRawMessage(String rawMessage) {
+        this.rawMessage = rawMessage;
+    }
+
+    public String getFont() {
+        return font;
+    }
+
+    public void setFont(String font) {
+        this.font = font;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
+    public String getSelfId() {
+        return selfId;
+    }
+
+    public void setSelfId(String selfId) {
+        this.selfId = selfId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getCard() {
+        return card;
+    }
+
+    public void setCard(String card) {
+        this.card = card;
     }
 }

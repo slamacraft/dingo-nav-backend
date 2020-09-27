@@ -10,14 +10,9 @@ import com.dingdo.msgHandler.model.ReqMsg;
 public interface MsgExtendService {
 
     /**
-     * 返回封装完毕的回复信息
-     * @return
+     * 通过apiService请求额外的功能
+     * @param reqMsg    请求消息
+     * @return  请求结果
      */
     String sendReply(ReqMsg reqMsg);
-
-    /**
-     * 返回处理完毕的回复信息
-     * @return
-     */
-    String getReply(ReqMsg reqMsg);
 }

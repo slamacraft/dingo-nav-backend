@@ -16,10 +16,10 @@ public enum CommonParamEnum {
 
     HELP(new String[]{"帮助", "h", "help"}, "帮助");
 
-    private String[] paramName;
-    private String description;
+    private final String[] paramName;
+    private final String description;
 
-    private static Map<String, CommonParamEnum> commonParamEnumMap = new HashMap<>();
+    private static final Map<String, CommonParamEnum> commonParamEnumMap = new HashMap<>();
 
     CommonParamEnum(String[] paramName, String description) {
         this.paramName = paramName;

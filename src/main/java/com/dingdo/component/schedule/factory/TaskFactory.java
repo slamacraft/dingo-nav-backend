@@ -18,7 +18,7 @@ import java.util.*;
 @Component
 public class TaskFactory<TaskList extends ITaskList, TaskInfo extends ITaskInfo> {
 
-    private Map<Class<TaskInfo>, Class<TaskList>> taskClazzMap = new HashMap<>();
+    private final Map<Class<TaskInfo>, Class<TaskList>> taskClazzMap = new HashMap<>();
 
 
     /**
@@ -28,13 +28,13 @@ public class TaskFactory<TaskList extends ITaskList, TaskInfo extends ITaskInfo>
      * @throws ClassNotFoundException   class未发现异常
      */
     public TaskFactory() throws ClassNotFoundException {
-        this(ITaskList.class.getPackage().getName());
+        this("com.dingdo.component.schedule");
     }
 
 
     /**
      * 指定包名的构造方法
-     * 搜索指定包路径下所有的类，并获取所有的继承了ITaskList的接口
+     * 搜索指定包路径下所有的类，并获取所有的继承了ITaskList的非接口对象
      *
      * @param packageName 包名
      * @throws ClassNotFoundException class未发现异常

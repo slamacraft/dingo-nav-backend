@@ -1,7 +1,6 @@
 package com.dingdo.msgHandler.model;
 
 import com.dingdo.enums.CQCodeEnum;
-import lombok.Data;
 
 import java.util.Map;
 
@@ -9,11 +8,9 @@ import java.util.Map;
  * 一些声明信息
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/8/31 14:00
  * @since JDK 1.8
  */
-@Data
 public class CQCode {
 
     // CQ码类型
@@ -51,5 +48,21 @@ public class CQCode {
             return obj.equals(this.code);
         }
         return false;
+    }
+
+    public CQCodeEnum getCode() {
+        return code;
+    }
+
+    public void setCode(CQCodeEnum code) {
+        this.code = code;
+    }
+
+    public Map<String, String> getValues() {
+        return values;
+    }
+
+    public void setValues(Map<String, String> values) {
+        this.values = values;
     }
 }

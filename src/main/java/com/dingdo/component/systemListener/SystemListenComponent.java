@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.lang.management.ManagementFactory;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringTokenizer;
 
 /**
@@ -27,10 +28,10 @@ import java.util.StringTokenizer;
  */
 @Component
 public class SystemListenComponent {
-    private static final int CPUTIME = 30;
+    private static final int CPU_TIME = 30;
     private static final int PERCENT = 100;
-    private static final int FAULTLENGTH = 10;
-    private static String linuxVersion = null;
+    private static final int FAULT_LENGTH = 10;
+    private static final String linuxVersion = null;
 
     private final StringRedisTemplate stringRedisTemplate;
     private final TaskRegister taskRegister;
@@ -46,8 +47,7 @@ public class SystemListenComponent {
     public String getSysInfo(ReqMsg reqMsg, Map<String, String> params) {
         String sysJson = stringRedisTemplate.opsForValue().get(RedisEnum.SYSINFO.toString());
         MonitorInfoBean infoBean = JSONObject.parseObject(sysJson, MonitorInfoBean.class);
-        String result = infoBean.toString();
-        return result;
+        return Objects.requireNonNull(infoBean).toString();
     }
 
 
@@ -103,10 +103,12 @@ public class SystemListenComponent {
         long usedMemory = (osmxb.getTotalPhysicalMemorySize() - osmxb.getFreePhysicalMemorySize()) / kb;
         //获得总线程数
         ThreadGroup parentThread;
-        for (parentThread = Thread.currentThread().getThreadGroup(); parentThread.getParent() != null; parentThread = parentThread.getParent())
-            ;
+        parentThread = Thread.currentThread().getThreadGroup();
+        while (parentThread.getParent() != null) {
+            parentThread = parentThread.getParent();
+        }
         int totalThread = parentThread.activeCount();
-        double cpuRatio = 0;
+        double cpuRatio;
         if (osName.toLowerCase().startsWith("windows")) {
             cpuRatio = this.getCpuRatioForWindows();
         } else {
@@ -131,14 +133,14 @@ public class SystemListenComponent {
         InputStream is = null;
         InputStreamReader isr = null;
         BufferedReader brStat = null;
-        StringTokenizer tokenStat = null;
+        StringTokenizer tokenStat;
         try {
             System.out.println("Get usage rate of CUP , linux version: " + linuxVersion);
             Process process = Runtime.getRuntime().exec("top -b -n 1");
             is = process.getInputStream();
             isr = new InputStreamReader(is);
             brStat = new BufferedReader(isr);
-            if (linuxVersion.equals("2.4")) {
+            if ("2.4".equals(linuxVersion)) {
                 brStat.readLine();
                 brStat.readLine();
                 brStat.readLine();
@@ -155,9 +157,9 @@ public class SystemListenComponent {
                 user = user.substring(0, user.indexOf("%"));
                 system = system.substring(0, system.indexOf("%"));
                 nice = nice.substring(0, nice.indexOf("%"));
-                float userUsage = new Float(user).floatValue();
-                float systemUsage = new Float(system).floatValue();
-                float niceUsage = new Float(nice).floatValue();
+                float userUsage = Float.parseFloat(user);
+                float systemUsage = Float.parseFloat(system);
+                float niceUsage = Float.parseFloat(nice);
                 return (userUsage + systemUsage + niceUsage) / 100;
             } else {
                 brStat.readLine();
@@ -173,7 +175,7 @@ public class SystemListenComponent {
                 String cpuUsage = tokenStat.nextToken();
                 System.out.println("CPU idle : " + cpuUsage);
                 Float usage = new Float(cpuUsage.substring(0, cpuUsage.indexOf("%")));
-                return (1 - usage.floatValue() / 100);
+                return (1 - usage / 100);
             }
         } catch (Exception ioe) {
             System.out.println(ioe.getMessage());
@@ -203,12 +205,12 @@ public class SystemListenComponent {
             String procCmd = System.getenv("windir") + "//system32//wbem//wmic.exe process get Caption,CommandLine,KernelModeTime,ReadOperationCount,ThreadCount,UserModeTime,WriteOperationCount";
             // 取进程信息
             long[] c0 = readCpu(Runtime.getRuntime().exec(procCmd));
-            Thread.sleep(CPUTIME);
+            Thread.sleep(CPU_TIME);
             long[] c1 = readCpu(Runtime.getRuntime().exec(procCmd));
             if (c0 != null && c1 != null) {
                 long idletime = c1[0] - c0[0];
                 long busytime = c1[1] - c0[1];
-                return Double.valueOf(PERCENT * (busytime) / (busytime + idletime)).doubleValue();
+                return (double) (PERCENT * (busytime) / (busytime + idletime));
             } else {
                 return 0.0;
             }
@@ -232,7 +234,7 @@ public class SystemListenComponent {
             InputStreamReader ir = new InputStreamReader(proc.getInputStream());
             LineNumberReader input = new LineNumberReader(ir);
             String line = input.readLine();
-            if (line == null || line.length() < FAULTLENGTH) {
+            if (line == null || line.length() < FAULT_LENGTH) {
                 return null;
             }
             int capidx = line.indexOf("Caption");
@@ -252,22 +254,22 @@ public class SystemListenComponent {
                 // ThreadCount,UserModeTime,WriteOperation
                 String caption = line.substring(capidx, cmdidx - 1).trim().replace(" ", "");
                 String cmd = line.substring(cmdidx, kmtidx - 1).trim().replace(" ", "");
-                if (cmd.indexOf("wmic.exe") >= 0) {
+                if (cmd.contains("wmic.exe")) {
                     continue;
                 }
                 String s1 = line.substring(kmtidx, rocidx - 1).trim().replace(" ", "");
                 String s2 = line.substring(umtidx, wocidx - 1).trim().replace(" ", "");
                 if (caption.equals("System Idle Process") || caption.equals("System")) {
                     if (s1.length() > 0)
-                        idletime += Long.valueOf(s1).longValue();
+                        idletime += Long.parseLong(s1);
                     if (s2.length() > 0)
-                        idletime += Long.valueOf(s2).longValue();
+                        idletime += Long.parseLong(s2);
                     continue;
                 }
                 if (s1.length() > 0)
-                    kneltime += Long.valueOf(s1).longValue();
+                    kneltime += Long.parseLong(s1);
                 if (s2.length() > 0)
-                    usertime += Long.valueOf(s2).longValue();
+                    usertime = usertime + Long.parseLong(s2);
             }
             retn[0] = idletime;
             retn[1] = kneltime + usertime;

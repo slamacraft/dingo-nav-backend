@@ -29,8 +29,4 @@ public class WeatherServiceImpl extends AbstractWeatherService implements Weathe
         return reply.toString();
     }
 
-    @Override
-    public String getReply(ReqMsg reqMsg) {
-        return null;
-    }
 }

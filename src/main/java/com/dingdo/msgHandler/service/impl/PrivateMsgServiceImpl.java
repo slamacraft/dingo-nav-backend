@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class PrivateMsgServiceImpl implements PrivateMsgService {
 
     // 使用log4j打印日志
-    private static Logger logger = Logger.getLogger(PrivateMsgServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(PrivateMsgServiceImpl.class);
 
     private final ServiceFromApi serviceFromApi;
     private final BotManager botManager;

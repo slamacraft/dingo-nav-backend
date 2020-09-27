@@ -13,7 +13,7 @@ import java.time.ZoneOffset;
 public class StopWatchExecutor implements Runnable {
 
     // 为执行器提供数据的处理器
-    private StopWatchHandler handler;
+    private final StopWatchHandler handler;
 
     // 执行器是否在运行
     private boolean runningFlag = true;

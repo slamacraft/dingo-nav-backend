@@ -14,7 +14,7 @@ public class InstructionUtils {
      * 验证语句是否是符合指令规范
      *
      * @param instruction 语句
-     * @return
+     * @return  是否是指令语句
      */
     public static boolean DFA(String instruction) {
         int status = 1; // 有穷自动机状态
@@ -110,19 +110,17 @@ public class InstructionUtils {
         }
 
         // 结束时停留在2，3，8状态，指令识别成功
-        if (status == 2 || status == 3) {
-            return true;
-        }
-        return false;
+        return status == 2 || status == 3;
     }
 
 
     /**
      * 解析指令变量
-     * 指令规则 args = value
+     * 指令参数规则       arg = value
+     * 或者使用后缀式      -arg    等同于 arg=开启
      *
-     * @param args
-     * @return
+     * @param args 待处理指令参数
+     * @return 指令参数Map
      */
     public static Map<String, String> analysisInstruction(String... args) {
         Map<String, String> argsMap = new HashMap<>();
@@ -135,9 +133,9 @@ public class InstructionUtils {
                 continue;
             }
             String[] values = args[i].split("=");
-            if(values.length>=2){
+            if (values.length >= 2) {
                 argsMap.put(values[0].trim(), values[1].trim());
-            }else {
+            } else {
                 String[] arg = args[i].split("-");
                 argsMap.put(arg[1].trim(), "开启");
             }
@@ -150,15 +148,15 @@ public class InstructionUtils {
     /**
      * 从参数Map中通过参数关键字/中文描述获取参数值
      *
-     * @param params
-     * @param key
-     * @param discrption
-     * @return
+     * @param params      参数集合
+     * @param key         参数关键字
+     * @param description 参数的中文描述
+     * @return  参数的值
      */
-    public static String getParamValue(Map<String, String> params, String key, String discrption) {
+    public static String getParamValue(Map<String, String> params, String key, String description) {
         String result = params.get(key);
         if (result == null) {
-            result = params.get(discrption);
+            result = params.get(description);
         }
         return result;
     }
@@ -167,14 +165,14 @@ public class InstructionUtils {
     /**
      * 从参数Map中通过参数关键字/中文描述获取一个Integer参数值
      *
-     * @param params
-     * @param key
-     * @param discrption
-     * @return
-     * @throws NumberFormatException
+     * @param params      参数集合
+     * @param key         参数关键字
+     * @param description 参数的中文描述
+     * @return  参数的值
+     * @throws NumberFormatException    参数的值不是数字
      */
-    public static Integer getParamValueOfInteger(Map<String, String> params, String key, String discrption) throws NumberFormatException {
-        String value = getParamValue(params, key, discrption);
+    public static Integer getParamValueOfInteger(Map<String, String> params, String key, String description) throws NumberFormatException {
+        String value = getParamValue(params, key, description);
         if (StringUtils.isBlank(value)) {
             return 0;
         }
@@ -185,37 +183,35 @@ public class InstructionUtils {
     /**
      * 从参数Map中通过参数关键字/中文描述获取一个Long参数值
      *
-     * @param params
-     * @param key
-     * @param discrption
-     * @return
-     * @throws NumberFormatException
+     * @param params      参数集合
+     * @param key         参数关键字
+     * @param description 参数的中文描述
+     * @return  参数的值
+     * @throws NumberFormatException    参数的值不是数字
      */
-    public static Long getParamValueOfLong(Map<String, String> params, String key, String discrption) throws NumberFormatException {
-        String value = getParamValue(params, key, discrption);
+    public static Long getParamValueOfLong(Map<String, String> params, String key, String description) throws NumberFormatException {
+        String value = getParamValue(params, key, description);
         if (StringUtils.isBlank(value)) {
             return null;
         }
-        Long result = Long.valueOf(value);
-        return result;
+        return Long.valueOf(value);
     }
 
 
     /**
      * 从参数Map中通过参数关键字中文描述获取一个Double参数值
      *
-     * @param params
-     * @param key
-     * @param discrption
-     * @return
-     * @throws NumberFormatException
+     * @param params      参数集合
+     * @param key         参数关键字
+     * @param description 参数的中文描述
+     * @return  参数的值
+     * @throws NumberFormatException    参数的值不是数字
      */
-    public static Double getParamValueOfDouble(Map<String, String> params, String key, String discrption) throws NumberFormatException {
-        String value = getParamValue(params, key, discrption);
+    public static Double getParamValueOfDouble(Map<String, String> params, String key, String description) throws NumberFormatException {
+        String value = getParamValue(params, key, description);
         if (StringUtils.isBlank(value)) {
             return null;
         }
-        Double result = Double.valueOf(value);
-        return result;
+        return Double.valueOf(value);
     }
 }

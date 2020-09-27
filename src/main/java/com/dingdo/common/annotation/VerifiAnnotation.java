@@ -20,6 +20,7 @@ public @interface VerifiAnnotation {
     /**
      * 校验权限的级别
      * @return  权限级别的枚举
+     * @see VerificationEnum
      */
     VerificationEnum level() default VerificationEnum.MANAGER;
 

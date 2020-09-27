@@ -4,7 +4,6 @@ package com.dingdo.util.nlp;
  * 一些声明信息
  *
  * @author slamacraft
- * @Description:
  * @date: 2020/8/29 14:28
  * @since JDK 1.8
  */
