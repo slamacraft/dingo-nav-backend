@@ -84,13 +84,12 @@ public class GroupMsgServiceImpl implements GroupMsgService {
      */
     private String randomSendMsg(ReqMsg reqMsg) {
         String reply = "";
-        if (!reqMsg.getMessage().contains("CQ:at,qq=" + reqMsg.getSelfId())) {
-            if (random.nextInt(100) < RANDOM_RATIO) {
-                if (random.nextInt(100) < 10) {
-                    reply = specialReplyService.getRandomGroupMsgYesterday(reqMsg);
-                } else {
-                    reply = serviceFromApi.sendMsgFromApi(reqMsg);
-                }
+        if (!reqMsg.getMessage().contains("CQ:at,qq=" + reqMsg.getSelfId())
+                && random.nextInt(100) < RANDOM_RATIO) {
+            if (random.nextInt(100) < 10) {
+                reply = specialReplyService.getRandomGroupMsgYesterday(reqMsg);
+            } else {
+                reply = serviceFromApi.sendMsgFromApi(reqMsg);
             }
         }
         return reply;

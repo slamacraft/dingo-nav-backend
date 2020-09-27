@@ -32,7 +32,7 @@ object RobotMsgFactory {
      * 根据simple-bot的消息，将其转换为[ReqMsg]后返回
      */
     @JvmStatic
-    fun createReqMsg(msg: Any):ReqMsg{
+    fun createReqMsg(msg: Any): ReqMsg {
         val reqMsg = ReqMsg()
         msg as MsgGet
         reqMsg.message = msg.msg
@@ -48,10 +48,10 @@ object RobotMsgFactory {
         msg as RemarkAble
         reqMsg.card = msg.remark
 
-        if(msg is PrivateMsg){
+        if (msg is PrivateMsg) {
             reqMsg.messageType = "private"
             reqMsg.userId = msg.qq
-        }else if(msg is GroupMsg){
+        } else if (msg is GroupMsg) {
             reqMsg.messageType = "group"
             reqMsg.userId = msg.qq
             reqMsg.groupId = msg.group
@@ -95,7 +95,7 @@ object RobotMsgFactory {
         }
 
         val result = CQCode()
-        result.code = CQCodeEnum.getCQCode(code[0])
+        result.code = CQCodeEnum.getCQCode(code[0].replace("[CQ:", ""))
         result.values = InstructionUtils.analysisInstruction(*code.toTypedArray())
         return result
     }
