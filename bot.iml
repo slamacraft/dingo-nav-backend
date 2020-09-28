@@ -46,7 +46,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: love.forte.simple-robot-component:component-mirai:1.8.2-1.16" level="project" />
+    <orderEntry type="library" name="Maven: love.forte.simple-robot-component:component-mirai:1.9.1-1.16" level="project" />
     <orderEntry type="library" name="Maven: io.github.ForteScarlet:simple-robot-core:1.16.3" level="project" />
     <orderEntry type="library" name="Maven: org.quartz-scheduler:quartz:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: com.mchange:mchange-commons-java:0.2.15" level="project" />
@@ -54,10 +54,10 @@
     <orderEntry type="library" name="Maven: io.github.ForteScarlet.plusutils:simple-plusutils:1.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.12" level="project" />
     <orderEntry type="library" name="Maven: io.gitee.ForteScarlet.plusutils:console-plus:1.2.1" level="project" />
-    <orderEntry type="library" name="Maven: io.github.ForteScarlet.simple-robot-module:mod-cqcodeutils:1.8.0-BETA.3" level="project" />
+    <orderEntry type="library" name="Maven: io.github.ForteScarlet.simple-robot-module:mod-cqcodeutils:1.8.1" level="project" />
     <orderEntry type="library" name="Maven: cn.hutool:hutool-crypto:5.3.8" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2" level="project" />
-    <orderEntry type="library" name="Maven: net.mamoe:mirai-core:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: net.mamoe:mirai-core:1.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-reflect:1.4.10" level="project" />
     <orderEntry type="library" name="Maven: io.ktor:ktor-client-core-jvm:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: io.ktor:ktor-http-jvm:1.4.0" level="project" />
@@ -66,8 +66,8 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:atomicfu:0.14.1" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:atomicfu-common:0.14.1" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-coroutines-io-jvm:0.1.16" level="project" />
-    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-serialization:1.4.0" level="project" />
-    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.4.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-serialization:1.4.10" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.4.10" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.0.0-RC" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-io:0.1.16" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:kotlinx-coroutines-io:0.1.16" level="project" />
@@ -77,11 +77,11 @@
     <orderEntry type="library" name="Maven: io.ktor:ktor-network-jvm:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: io.ktor:ktor-utils-jvm:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: io.ktor:ktor-io-jvm:1.4.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: net.mamoe:kotlin-jvm-blocking-bridge-jvm:1.0.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: net.mamoe:kotlin-jvm-blocking-bridge-jvm:1.0.5" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.0.0-RC" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlinx:atomicfu-jvm:0.14.4" level="project" />
-    <orderEntry type="library" name="Maven: net.mamoe:mirai-core-qqandroid:1.2.2" level="project" />
-    <orderEntry type="library" name="Maven: net.mamoe:mirai-core-jvm:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: net.mamoe:mirai-core-qqandroid:1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: net.mamoe:mirai-core-jvm:1.3.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.bouncycastle:bcprov-jdk15on:1.64" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.4.10" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.4.10" level="project" />

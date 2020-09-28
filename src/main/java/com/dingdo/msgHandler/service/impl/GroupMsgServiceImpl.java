@@ -2,7 +2,7 @@ package com.dingdo.msgHandler.service.impl;
 
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
-import com.dingdo.component.otherComponent.SaveGroupMsgComponent;
+import com.dingdo.component.otherComponent.SaveMsgComponent;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.extendService.otherService.SpecialReplyService;
@@ -24,7 +24,7 @@ public class GroupMsgServiceImpl implements GroupMsgService {
     private final ServiceFromApi serviceFromApi;
     private final BotManager botManager;
     private final SpecialReplyService specialReplyService;
-    private final SaveGroupMsgComponent saveMsgComponent;
+    private final SaveMsgComponent saveMsgComponent;
 
     // 在不at的情况下，机器人对群消息产生响应的几率，默认是0
     private int RANDOM_RATIO = 0;
@@ -43,7 +43,7 @@ public class GroupMsgServiceImpl implements GroupMsgService {
 
 
     @Autowired
-    public GroupMsgServiceImpl(SaveGroupMsgComponent saveMsgComponent,
+    public GroupMsgServiceImpl(SaveMsgComponent saveMsgComponent,
                                ServiceFromApi serviceFromApi,
                                BotManager botManager,
                                SpecialReplyService specialReplyService) {

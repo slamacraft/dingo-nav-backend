@@ -6,103 +6,70 @@ import com.dingdo.enums.VerificationEnum;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.util.FileUtils;
 import com.dingdo.util.InstructionUtils;
-import org.apache.commons.collections4.CollectionUtils;
+import com.forte.qqrobot.anno.Async;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 聊天消息存储组件件
  */
-@Deprecated
+@Component
 public class SaveMsgComponent {
+
+    private final static Logger logger = Logger.getLogger(SaveMsgComponent.class);
+
     // 群消息列表(不一定线程安全)
-    private final Map<String, List<String>> groupMsgList = new ConcurrentHashMap<>();
+    private final Map<String, StringBuilder> msgMap = new HashMap<>();
 
-    // 消息存储池
-    private ThreadPoolExecutor msgStorePool;
     // 缓冲区阈值
-    private int msgListSize = 10;
+    private int bufferSize = 100;
 
-
-    /**
-     * 当这个实例被初次注入时所做的事情
-     * 这里是将这个组件的线程池初始化
-     */
-    @PostConstruct
-    private void initThisComponent() {
-        msgStorePool = new ThreadPoolExecutor(
-                1,  // 核心线程池大小（没加几个群，用不了多少核心线程）
-                8,  // 最大线程池大小
-                1, TimeUnit.MINUTES,    // 阻塞队列的生存时间
-                new ArrayBlockingQueue<>(15),   // 阻塞队列长度
-                new ThreadPoolExecutor.DiscardPolicy()    // 拒绝策略：什么也不做
-        );
-    }
 
     @VerifiAnnotation(level = VerificationEnum.DEVELOPER)
-    @Instruction(description = "设置消息缓存大小",
-            errorMsg = "设置错误，指令的参数格式为:\n消息列表大小=【数字】")
+    @Instruction(description = "设置消息缓存", errorMsg = "参数格式: 缓存大小=[数字 <= INT.MAX]")
     public String setMsgListSize(ReqMsg reqMsg, Map<String, String> params) {
-        String resultMsg = "设置成功";
-        this.msgListSize = InstructionUtils.getParamValueOfInteger(params, "msgListSize", "大小");
-        return resultMsg;
-    }
-
-    /**
-     * 消息存储的线程类
-     */
-    private class MsgStoreThread implements Runnable {
-        private final String groupId;
-        private final String[] msgList;
-
-        MsgStoreThread(String groupId, String[] msgList) {
-            this.groupId = groupId;
-            this.msgList = msgList;
-        }
-
-        /**
-         * 消息存储线程的方法
-         * 主要干的就是组装存储数据，然后使用工具类FileUtil进行存储
-         */
-        @Override
-        public void run() {
-            String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            String toWriteString = Arrays.stream(msgList).reduce((item1, item2) -> item1 + item2).get();
-            FileUtils.appendTextRelativeToJar("/message/" + groupId + " " + today + ".txt", toWriteString);
-        }
+        this.bufferSize = InstructionUtils.getParamValueOfInteger(params, "bufferSize", "缓存大小");
+        return "设置成功";
     }
 
 
     /**
      * 存储群聊消息的方法
      * <p>
-     *     本方法会为每个群聊都赋予一个消息缓冲队列，当缓冲区{@code msgListSize}
-     *     满后，会启动一个{@link MsgStoreThread}线程将消息异步存储到对应的
+     * 本方法会为每个群聊都赋予一个消息缓冲队列，当缓冲区{@code msgListSize}
+     * 满后，会将消息异步存储到对应的文件
      * </p>
      *
      * @param msg
      * @param groupId
      */
     public void saveGroupMsg(String msg, String groupId) {
-        // 获取该群的群消息列表
-        List<String> msgList = groupMsgList.get(groupId);
-        if (CollectionUtils.isEmpty(msgList)) {
-            msgList = new LinkedList<>();
-            groupMsgList.put(groupId, msgList);
+        appendMsg(msg, groupId);
+        StringBuilder msgString = msgMap.get(groupId);
+        if (msgString.length() >= bufferSize) {
+            writeMsgToFile(msgString.toString(), groupId);
         }
-        msgList.add(msg + "\r\n");
+    }
 
-        // 当消息列表长度超过阈值，将消息列表分发给子线程进行存储
-        if (msgList.size() >= msgListSize) {
-            String[] messageList = msgList.toArray(new String[0]);
-            msgList.clear();
-            msgStorePool.execute(new MsgStoreThread(groupId, messageList));
+    public void appendMsg(String msg, String groupId) {
+        StringBuilder msgBuilder = msgMap.get(groupId);
+        if (msgBuilder == null) {
+            msgBuilder = new StringBuilder();
+            msgMap.put(groupId, msgBuilder);
         }
+
+        msgBuilder.append(msg).append("\r\n");
+    }
+
+
+    @Async
+    public void writeMsgToFile(String groupMsg, String groupId) {
+        LocalDate today = LocalDate.now();
+        logger.info("已储存群" + groupId + "的消息");
+        FileUtils.appendTextRelativeToJar("/message/" + groupId + " " + today.toString() + ".txt", groupMsg);
     }
 }
