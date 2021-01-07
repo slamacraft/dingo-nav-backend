@@ -1,6 +1,5 @@
 package com.dingdo.util;
 
-import com.dingdo.enums.ClassicEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.boot.system.ApplicationHome;
@@ -8,8 +7,6 @@ import org.springframework.boot.system.ApplicationHome;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 文件操作工具类
@@ -38,28 +35,6 @@ public class FileUtil {
         }
     }
 
-    /**
-     * 获取某个目录下所有下级文件，包括目录下的子目录的下的文件
-     *
-     * @param path
-     * @return
-     */
-    public static Map<String, String> getFiles(String path) {
-        Map<String, String> result = new HashMap<>(ClassicEnum.values().length);
-        File file = new File(path);
-        File[] tempList = file.listFiles();
-
-        for (int i = 0; i < tempList.length; i++) {
-            if (tempList[i].isFile()) {
-                result.put(tempList[i].toString(), tempList[i].getName());
-            }
-            if (tempList[i].isDirectory()) {
-                //这里进行递归
-                result.putAll(getFiles(tempList[i].toString()));
-            }
-        }
-        return result;
-    }
 
     /**
      * 将文件读取为String

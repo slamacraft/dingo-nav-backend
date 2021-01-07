@@ -1,7 +1,5 @@
 package com.dingdo;
 
-import com.dingdo.config.configuration.SimpleRobotConfig;
-import com.dingdo.config.runListener.ApplicationRunListener;
 import com.forte.qqrobot.SimpleRobotApplication;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -24,9 +22,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class DingDoRobot {
 
     public static void main(String[] args) {
-        SimpleRobotConfig.initSimpleRobotContext(DingDoRobot.class, args);
-        SpringApplication sa = new SpringApplication(DingDoRobot.class);
-        sa.addListeners(new ApplicationRunListener());
-        sa.run(DingDoRobot.class, args);
+        SpringApplication springApplication = new SpringApplication(DingDoRobot.class);
+        springApplication.run(args);
+//        SimpleRobotConfig.initSimpleRobotContext(DingDoRobot.class, args);
+//        SpringApplication sa = new SpringApplication(DingDoRobot.class);
+//        sa.addListeners(new ApplicationRunListener());
+//        sa.run(DingDoRobot.class, args);
     }
 }
