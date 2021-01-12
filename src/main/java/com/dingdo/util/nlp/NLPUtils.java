@@ -1,9 +1,9 @@
 package com.dingdo.util.nlp;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -282,7 +282,7 @@ public class NLPUtils {
                 result.add(i);
             }
         }
-        if (CollectionUtils.isEmpty(result)) {
+        if (CollectionUtil.isEmpty(result)) {
             return -1;
         }
         return result.stream().min(Integer::compareTo).get();

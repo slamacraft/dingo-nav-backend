@@ -1,8 +1,8 @@
 package com.dingdo.service.model.weather;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.apache.commons.collections4.CollectionUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class Weather {
 
         public String getLifeStyleInfo() {
             StringBuffer result = new StringBuffer();
-            if (CollectionUtils.isNotEmpty(lifestyle)) {
+            if (CollectionUtil.isNotEmpty(lifestyle)) {
                 lifestyle.forEach(item -> {
                     result.append(item.toString() + "\n");
                 });

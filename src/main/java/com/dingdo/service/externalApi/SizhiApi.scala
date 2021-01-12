@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
 /**
- * @date 2021/1/4 19:12
  * @author slamacraft 
  * @since JDK 1.8
  * @version 1.0
