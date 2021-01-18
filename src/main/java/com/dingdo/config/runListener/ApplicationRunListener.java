@@ -1,6 +1,6 @@
 package com.dingdo.config.runListener;
 
-import com.dingdo.util.SpringContextUtils;
+import com.dingdo.util.SpringContextUtil;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
@@ -13,7 +13,7 @@ public class ApplicationRunListener implements ApplicationListener<ContextRefres
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         System.out.println("===========！！！！！！！！！！==========初始化");
-        SpringContextUtils.setApplicationContext(event.getApplicationContext());
+        SpringContextUtil.setApplicationContext(event.getApplicationContext());
 //        InstructionMethodContext.setApplicationContext(event.getApplicationContext());
     }
 }
