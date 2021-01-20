@@ -8,7 +8,7 @@ package com.dingdo.util.nlp;
  * @date: 2020/8/29 14:28
  * @since JDK 1.8
  */
-public enum  ChiNumEnum {
+public enum ChiNumEnum {
     ZERO('零', 0),
     ONE('一', 1),
     TWO('二', 2),
@@ -24,47 +24,41 @@ public enum  ChiNumEnum {
     HUNDRED('百', 100),
     THOUSAND('千', 1000),
     TEN_THOUSAND('万', 10000),
+    MILLION('兆', 1000000),
     BILLION('亿', 100000000),
 
 
     HALF('半', 30),
     RI('日', 7),
-    TIAN('天', 7);
+    TIAN('天', 7),
 
+    ;
 
-    private Character chi;
-    private int num;
+    private final char chi;
+    private final int num;
 
     ChiNumEnum(Character chi, int num) {
         this.chi = chi;
         this.num = num;
     }
 
-    public static boolean isChiNum(char c){
+    public static boolean isChiNum(char c) {
         ChiNumEnum[] values = ChiNumEnum.values();
-        for(int i=0;i<values.length;i++){
-            if(values[i].chi == c){
+        for (ChiNumEnum value : values) {
+            if (value.chi == c) {
                 return true;
             }
         }
         return false;
     }
 
-    public static Integer getNumByChi(char c){
+    public static int getNumByChi(char c) {
         ChiNumEnum[] values = ChiNumEnum.values();
-        for(int i=0;i<values.length;i++){
-            if(values[i].chi == c){
-                return values[i].num;
+        for (ChiNumEnum value : values) {
+            if (value.chi == c) {
+                return value.num;
             }
         }
-        return null;
-    }
-
-    public Character getChi() {
-        return chi;
-    }
-
-    public int getNum() {
-        return num;
+        throw new RuntimeException("无效的中文数字");
     }
 }

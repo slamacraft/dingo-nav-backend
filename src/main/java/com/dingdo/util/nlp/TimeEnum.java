@@ -20,7 +20,7 @@ public enum TimeEnum {
     MONTH(new String[]{"月"}),
     WEEK(new String[]{"星期", "周"});
 
-    private String[] keywords;
+    private final String[] keywords;
 
     TimeEnum(String[] keywords) {
         this.keywords = keywords;
