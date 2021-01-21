@@ -37,7 +37,6 @@ public final class NLPUtils {
     /**
      * 获取一个全命名实体识别的分词器
      *
-     * @return
      */
     public static Segment getNERSegment() {
         return NERSegment;
@@ -46,7 +45,6 @@ public final class NLPUtils {
     /**
      * 获取一个简易分词器
      *
-     * @return
      */
     public static Segment getNativeSegment() {
         return nativeSegment;
@@ -55,7 +53,6 @@ public final class NLPUtils {
     /**
      * 获取识别地名的分词器
      *
-     * @return
      */
     public static Segment getPlaceSegment() {
         return placeSegment;
@@ -104,15 +101,13 @@ public final class NLPUtils {
     public static String getCronFromString(String text) {
         List<Term> list = nativeSegment.seg(chiNumTransformation(text));
         List<String> wordList = list.stream().map(item -> item.word).collect(Collectors.toList());
-        StringBuilder cron = new StringBuilder();
-        cron.append(getSec(wordList))
-                .append(getMin(wordList))
-                .append(getHour(wordList))
-                .append(getDay(wordList))
-                .append(getMonth(wordList))
-                .append(getWeek(wordList));
 
-        return cron.toString();
+        return getSec(wordList) +
+                getMin(wordList) +
+                getHour(wordList) +
+                getDay(wordList) +
+                getMonth(wordList) +
+                getWeek(wordList);
     }
 
 
@@ -267,9 +262,9 @@ public final class NLPUtils {
      * 获取strList在list中的位置
      * 如果存在多个，取最前端的位置
      *
-     * @param list
-     * @param strList
-     * @return
+     * @param list  单词列表
+     * @param strList   想要查询单词的集合
+     * @return  单词的位置
      */
     public static int getIndexBatch(List<String> list, String[] strList) {
         List<Integer> result = new ArrayList<>();
@@ -290,8 +285,8 @@ public final class NLPUtils {
     /**
      * 将句子中所有中文数字转换为阿拉伯数字
      *
-     * @param text
-     * @return
+     * @param text  文本
+     * @return  改为阿拉伯数字的句子
      */
     public static String chiNumTransformation(String text) {
         char[] chars = text.toCharArray();

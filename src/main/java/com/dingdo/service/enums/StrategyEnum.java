@@ -12,8 +12,8 @@ public enum StrategyEnum {
 
     ;
 
-    private String description;
-    private double value;
+    private final String description;
+    private final double value;
 
     StrategyEnum(String description, double value) {
         this.description = description;

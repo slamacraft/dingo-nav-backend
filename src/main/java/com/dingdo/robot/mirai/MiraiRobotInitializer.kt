@@ -20,7 +20,7 @@ import java.util.stream.Collectors
  */
 object MiraiRobotInitializer {
 
-    var bots = HashMap<Long, Bot>()
+    private var bots = HashMap<Long, Bot>()
 
     /**
      * 将所有的机器人登录

@@ -33,7 +33,7 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "bots.core")
 public class MiraiRobot {
 
-    private static Logger logger = Logger.getLogger(MiraiRobot.class);
+    private static final Logger logger = Logger.getLogger(MiraiRobot.class);
 
     private final MiraiRobotInitializer robotInitializer = MiraiRobotInitializer.INSTANCE;
 
