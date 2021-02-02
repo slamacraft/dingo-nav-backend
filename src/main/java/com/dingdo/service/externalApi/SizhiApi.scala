@@ -11,9 +11,12 @@ import com.dingdo.service.model.MsgFromSiZhi.ChatMsg
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.log4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.http.{HttpEntity, HttpHeaders, MediaType}
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
+
+import scala.beans.BeanProperty
 
 /**
  * @author slamacraft 
@@ -21,9 +24,19 @@ import org.springframework.web.client.RestTemplate
  * @version 1.0
  */
 @Component
+@ConfigurationProperties(prefix = "bots.sizhi")
 class SizhiApi extends MsgProcessor {
 
   private val logger = Logger.getLogger(classOf[SizhiApi])
+
+  // 请求的消息
+  private val SPOKEN = "spoken"
+  private val APP_ID = "appid"
+  //自己管理的用户id，填写可进行上下文对话
+  private val USERID = "userid"
+
+  @BeanProperty
+  var appId: String = _
 
   @Autowired
   private var restTemplate: RestTemplate = _
@@ -44,10 +57,10 @@ class SizhiApi extends MsgProcessor {
     }
 
     val headers = new HttpHeaders
-    headers.setContentType(MediaType.APPLICATION_JSON_UTF8)
-    json.put("spoken", msg) //请求的文本
-    json.put("appid", "cebaf94c551f180d5c6847cf1ccaa1fa") // 先使用统一的机器人pid
-    json.put("userid", reqMsg.getUserId) //自己管理的用户id，填写可进行上下文对话
+    headers.setContentType(MediaType.APPLICATION_JSON)
+    json.put(SPOKEN, msg)
+    json.put(APP_ID, appId)
+    json.put(USERID, reqMsg.getUserId)
 
     val request = new HttpEntity[JSONObject](json, headers)
 

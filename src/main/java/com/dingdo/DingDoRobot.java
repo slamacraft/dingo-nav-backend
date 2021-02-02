@@ -24,9 +24,5 @@ public class DingDoRobot {
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(DingDoRobot.class);
         springApplication.run(args);
-//        SimpleRobotConfig.initSimpleRobotContext(DingDoRobot.class, args);
-//        SpringApplication sa = new SpringApplication(DingDoRobot.class);
-//        sa.addListeners(new ApplicationRunListener());
-//        sa.run(DingDoRobot.class, args);
     }
 }

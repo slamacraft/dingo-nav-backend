@@ -45,7 +45,7 @@ object NLPUtil {
    */
   def queryAbstract(querySentence: String, natures: String*): util.List[Term] = {
     // 句子抽象化
-    val segment = NLPUtils.getPlaceSegment
+    val segment = NLPUtil.getPlaceSegment
     val terms = segment.seg(querySentence).asScala
     for {term <- terms; nature <- natures
          if term.nature.toString == nature} {
