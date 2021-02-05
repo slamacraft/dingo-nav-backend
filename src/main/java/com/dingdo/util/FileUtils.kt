@@ -113,15 +113,6 @@ object FileUtils {
 
 
     /**
-     * 通过[imageUrl]将图片保存到到路径[path]
-     */
-    @JvmStatic
-    fun saveImageFromUrl(imageUrl: String, path: String): String {
-        return saveImage(ImageUtil.getImageFromURL(imageUrl), path)
-    }
-
-
-    /**
      * 保存图片[image]到路径[path]
      */
     @JvmStatic

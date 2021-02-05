@@ -1,6 +1,5 @@
 package com.dingdo.robot.mirai;
 
-import com.dingdo.mirai.MiraiRobotInitializer;
 import com.dingdo.robot.botDto.ReplyMsg;
 import com.dingdo.robot.botDto.ReqMsg;
 import com.dingdo.robot.botDto.factory.BotDtoFactory;
@@ -55,11 +54,6 @@ public class MiraiRobot {
         Thread.sleep(3000);
         robotInitializer.registeredFriendMsgEvent(this::privateEvent);
         robotInitializer.registeredGroupMsgEvent(this::groupEvent);
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        MiraiRobot miraiRobot = new MiraiRobot();
-        miraiRobot.run();
     }
 
 

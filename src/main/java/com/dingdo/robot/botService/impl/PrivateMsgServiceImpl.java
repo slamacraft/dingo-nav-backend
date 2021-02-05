@@ -1,7 +1,7 @@
 package com.dingdo.robot.botService.impl;
 
 
-import com.dingdo.mirai.MiraiRobotInitializer;
+import com.dingdo.robot.mirai.MiraiRobotInitializer;
 import com.dingdo.robot.botDto.ReplyMsg;
 import com.dingdo.robot.botDto.ReqMsg;
 import com.dingdo.robot.botService.PrivateMsgService;

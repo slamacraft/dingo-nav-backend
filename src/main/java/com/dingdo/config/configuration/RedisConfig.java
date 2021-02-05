@@ -31,7 +31,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Boolean> userStautsRedisTemplate(RedisConnectionFactory factory) {
+    public RedisTemplate<String, Boolean> userStatusRedisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Boolean> template = new RedisTemplate<>();
         //关联
         template.setConnectionFactory(factory);

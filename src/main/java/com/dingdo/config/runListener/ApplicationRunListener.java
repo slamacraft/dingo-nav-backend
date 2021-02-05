@@ -12,8 +12,7 @@ public class ApplicationRunListener implements ApplicationListener<ContextRefres
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        System.out.println("===========！！！！！！！！！！==========初始化");
+        System.out.println("=========== 容器初始化完成 ===========");
         SpringContextUtil.setApplicationContext(event.getApplicationContext());
-//        InstructionMethodContext.setApplicationContext(event.getApplicationContext());
     }
 }
