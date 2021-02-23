@@ -1,5 +1,6 @@
 package com.dingdo.service.externalApi
 
+import cn.hutool.core.text.CharSequenceUtil
 import cn.hutool.core.util.StrUtil
 import com.alibaba.fastjson.JSONObject
 import com.dingdo.robot.botDto.factory.BotDtoFactory
@@ -51,7 +52,7 @@ class SizhiApi extends MsgProcessor {
     val json = new JSONObject
 
     // 对啥也不说的人的回答
-    if (StrUtil.isBlank(msg)) {
+    if (CharSequenceUtil.isBlank(msg)) {
       return if (PRIVATE == reqMsg.getType) BotDtoFactory.replyMsg("你想对我说什么呢？")
       else BotDtoFactory.replyMsg("")
     }

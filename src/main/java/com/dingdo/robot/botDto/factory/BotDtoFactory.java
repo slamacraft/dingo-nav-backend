@@ -5,9 +5,12 @@ import com.dingdo.robot.botDto.ReqMsg;
 import com.dingdo.robot.botDto.dto.ReplyMsgModel;
 import com.dingdo.robot.botDto.dto.ReqMsgModel;
 import com.dingdo.robot.enums.MsgTypeEnum;
-import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.PlainText;
+import net.mamoe.mirai.message.data.SingleMessage;
+
+import java.util.Optional;
 
 /**
  * @author slamacraft
@@ -20,13 +23,14 @@ public final class BotDtoFactory {
     private BotDtoFactory(){}
 
     ///////////////////////// mirai //////////////////////////
-    public static ReqMsg reqMsg(GroupMessageEvent groupMessageEvent){
+    public static ReqMsg reqMsg(GroupMessageEvent groupMessageEvent) {
         ReqMsgModel reqMsgModel = new ReqMsgModel();
-        PlainText text = groupMessageEvent.getMessage().first(PlainText.Key);
-        String msg = text != null
-                ? text.contentToString()
-                : "干嘛";
-        reqMsgModel.setMsg(msg);
+        Optional<String> msg = groupMessageEvent.getMessage().stream()
+                .filter(item -> item instanceof PlainText)
+                .map(SingleMessage::contentToString)
+                .reduce((t1, t2) -> t1 + t2);
+
+        reqMsgModel.setMsg(msg.orElse("干嘛"));
         reqMsgModel.setSourceMsg(groupMessageEvent.getMessage());
         reqMsgModel.setType(MsgTypeEnum.GROUP);
         reqMsgModel.setNickname(groupMessageEvent.getSenderName());
@@ -38,14 +42,14 @@ public final class BotDtoFactory {
         return reqMsgModel;
     }
 
-    public static ReqMsg reqMsg(FriendMessageEvent friendMessageEvent){
+    public static ReqMsg reqMsg(FriendMessageEvent friendMessageEvent) {
         ReqMsgModel reqMsgModel = new ReqMsgModel();
-        StringBuilder msg = new StringBuilder();
-        friendMessageEvent.getMessage().forEachContent(item->{
-            msg.append(item.contentToString());
-            return null;
-        });
-        reqMsgModel.setMsg(msg.toString());
+        Optional<String> msg = friendMessageEvent.getMessage().stream()
+                .filter(item -> item instanceof PlainText)
+                .map(SingleMessage::contentToString)
+                .reduce((t1, t2) -> t1 + t2);
+
+        reqMsgModel.setMsg(msg.orElse(""));
         reqMsgModel.setSourceMsg(friendMessageEvent.getMessage());
         reqMsgModel.setType(MsgTypeEnum.GROUP);
         reqMsgModel.setNickname(friendMessageEvent.getSenderName());

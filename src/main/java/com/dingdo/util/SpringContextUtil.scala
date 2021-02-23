@@ -1,6 +1,6 @@
 package com.dingdo.util
 
-import cn.hutool.core.util.StrUtil
+import cn.hutool.core.text.CharSequenceUtil
 import org.springframework.context.ApplicationContext
 
 object SpringContextUtil {
@@ -48,7 +48,7 @@ object SpringContextUtil {
 
   private def getBean[T](context: ApplicationContext, name: String, clazz: Class[T]): T = {
     if (context == null) throw new NullPointerException("applicationContext为空")
-    if (StrUtil.isBlank(name)) context.getBean(clazz)
+    if (CharSequenceUtil.isBlank(name)) context.getBean(clazz)
     else if (clazz == null) context.getBean(name).asInstanceOf[T]
     else context.getBean(name, clazz)
   }

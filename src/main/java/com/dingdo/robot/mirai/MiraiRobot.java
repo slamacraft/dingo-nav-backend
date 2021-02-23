@@ -8,8 +8,8 @@ import com.dingdo.robot.botService.PrivateMsgService;
 import com.dingdo.service.base.RepeatComponent;
 import kotlin.Unit;
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChain;
 import org.apache.log4j.Logger;
@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author slamacraft
@@ -60,11 +61,18 @@ public class MiraiRobot {
     public Unit groupEvent(GroupMessageEvent event) {
         MessageChain message = event.getMessage();
         ReqMsg receive = BotDtoFactory.reqMsg(event);
+
         repeatComponent.repeat(receive);
-        At at = message.first(At.Key);
-        if(at == null || at.getTarget() != event.getBot().getId()){
+
+        Optional<At> atBotOption = message.stream()
+                .filter(item -> item instanceof At && ((At) item).getTarget() == event.getBot().getId())
+                .map(item -> (At) item)
+                .findFirst();
+
+        if (!atBotOption.isPresent()) {
             return null;
         }
+
         ReplyMsg replyMsg = groupMsgService.handleMsg(receive);
         event.getGroup().sendMessage(replyMsg.getReplyMsg());
         return null;
@@ -82,15 +90,15 @@ public class MiraiRobot {
     private Map<Long, String> getBotUserPwInfo() {
         Map<Long, String> result = new HashMap<>();
         // 从启动后加载的配置文件中加载登录机器人的账号密码
-        for(String bot:loginInfo){
+        loginInfo.forEach(bot -> {
             String[] split = bot.split(":");
-            if(split.length != 2){
+            if (split.length != 2) {
                 logger.warn("登录信息填写错误：" + bot);
-                continue;
+                return;
             }
 
             result.put(Long.parseLong(split[0]), split[1]);
-        }
+        });
 
         return result;
     }
@@ -102,7 +110,6 @@ public class MiraiRobot {
     public List<Bot> getBotList() {
         return robotInitializer.getBotList();
     }
-
 
     public List<String> getLoginInfo() {
         return loginInfo;

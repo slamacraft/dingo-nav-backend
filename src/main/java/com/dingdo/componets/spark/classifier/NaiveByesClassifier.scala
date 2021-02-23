@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 class NaiveByesClassifier {
 
-  @Autowired
+//  @Autowired
   private var spark: SparkSession = _
 
   def init(): Unit ={

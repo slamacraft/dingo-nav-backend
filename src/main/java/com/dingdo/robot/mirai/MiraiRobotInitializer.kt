@@ -3,10 +3,11 @@ package com.dingdo.robot.mirai
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
-import net.mamoe.mirai.event.subscribeAlways
-import net.mamoe.mirai.message.FriendMessageEvent
-import net.mamoe.mirai.message.GroupMessageEvent
+import net.mamoe.mirai.event.GlobalEventChannel
+import net.mamoe.mirai.event.events.FriendMessageEvent
+import net.mamoe.mirai.event.events.GroupMessageEvent
 import java.util.stream.Collectors
 
 /**
@@ -24,16 +25,12 @@ object MiraiRobotInitializer {
      */
     private suspend fun robotLogin(initBotInfo: Map<Long, String>) {
         initBotInfo.forEach(action = {
-            bots[it.key] = Bot(it.key, it.value) {
+            val bot = BotFactory.newBot(it.key, it.value) {
                 fileBasedDeviceInfo()
-                inheritCoroutineContext() // 使用 `coroutineScope` 的 Job 作为父 Job
             }
+            bot.alsoLogin()
+            bots[it.key] = bot
         })
-
-        // 登录所有机器人
-        bots.forEach {
-            it.value.alsoLogin()
-        }
     }
 
 
@@ -41,21 +38,17 @@ object MiraiRobotInitializer {
      * 注册群消息事件[GroupMessageEvent]
      */
     fun registeredGroupMsgEvent(eventMethod: (eventType: GroupMessageEvent) -> Unit) {
-        bots.values.forEach {
-            it.subscribeAlways<GroupMessageEvent> { eventItem ->
-                eventMethod(eventItem)
-            }
+        GlobalEventChannel.subscribeAlways<GroupMessageEvent> { event ->
+            eventMethod(event)
         }
     }
 
     /**
      * 注册好友消息事件[FriendMessageEvent]
      */
-    fun registeredFriendMsgEvent(eventMethod: (eventType: FriendMessageEvent) -> Unit){
-        bots.values.forEach {
-            it.subscribeAlways<FriendMessageEvent> { eventItem ->
-                eventMethod(eventItem)
-            }
+    fun registeredFriendMsgEvent(eventMethod: (eventType: FriendMessageEvent) -> Unit) {
+        GlobalEventChannel.subscribeAlways<FriendMessageEvent> { event ->
+            eventMethod(event)
         }
     }
 
