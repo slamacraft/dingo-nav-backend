@@ -7,12 +7,16 @@ package com.dingdo.robot.enums;
  * @since JDK 1.8
  */
 public enum MsgTypeEnum {
-    PRIVATE("私聊请求"),
-    GROUP("群聊请求");
 
-    private String name;
+    /**
+     * 私聊请求
+     */
+    PRIVATE,
+    /**
+     * 群聊请求
+     */
+    GROUP;
 
-    MsgTypeEnum(String name) {
-        this.name = name;
+    MsgTypeEnum() {
     }
 }

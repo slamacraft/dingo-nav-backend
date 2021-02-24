@@ -6,6 +6,7 @@ import com.dingdo.robot.botDto.ReqMsg;
 import com.dingdo.robot.botService.GroupMsgService;
 import com.dingdo.service.externalApi.SizhiApi;
 import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.contact.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,8 @@ public class GroupMsgServiceImpl implements GroupMsgService {
     public void sendMsg(String source, String target, ReplyMsg msg) {
         Bot bot = MiraiRobotInitializer.INSTANCE.getBotInfo(Long.parseLong(source));
         if (bot == null) return;
-        bot.getGroup(Long.parseLong(target)).sendMessage(msg.getReplyMsg());
+        Group group = bot.getGroup(Long.parseLong(target));
+        if(group == null) return;
+        group .sendMessage(msg.getReplyMsg());
     }
 }
