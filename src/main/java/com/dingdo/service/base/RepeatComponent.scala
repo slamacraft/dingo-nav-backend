@@ -1,5 +1,6 @@
 package com.dingdo.service.base
 
+import cn.hutool.core.util.StrUtil
 import com.dingdo.robot.botDto.ReqMsg
 import com.dingdo.robot.botDto.factory.BotDtoFactory
 import com.dingdo.robot.botService.GroupMsgService
@@ -25,7 +26,7 @@ class RepeatComponent {
     val repeatFlag = groupMsg.msg.endsWith(reqMsg.getMsg)
 
     groupMsg.repeat =
-      if (repeatFlag && !groupMsg.repeat) sendRepeat(reqMsg)
+      if (repeatFlag && !groupMsg.repeat && StrUtil.isNotBlank(groupMsg.msg)) sendRepeat(reqMsg)
       else if (!repeatFlag) false
       else groupMsg.repeat
 

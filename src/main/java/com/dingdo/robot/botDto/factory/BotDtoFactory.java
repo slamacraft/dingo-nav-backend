@@ -30,7 +30,7 @@ public final class BotDtoFactory {
                 .map(SingleMessage::contentToString)
                 .reduce((t1, t2) -> t1 + t2);
 
-        reqMsgModel.setMsg(msg.orElse("干嘛"));
+        reqMsgModel.setMsg(msg.orElse(""));
         reqMsgModel.setSourceMsg(groupMessageEvent.getMessage());
         reqMsgModel.setType(MsgTypeEnum.GROUP);
         reqMsgModel.setNickname(groupMessageEvent.getSenderName());

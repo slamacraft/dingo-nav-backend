@@ -5,9 +5,11 @@ import kotlinx.coroutines.launch
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
+import net.mamoe.mirai.event.Event
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.utils.BotConfiguration
 import java.util.stream.Collectors
 
 /**
@@ -27,6 +29,7 @@ object MiraiRobotInitializer {
         initBotInfo.forEach(action = {
             val bot = BotFactory.newBot(it.key, it.value) {
                 fileBasedDeviceInfo()
+                protocol = BotConfiguration.MiraiProtocol.ANDROID_PAD
             }
             bot.alsoLogin()
             bots[it.key] = bot
