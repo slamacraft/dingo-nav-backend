@@ -1,5 +1,7 @@
 package com.dingdo.robot.mirai;
 
+import com.dingdo.componets.conrtruction.base.ConstructionReply;
+import com.dingdo.componets.conrtruction.base.Constructor;
 import com.dingdo.robot.botDto.ReplyMsg;
 import com.dingdo.robot.botDto.ReqMsg;
 import com.dingdo.robot.botDto.factory.BotDtoFactory;
@@ -16,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import scala.Option;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -46,6 +49,9 @@ public class MiraiRobot {
     @Autowired
     private RepeatComponent repeatComponent;
 
+    @Autowired
+    private Constructor constructor;
+
     private List<String> loginInfo;
 
     @PostConstruct
@@ -61,6 +67,12 @@ public class MiraiRobot {
     public Unit groupEvent(GroupMessageEvent event) {
         MessageChain message = event.getMessage();
         ReqMsg receive = BotDtoFactory.reqMsg(event);
+
+        Option<ConstructionReply> runResult = constructor.executor(receive);
+        if (runResult.filter(reply -> !reply.isFailure()).isDefined()) {
+            runResult.get().reply();
+            return null;
+        }
 
         repeatComponent.repeat(receive);
 
@@ -81,6 +93,13 @@ public class MiraiRobot {
 
     public Unit privateEvent(FriendMessageEvent event) {
         ReqMsg receive = BotDtoFactory.reqMsg(event);
+
+        Option<ConstructionReply> runResult = constructor.executor(receive);
+        if (runResult.filter(reply -> !reply.isFailure()).isDefined()) {
+            runResult.get().reply();
+            return null;
+        }
+
         ReplyMsg replyMsg = privateMsgService.handleMsg(receive);
         event.getFriend().sendMessage(replyMsg.getReplyMsg());
         return null;
