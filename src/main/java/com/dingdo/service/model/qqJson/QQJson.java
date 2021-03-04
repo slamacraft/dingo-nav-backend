@@ -1,7 +1,7 @@
 package com.dingdo.service.model.qqJson;
 
 
-import com.dingdo.util.SpringContextUtil;
+import com.dingdo.common.util.SpringContextUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

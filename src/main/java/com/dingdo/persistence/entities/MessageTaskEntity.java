@@ -1,4 +1,4 @@
-package com.dingdo.mvc.entities;
+package com.dingdo.persistence.entities;
 
 
 import com.baomidou.mybatisplus.annotation.FieldFill;

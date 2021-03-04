@@ -1,4 +1,4 @@
-package com.dingdo.util
+package com.dingdo.common.util
 
 import cn.hutool.core.text.CharSequenceUtil
 import org.springframework.context.ApplicationContext

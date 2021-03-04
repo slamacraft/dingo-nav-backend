@@ -1,7 +1,7 @@
-package com.dingdo.mvc.service;
+package com.dingdo.persistence.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dingdo.mvc.entities.UserTomatoEntity;
+import com.dingdo.persistence.entities.UserTomatoEntity;
 
 /**
  * @author slamacraft

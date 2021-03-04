@@ -1,4 +1,4 @@
-package com.dingdo.util;
+package com.dingdo.common.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;

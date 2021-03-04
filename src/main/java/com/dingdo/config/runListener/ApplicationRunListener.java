@@ -1,6 +1,6 @@
 package com.dingdo.config.runListener;
 
-import com.dingdo.util.SpringContextUtil;
+import com.dingdo.common.util.SpringContextUtil;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
