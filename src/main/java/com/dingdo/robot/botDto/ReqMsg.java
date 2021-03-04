@@ -53,4 +53,6 @@ public interface ReqMsg {
 
     Object getSourceMsg();
 
+    boolean isFriend();
+
 }

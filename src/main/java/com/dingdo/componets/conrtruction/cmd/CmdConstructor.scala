@@ -21,8 +21,8 @@ class CmdConstructor extends LockStatusConstruction {
 
   override def value: String = ".cmd"
 
-  override def check(reqMsg: ReqMsg, user: User): Boolean = {
-    true
+  override def check(reqMsg: ReqMsg, user: User): Boolean ={
+    reqMsg.isFriend
   }
 
   override def run(reqMsg: ReqMsg, user: User): ConstructionReply = {

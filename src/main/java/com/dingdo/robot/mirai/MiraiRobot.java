@@ -15,6 +15,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChain;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -64,7 +65,7 @@ public class MiraiRobot {
     }
 
 
-    public Unit groupEvent(GroupMessageEvent event) {
+    public Unit groupEvent(@NotNull GroupMessageEvent event) {
         MessageChain message = event.getMessage();
         ReqMsg receive = BotDtoFactory.reqMsg(event);
 
@@ -106,6 +107,7 @@ public class MiraiRobot {
     }
 
 
+    @NotNull
     private Map<Long, String> getBotUserPwInfo() {
         Map<Long, String> result = new HashMap<>();
         // 从启动后加载的配置文件中加载登录机器人的账号密码

@@ -19,6 +19,7 @@ public class ReqMsgModel implements ReqMsg {
     private String msg;
     private Long time;
     private Object sourceMsg;
+    private boolean friendFlag;
 
     public ReqMsgModel() {
     }
@@ -102,5 +103,14 @@ public class ReqMsgModel implements ReqMsg {
     @Override
     public Object getSourceMsg() {
         return sourceMsg;
+    }
+
+    @Override
+    public boolean isFriend() {
+        return friendFlag;
+    }
+
+    public void setFriendFlag(boolean friendFlag) {
+        this.friendFlag = friendFlag;
     }
 }
