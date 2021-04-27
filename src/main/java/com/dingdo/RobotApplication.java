@@ -14,7 +14,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @MapperScan(basePackages = {"com.dingdo.**.mapper"})
 @SpringBootApplication
-//@SimpleRobotApplication
 @EnableSwagger2
 public class RobotApplication {
 
