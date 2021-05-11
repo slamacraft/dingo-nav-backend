@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil
 import com.dingdo.robot.botDto.ReqMsg
 import com.dingdo.robot.botDto.factory.BotDtoFactory
 import com.dingdo.robot.botService.GroupMsgService
+import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -20,17 +21,17 @@ class RepeatComponent {
 
 
   def repeat(reqMsg: ReqMsg): Unit = {
-    val groupMsg = groupMsgMap.getOrElseUpdate(reqMsg.getGroupId, new UserMsg())
+    val groupMsg = groupMsgMap.getOrElseUpdate(reqMsg.getSource.getGroupId, new UserMsg())
 
     // 复读触发条件
     val repeatFlag = groupMsg.msg.endsWith(reqMsg.getMsg)
 
     groupMsg.repeat =
-      if (repeatFlag && !groupMsg.repeat && StrUtil.isNotBlank(groupMsg.msg)) sendRepeat(reqMsg)
+      if (repeatFlag && !groupMsg.repeat && StringUtils.isNotBlank(groupMsg.msg)) sendRepeat(reqMsg)
       else if (!repeatFlag) false
       else groupMsg.repeat
 
-    groupMsg.userId = reqMsg.getUserId
+    groupMsg.userId = reqMsg.getSource.getUserId
     groupMsg.msg = reqMsg.getMsg
   }
 
@@ -43,7 +44,7 @@ class RepeatComponent {
    */
   def sendRepeat(reqMsg: ReqMsg): Boolean = {
     val reply = BotDtoFactory.replyMsg(reqMsg.getMsg)
-    groupMsgService.sendMsg(reqMsg.getSelfId, reqMsg.getGroupId, reply)
+    groupMsgService.sendMsg(reqMsg.getSource.getSelfId, reqMsg.getSource.getGroupId, reply)
     true
   }
 

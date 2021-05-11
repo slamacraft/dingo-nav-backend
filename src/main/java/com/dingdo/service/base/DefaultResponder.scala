@@ -19,7 +19,7 @@ class DefaultResponder {
 
 
   def defaultReply(req: ReqMsg, reply: ReplyMsg): Unit = {
-    req.getType match {
+    req.getSource.getType match {
       case MsgTypeEnum.PRIVATE => defaultPrivateReply(req, reply)
       case MsgTypeEnum.GROUP => defaultGroupReply(req, reply)
       case _ => Unit
@@ -28,10 +28,10 @@ class DefaultResponder {
 
 
   def defaultGroupReply(req: ReqMsg, reply: ReplyMsg): Unit = {
-    groupMsgService.sendMsg(req.getSelfId, req.getGroupId, reply)
+    groupMsgService.sendMsg(req.getSource.getSelfId, req.getSource.getGroupId, reply)
   }
 
   def defaultPrivateReply(req: ReqMsg, reply: ReplyMsg): Unit = {
-    privateMsgService.sendMsg(req.getSelfId, req.getUserId, reply)
+    privateMsgService.sendMsg(req.getSource.getSelfId, req.getSource.getUserId, reply)
   }
 }

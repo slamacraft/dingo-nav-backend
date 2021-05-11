@@ -2,6 +2,7 @@ package com.dingdo.robot.botDto.factory;
 
 import com.dingdo.robot.botDto.ReplyMsg;
 import com.dingdo.robot.botDto.ReqMsg;
+import com.dingdo.robot.botDto.dto.SourceModel;
 import com.dingdo.robot.botDto.dto.ReplyMsgModel;
 import com.dingdo.robot.botDto.dto.ReqMsgModel;
 import com.dingdo.robot.enums.MsgTypeEnum;
@@ -33,19 +34,22 @@ public final class BotDtoFactory {
                 .map(SingleMessage::contentToString)
                 .reduce((t1, t2) -> t1 + t2);
 
+        SourceModel msgSourceModel = new SourceModel();
+        msgSourceModel.setType(MsgTypeEnum.GROUP);
+        msgSourceModel.setNickname(groupMessageEvent.getSenderName());
+        msgSourceModel.setUserId(String.valueOf(groupMessageEvent.getSender().getId()));
+        msgSourceModel.setSelfId(String.valueOf(groupMessageEvent.getBot().getId()));
+        msgSourceModel.setGroupId(String.valueOf(groupMessageEvent.getGroup().getId()));
+
+        reqMsgModel.setSource(msgSourceModel);
         reqMsgModel.setMsg(msg.orElse(""));
         reqMsgModel.setSourceMsg(groupMessageEvent.getMessage());
-        reqMsgModel.setType(MsgTypeEnum.GROUP);
-        reqMsgModel.setNickname(groupMessageEvent.getSenderName());
-        reqMsgModel.setUserId(String.valueOf(groupMessageEvent.getSender().getId()));
-        reqMsgModel.setSelfId(String.valueOf(groupMessageEvent.getBot().getId()));
-        reqMsgModel.setGroupId(String.valueOf(groupMessageEvent.getGroup().getId()));
         reqMsgModel.setTime((long) groupMessageEvent.getTime());
 
         Bot bot = MiraiRobotInitializer.INSTANCE.getBotInfo(groupMessageEvent.getBot().getId());
         Objects.requireNonNull(bot, "bot不存在");
 
-        reqMsgModel.setFriendFlag(Objects.nonNull(bot.getFriend(groupMessageEvent.getSender().getId())));
+        msgSourceModel.setFriend(Objects.nonNull(bot.getFriend(groupMessageEvent.getSender().getId())));
 
         return reqMsgModel;
     }
@@ -57,18 +61,21 @@ public final class BotDtoFactory {
                 .map(SingleMessage::contentToString)
                 .reduce((t1, t2) -> t1 + t2);
 
+        SourceModel msgSourceModel = new SourceModel();
+        msgSourceModel.setType(MsgTypeEnum.PRIVATE);
+        msgSourceModel.setNickname(friendMessageEvent.getSenderName());
+        msgSourceModel.setUserId(String.valueOf(friendMessageEvent.getSender().getId()));
+        msgSourceModel.setSelfId(String.valueOf(friendMessageEvent.getBot().getId()));
+
+        reqMsgModel.setSource(msgSourceModel);
         reqMsgModel.setMsg(msg.orElse(""));
         reqMsgModel.setSourceMsg(friendMessageEvent.getMessage());
-        reqMsgModel.setType(MsgTypeEnum.PRIVATE);
-        reqMsgModel.setNickname(friendMessageEvent.getSenderName());
-        reqMsgModel.setUserId(String.valueOf(friendMessageEvent.getSender().getId()));
-        reqMsgModel.setSelfId(String.valueOf(friendMessageEvent.getBot().getId()));
         reqMsgModel.setTime((long) friendMessageEvent.getTime());
 
         Bot bot = MiraiRobotInitializer.INSTANCE.getBotInfo(friendMessageEvent.getBot().getId());
         Objects.requireNonNull(bot, "bot不存在");
 
-        reqMsgModel.setFriendFlag(Objects.nonNull(bot.getFriend(friendMessageEvent.getSender().getId())));
+        msgSourceModel.setFriend(Objects.nonNull(bot.getFriend(friendMessageEvent.getSender().getId())));
 
         return reqMsgModel;
     }

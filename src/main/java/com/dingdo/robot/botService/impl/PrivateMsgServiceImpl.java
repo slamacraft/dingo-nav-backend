@@ -15,8 +15,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class PrivateMsgServiceImpl implements PrivateMsgService {
 
-    @Autowired
-    private SizhiApi sizhiApi;
+    private final SizhiApi sizhiApi;
+
+    public PrivateMsgServiceImpl(SizhiApi sizhiApi) {
+        this.sizhiApi = sizhiApi;
+    }
 //    private final BotManager botManager;
 
 

@@ -7,6 +7,7 @@ import com.dingdo.robot.botDto.factory.BotDtoFactory
 import com.dingdo.robot.botDto.{ReplyMsg, ReqMsg}
 import com.dingdo.robot.enums.MsgTypeEnum.PRIVATE
 import com.dingdo.service.MsgProcessor
+import com.dingdo.service.base.MessageProcessChain
 import com.dingdo.service.enums.{StrategyEnum, UrlEnum}
 import com.dingdo.service.model.MsgFromSiZhi.ChatMsg
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -26,7 +27,7 @@ import scala.beans.BeanProperty
  */
 @Component
 @ConfigurationProperties(prefix = "bots.sizhi")
-class SizhiApi extends MsgProcessor {
+class SizhiApi extends MsgProcessor with MessageProcessChain{
 
   private val logger = Logger.getLogger(classOf[SizhiApi])
 
@@ -53,7 +54,7 @@ class SizhiApi extends MsgProcessor {
 
     // 对啥也不说的人的回答
     if (CharSequenceUtil.isBlank(msg)) {
-      return if (PRIVATE == reqMsg.getType) BotDtoFactory.replyMsg("你想对我说什么呢？")
+      return if (PRIVATE == reqMsg.getSource.getType) BotDtoFactory.replyMsg("你想对我说什么呢？")
       else BotDtoFactory.replyMsg("")
     }
 
@@ -61,7 +62,7 @@ class SizhiApi extends MsgProcessor {
     headers.setContentType(MediaType.APPLICATION_JSON)
     json.put(SPOKEN, msg)
     json.put(APP_ID, appId)
-    json.put(USERID, reqMsg.getUserId)
+    json.put(USERID, reqMsg.getSource.getUserId)
 
     val request = new HttpEntity[JSONObject](json, headers)
 
@@ -87,4 +88,10 @@ class SizhiApi extends MsgProcessor {
 
 
   override def getType: StrategyEnum = StrategyEnum.CHAT
+
+  override def isMatch(reqMsg: ReqMsg): Boolean = true
+
+  override def invokeProcess(reqMsg: ReqMsg): ReplyMsg = getReply(reqMsg)
+
+  override def getPriority: Int = 100
 }

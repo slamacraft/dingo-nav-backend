@@ -18,31 +18,25 @@
         <java.version>1.8</java.version>
 <!--        <kotlin.version>1.4.3</kotlin.version>-->
         <scala.version>2.12.12</scala.version>
-        <simbot.version>2.0.1</simbot.version>
+        <simbot.version>2.0.6</simbot.version>
         <hutool.version>5.5.8</hutool.version>
-        <mirai.version>2.4.0</mirai.version>
+        <mirai.version>2.6.4</mirai.version>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>love.forte.simple-robot</groupId>
-                <artifactId>parent</artifactId>
-                <version>${simbot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
-
-        <!--        核心包-->
-        <!-- 使用mirai组件开发QQ机器人。 -->
+        <!-- https://mvnrepository.com/artifact/net.mamoe/mirai-core-jvm -->
         <dependency>
-            <groupId>love.forte.simple-robot</groupId>
-            <artifactId>component-mirai</artifactId>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-jvm</artifactId>
+            <version>${mirai.version}</version>
         </dependency>
+
+<!--        &lt;!&ndash;        核心包&ndash;&gt;-->
+<!--        &lt;!&ndash; 使用mirai组件开发QQ机器人。 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>love.forte.simple-robot</groupId>-->
+<!--            <artifactId>component-mirai</artifactId>-->
+<!--        </dependency>-->
 
         <!--    语言相关    -->
         <dependency>

@@ -8,14 +8,16 @@ import com.dingdo.service.externalApi.SizhiApi;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.data.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GroupMsgServiceImpl implements GroupMsgService {
 
-    @Autowired
-    private SizhiApi sizhiApi;
+    private final SizhiApi sizhiApi;
+
+    public GroupMsgServiceImpl(SizhiApi sizhiApi) {
+        this.sizhiApi = sizhiApi;
+    }
 //    private final BotManager botManager;
 
 
