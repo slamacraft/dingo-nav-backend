@@ -1,8 +1,6 @@
 package com.dingdo.common.util
 
 import cn.hutool.core.util.StrUtil
-import com.dingdo.service.enums.ClassicEnum
-import org.apache.log4j.Logger
 import org.springframework.boot.system.ApplicationHome
 import java.awt.image.BufferedImage
 import java.io.File
@@ -16,27 +14,11 @@ import javax.imageio.ImageIO
  */
 object FileUtils {
 
-    val logger: Logger = Logger.getLogger(FileUtils::class.java)
 
     object JarPath {
         val jarPath = ApplicationHome(FileUtils::class.java).source.parentFile.toString()
     }
 
-    /**
-     * 获取[path]路径下所有的文件，包括子文件
-     * @return 返回一个[Map],key=文件路径，value=文件名称
-     */
-    @JvmStatic
-    fun getFiles(path: String): Map<String, String> {
-        val result = HashMap<String, String>(ClassicEnum.values().size)
-        val file = File(path.requireNonBlank()).existOrCreate()
-
-        file.walk().maxDepth(3)
-                .filter { it.isFile }
-                .filter { it.extension == "txt" }
-                .forEach { result[it.toString()] = it.name }
-        return result
-    }
 
 
     /**
