@@ -216,7 +216,7 @@ object NPLUtil {
     private fun getIndexBatch(list: List<String>, strList: Array<String>): Int {
         val minIndex = strList.map { list.indexOf(it) }
             .filter { it > -1 }
-            .min()
+            .minOrNull()
         return Optional.ofNullable(minIndex)
             .orElse(-1)
     }

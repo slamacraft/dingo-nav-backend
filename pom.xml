@@ -16,9 +16,9 @@
 
     <properties>
         <java.version>1.8</java.version>
-<!--        <kotlin.version>1.4.3</kotlin.version>-->
+        <kotlin.version>1.5.10</kotlin.version>
+        <kotlin-coroutines.version>1.5.0</kotlin-coroutines.version>
         <scala.version>2.12.12</scala.version>
-        <simbot.version>2.0.6</simbot.version>
         <hutool.version>5.5.8</hutool.version>
         <mirai.version>2.7-M2</mirai.version>
     </properties>
@@ -31,36 +31,12 @@
             <version>${mirai.version}</version>
         </dependency>
 
-<!--        &lt;!&ndash;        核心包&ndash;&gt;-->
-<!--        &lt;!&ndash; 使用mirai组件开发QQ机器人。 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>love.forte.simple-robot</groupId>-->
-<!--            <artifactId>component-mirai</artifactId>-->
-<!--        </dependency>-->
-
-        <!--        工具-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.70</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.0</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>logback-classic</artifactId>
-                    <groupId>ch.qos.logback</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -72,20 +48,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/junit/junit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -128,13 +90,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.2.8.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
 
 
     </dependencies>
@@ -144,7 +99,7 @@
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
-                <version>1.5.10</version>
+                <version>${kotlin.version}</version>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -211,14 +166,14 @@
             <id>bintray</id>
             <url>https://dl.bintray.com/kotlin/kotlin-eap</url>
         </repository>
-<!--        <repository>-->
-<!--            <snapshots>-->
-<!--                <enabled>false</enabled>-->
-<!--            </snapshots>-->
-<!--            <id>central</id>-->
-<!--            <name>Maven Repository Switchboard</name>-->
-<!--            <url>http://repo2.maven.org/maven2</url>-->
-<!--        </repository>-->
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <url>http://repo2.maven.org/maven2</url>
+        </repository>
     </repositories>
 
 

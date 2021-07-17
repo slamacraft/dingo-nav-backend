@@ -25,14 +25,14 @@ object MiraiRobotInitializer {
      * 将所有的机器人登录
      */
     private suspend fun robotLogin(initBotInfo: Map<Long, String>) {
-        initBotInfo.forEach(action = {
+        initBotInfo.forEach{
             val bot = BotFactory.newBot(it.key, it.value) {
                 fileBasedDeviceInfo()
                 protocol = BotConfiguration.MiraiProtocol.ANDROID_PAD
             }
             bot.alsoLogin()
             bots[it.key] = bot
-        })
+        }
     }
 
 
@@ -75,16 +75,16 @@ object MiraiRobotInitializer {
      * 之前会将让线程休眠
      */
     fun run(initBotInfo: Map<Long, String>) {
-        var flag = false;
+//        var flag = false;
 
         GlobalScope.launch {
             robotLogin(initBotInfo)
-            flag = true
+//            flag = true
         }
 
-        while (!flag) {
-            Thread.sleep(1000)
-        }
+//        while (!flag) {
+//            Thread.sleep(1000)
+//        }
     }
 
 }
