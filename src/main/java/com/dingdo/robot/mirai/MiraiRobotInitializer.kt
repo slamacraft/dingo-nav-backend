@@ -1,5 +1,6 @@
 package com.dingdo.robot.mirai
 
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.mamoe.mirai.Bot
@@ -75,16 +76,9 @@ object MiraiRobotInitializer {
      * 之前会将让线程休眠
      */
     fun run(initBotInfo: Map<Long, String>) {
-//        var flag = false;
-
         GlobalScope.launch {
             robotLogin(initBotInfo)
-//            flag = true
         }
-
-//        while (!flag) {
-//            Thread.sleep(1000)
-//        }
     }
 
 }

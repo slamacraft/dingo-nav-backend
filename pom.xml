@@ -91,6 +91,12 @@
             </exclusions>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.gnu.gettext/libintl -->
+        <dependency>
+            <groupId>org.gnu.gettext</groupId>
+            <artifactId>libintl</artifactId>
+            <version>0.18.3</version>
+        </dependency>
 
     </dependencies>
 
