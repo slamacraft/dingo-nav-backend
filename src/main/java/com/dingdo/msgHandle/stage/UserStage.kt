@@ -6,10 +6,11 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
 import java.util.*
+import kotlin.reflect.KClass
 
 interface UserStage {
 
-    fun rootStage(): UserStage
+    fun rootStage(): KClass<out UserStage>
 
     fun order(): Int {
         return 1
@@ -30,19 +31,17 @@ interface UserStage {
 
 interface RootStage : UserStage {
 
-    override fun rootStage(): UserStage {
-        return DefaultRootStage.defaultStage
-    }
+    override  fun rootStage(): KClass<out UserStage>  = DefaultRootStage::class
 
     override fun process(msgEvent: MessageEvent): UserStage {
         return this
     }
 
     override fun transition(msgEvent: MessageEvent): UserStage {
-        val subStageList = StageContext.rootStageMap.getOrElse(this) { emptyList() }
+        val subStageList = StageContext.rootStageMap.getOrElse(this::class) { emptyList() }
         for (stage in subStageList) {
             if (stage.valid(msgEvent)) {
-                return stage.transition(msgEvent)
+                return stage
             }
         }
         return this

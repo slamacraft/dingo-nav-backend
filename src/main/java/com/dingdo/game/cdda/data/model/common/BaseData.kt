@@ -14,11 +14,18 @@ abstract class BaseData {
         id = rootNode.path("id").asText()
         type = Type.getEnum(rootNode.path("type").asText()).get()
         name = rootNode.path("name").path("str").asText().translation()
+            .ifBlank { rootNode.path("name").path("str_sp").asText().translation() }
+            .ifBlank { rootNode.path("name").asText().translation() }
         return this
     }
 
-    fun String.translation():String{
-        return GettextTranslator.translation(this)
+    abstract fun extends(): BaseData
+
+    open fun alias():String{
+        return name
     }
 }
 
+fun String.translation(): String {
+    return GettextTranslator.translation(this)
+}

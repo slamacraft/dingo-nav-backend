@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.annotation.PostConstruct
+import kotlin.reflect.KClass
 
 @Component
 class StageHandler {
@@ -24,7 +25,7 @@ class StageHandler {
 
     fun msgHandle(msgEvent: MessageEvent) {
         val user = userContext.getUser(msgEvent.sender.id)
-        val info = user.getInfo(UserStageInfo::class)
+        val info = user.getInfo(UserStageInfo::class) { UserStageInfo() }
         info.id = user.id
         val transitionStage = info.stage.transition(msgEvent)
         if (info.stage != transitionStage) {
@@ -41,7 +42,7 @@ class UserStageInfo {
 @Component
 object StageContext : ApplicationContextAware {
     val stageList = ArrayList<UserStage>()
-    val rootStageMap = HashMap<UserStage, List<UserStage>>()
+    val rootStageMap = HashMap<KClass<out UserStage>, List<UserStage>>()
 
     override fun setApplicationContext(applicationContext: ApplicationContext) {
         applicationContext.getBeansOfType(UserStage::class.java).values

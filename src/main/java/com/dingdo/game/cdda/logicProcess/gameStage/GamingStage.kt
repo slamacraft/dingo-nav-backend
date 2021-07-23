@@ -7,6 +7,7 @@ import com.dingdo.robot.mirai.MsgSender
 import net.mamoe.mirai.event.events.MessageEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import kotlin.reflect.KClass
 
 @Component
 class GameDefaultStage : RootStage {
@@ -26,11 +27,11 @@ class GameDefaultStage : RootStage {
 }
 
 @Component
-class CloseGameStage : UserStage {
+class CloseGame : UserStage {
     @Autowired
     lateinit var gameDefaultStage: GameDefaultStage
 
-    override fun rootStage(): UserStage = gameDefaultStage
+    override fun rootStage(): KClass<out UserStage> = GameDefaultStage::class
 
     override fun valid(msgEvent: MessageEvent): Boolean = msgEvent.getMsgText().startsWith("退出游戏")
 

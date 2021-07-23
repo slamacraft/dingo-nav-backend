@@ -1,18 +1,20 @@
 package com.dingdo.game.cdda.data.component
 
+import cn.hutool.core.util.StrUtil
 import com.dingdo.common.util.existOrCreate
 import com.dingdo.game.cdda.data.emuns.Type
 import com.dingdo.game.cdda.data.model.common.BaseData
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.stereotype.Component
 import java.io.File
 
 object DataFileLoader {
 
     private val objectMapper: ObjectMapper = ObjectMapper()
     val dataMap = HashMap<String, DataTypeCollection>()
+    val dataIdMap = HashMap<String, BaseData>()
 
     init {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
@@ -21,32 +23,65 @@ object DataFileLoader {
 
     fun loadData(src: String) {
 
+        val laterInitQueue = ArrayDeque<JsonNode>()
+
         File(src).walk()
             .filter { it.isFile }
             .forEach { jsonFile ->
                 val dataStr = jsonFile.existOrCreate().readText()
                 val data = objectMapper.readTree(dataStr)
 
-                data.forEach { rootNode ->
-                    val typeStr = rootNode.path("type").asText()
-                    Type.getEnum(typeStr).map {
-                        val dataModel = it.instanceSupplier().parse(rootNode)
-                        val dataTypeCollection = dataMap.getOrPut(typeStr) { DataTypeCollection(it) }
-                        dataTypeCollection.dataIdMap[dataModel.id] = dataModel
-                        dataTypeCollection.dataNameMap[dataModel.name] = dataModel
+                data.forEach next@{ rootNode ->
+                    if (StrUtil.isNotBlank(rootNode.path("copy-from").asText())) {
+                        laterInitQueue.add(rootNode)
+                        return@next
                     }
+                    saveModel(rootNode) { it.instanceSupplier() }
                 }
             }
+
+        initPost(laterInitQueue)
+    }
+
+
+    private fun saveModel(jsonNode: JsonNode, dataSupplier: (Type) -> BaseData) {
+        val typeStr = jsonNode.path("type").asText()
+        Type.getEnum(typeStr).map {
+            val dataModel = dataSupplier.invoke(it).parse(jsonNode)
+            val dataTypeCollection = dataMap.getOrPut(typeStr) { DataTypeCollection(it) }
+
+            dataTypeCollection.dataIdMap[dataModel.id] = dataModel
+            dataTypeCollection.dataNameMap[dataModel.name] = dataModel
+            dataTypeCollection.dataNameMap[dataModel.alias()] = dataModel
+            dataIdMap[dataModel.id] = dataModel
+        }
+    }
+
+
+    private fun initPost(laterInitQueue: ArrayDeque<JsonNode>) {
+        var finished = false
+        while (laterInitQueue.isNotEmpty() && !finished) {
+            finished = true
+            val foreachList = laterInitQueue.toList()
+            laterInitQueue.clear()
+
+            foreachList.forEach next@{
+                val parentNodeId = it.path("copy-from").asText()
+                val parentNode = dataIdMap[parentNodeId]
+                if (parentNode == null) {
+                    laterInitQueue.add(it)
+                    return@next
+                }
+                finished = false
+                saveModel(it) { parentNode.extends() }
+            }
+        }
     }
 
     fun searchByName(name: String): BaseData? {
-        for (dataCollection in dataMap) {
-            val baseData = dataCollection.value.dataNameMap[name]
-            if (baseData != null) {
-                return baseData
-            }
+        return dataMap.firstNotNullOfOrNull {
+            it.value.dataNameMap[name]
         }
-        return null
     }
 }
 
@@ -56,7 +91,7 @@ class DataTypeCollection constructor(val type: Type) {
 }
 
 fun main() {
-    DataFileLoader.loadData("D:\\workspace\\springboot-webjar\\cddaData\\monsters")
+    DataFileLoader.loadData("D:\\workspace\\springboot-webjar\\cddaData")
     val dataMap = DataFileLoader.dataMap
-    println("load OK")
+    println(DataFileLoader.dataIdMap["maid_dress"])
 }
