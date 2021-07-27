@@ -22,14 +22,14 @@ class CreateRoleAndSelectSex : UserStage {
 
     override fun rootStage(): KClass<out UserStage> = GameDefaultStage::class
 
-    override fun valid(msgEvent: MessageEvent): Boolean = msgEvent.getMsgText().startsWith("创建角色")
+    override fun valid(msgEvent: MessageEvent): Boolean = msgEvent.getText().startsWith("创建角色")
 
     override fun transition(msgEvent: MessageEvent): UserStage {
         if (!selectProfession.valid(msgEvent)) {
             MsgSender.sendMsg(msgEvent.subject, "啊这")
             return this
         }
-        msgEvent.getGameUserInfo().sex = msgEvent.getMsgText() == "女"
+        msgEvent.getGameUserInfo().sex = msgEvent.getText() == "女"
         return selectProfession
     }
 
@@ -57,10 +57,10 @@ class SelectProfession : UserStage {
     override fun rootStage(): KClass<out UserStage> = CreateRoleAndSelectSex::class
 
     override fun valid(msgEvent: MessageEvent): Boolean =
-        msgEvent.getMsgText() == "男" || msgEvent.getMsgText() == "女"
+        msgEvent.getText() == "男" || msgEvent.getText() == "女"
 
     override fun transition(msgEvent: MessageEvent): UserStage {
-        val profession = msgEvent.getMsgText()
+        val profession = msgEvent.getText()
         val professions = DataFileLoader.dataMap[Type.PROFESSION.typeName]
         val profInfo = professions!!.dataNameMap[profession]
         if (profInfo == null) {
@@ -88,13 +88,13 @@ class ConfirmRole : UserStage {
     override fun rootStage(): KClass<out UserStage> = SelectProfession::class
 
     override fun valid(msgEvent: MessageEvent): Boolean =
-        msgEvent.getMsgText() == "确认" || msgEvent.getMsgText() == "取消"
+        msgEvent.getText() == "确认" || msgEvent.getText() == "取消"
 
     override fun transition(msgEvent: MessageEvent): UserStage {
         if(!valid(msgEvent)){
             return this
         }
-        if (msgEvent.getMsgText() == "确认") {
+        if (msgEvent.getText() == "确认") {
             MsgSender.sendMsg(msgEvent, "已为您生成角色")
         } else {
             UserContext.getUser(msgEvent.sender.id).removeInfo(CddaUserInfo::class)

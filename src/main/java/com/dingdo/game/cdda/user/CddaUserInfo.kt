@@ -2,6 +2,8 @@ package com.dingdo.game.cdda.user
 
 import com.dingdo.game.cdda.data.component.DataFileLoader
 import com.dingdo.game.cdda.data.emuns.Type
+import com.dingdo.game.cdda.data.model.Armor
+import com.dingdo.game.cdda.data.model.Materials
 import com.dingdo.game.cdda.data.model.Professions
 
 class CddaUserInfo(val id: Long, val name: String) {
@@ -66,5 +68,18 @@ class BodyPart(val partId: String) {
 }
 
 class Item(val itemId: String) {
-    var durable = 70   // 耐久值, 部分可使用的物品才有，比如护甲
+    var durable = 100   // 耐久值, 部分可使用的物品才有，比如护甲
+
+    override fun toString(): String {
+        return when (val item = DataFileLoader.dataIdMap[this.itemId]){
+            is Armor -> {
+                val material = item.material.first()
+                val materialInfo = DataFileLoader.dataIdMap[material] as Materials
+                "${materialInfo.getDurability(this.durable)}${DataFileLoader.dataIdMap[this.itemId]!!.name}"
+            }
+            else -> {
+                DataFileLoader.dataIdMap[this.itemId]!!.name
+            }
+        }
+    }
 }

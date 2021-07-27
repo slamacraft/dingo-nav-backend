@@ -25,8 +25,7 @@ class StageHandler {
 
     fun msgHandle(msgEvent: MessageEvent) {
         val user = userContext.getUser(msgEvent.sender.id)
-        val info = user.getInfo(UserStageInfo::class) { UserStageInfo() }
-        info.id = user.id
+        val info = user.getInfo(UserStageInfo::class) { UserStageInfo(user.id) }
         val transitionStage = info.stage.transition(msgEvent)
         if (info.stage != transitionStage) {
             info.stage = transitionStage.process(msgEvent)
@@ -34,8 +33,7 @@ class StageHandler {
     }
 }
 
-class UserStageInfo {
-    var id: Long = -1
+class UserStageInfo(val id:Long) {
     var stage: UserStage = DefaultRootStage.defaultStage
 }
 

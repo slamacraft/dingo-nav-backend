@@ -17,7 +17,7 @@ class GameDefaultStage : RootStage {
     }
 
     override fun valid(msgEvent: MessageEvent): Boolean {
-        return msgEvent.getMsgText().startsWith("开始游戏")
+        return msgEvent.getText().startsWith("开始游戏")
     }
 
     override fun process(msgEvent: MessageEvent): UserStage {
@@ -33,7 +33,7 @@ class CloseGame : UserStage {
 
     override fun rootStage(): KClass<out UserStage> = GameDefaultStage::class
 
-    override fun valid(msgEvent: MessageEvent): Boolean = msgEvent.getMsgText().startsWith("退出游戏")
+    override fun valid(msgEvent: MessageEvent): Boolean = msgEvent.getText().startsWith("退出游戏")
 
     override fun transition(msgEvent: MessageEvent): UserStage = this
 

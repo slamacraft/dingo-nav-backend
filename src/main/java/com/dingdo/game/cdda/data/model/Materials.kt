@@ -53,4 +53,10 @@ class Materials : BaseData() {
         """.trimIndent()
     }
 
+
+    fun getDurability(durablePer: Int): String {
+        val adjIndex = (100 - durablePer) / (100 / (this.dmgAdj.size + 1)) - 1
+        return if (adjIndex >= 0) this.dmgAdj[adjIndex] else ""
+    }
+
 }
