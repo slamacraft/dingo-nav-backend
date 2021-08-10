@@ -12,6 +12,11 @@ import kotlin.reflect.KClass
 @Component
 class GameDefaultStage : RootStage {
 
+    override fun rootStage(): KClass<out UserStage> {
+        // todo 通过将上级节点指定为本身，从而屏蔽该功能节点
+        return GameDefaultStage::class
+    }
+
     override fun order(): Int {
         return 2
     }
