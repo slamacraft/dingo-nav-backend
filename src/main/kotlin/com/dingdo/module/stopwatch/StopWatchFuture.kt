@@ -5,9 +5,9 @@ import java.time.ZoneOffset
 
 open class StopWatchFuture(
     val id: String,
-    protected val taskList: List<StopWatchTask>,
+    private val taskList: List<StopWatchTask>,
     var count: Long = 1,
-    var startTime: Long = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"))    // 任务开始时间，单位秒
+    var startTime: Long = now()    // 任务开始时间，单位秒
 ) {
 
     init {
@@ -19,23 +19,23 @@ open class StopWatchFuture(
     }
 
     // 当前秒表任务执行的任务序号
-    protected var taskIndex = 0
+    private var taskIndex = 0
 
     // 暂停的时间点，单位秒
-    protected var stopTimePoint: Long = 0
+    private var stopTimePoint: Long = 0
 
     // 是否暂停
-    protected var stopFlag = false
+    private var stopFlag = false
 
     fun isStop() = stopFlag
 
     fun stop() {
-        stopTimePoint = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"))
+        stopTimePoint = now()
         stopFlag = true
     }
 
     fun toContinue() {
-        val stopTime = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")) - stopTimePoint
+        val stopTime = now() - stopTimePoint
         startTime += stopTime
         stopFlag = true
     }
@@ -53,10 +53,12 @@ open class StopWatchFuture(
 }
 
 
-open class StopWatchTask(val task: Runnable, val waitTime: Long = 0) {
+open class StopWatchTask(private val task: StopWatchFuture.() -> Unit, val waitTime: Long = 0) {
 
     /**
      * 执行秒表任务
      */
-    fun execute() = task.run()
+    fun execute(future: StopWatchFuture) = task(future)
 }
+
+fun now(): Long = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"))

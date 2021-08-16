@@ -16,7 +16,7 @@ object StopWatchRegister {
      * 秒表任务处理器
      * 负责对从本注册器实例注册的秒表任务进行管理
      */
-    private val handler = StopWatchHandler
+    private val taskPool = StopWatchTaskPool
 
     /**
      * 通过id获取注册过的秒表任务
@@ -31,6 +31,7 @@ object StopWatchRegister {
 
     /**
      * 新增秒表任务
+     *
      * 通过秒表任务自带的id判断唯一性
      * 如果id相同，后注册的秒表任务会覆盖掉先注册的秒表任务
      * @param future    秒表任务实例
@@ -38,10 +39,10 @@ object StopWatchRegister {
     fun addFuture(future: StopWatchFuture) {
         val runningFuture = getFuture(future.id)
         if (runningFuture != null) {
-            handler.remove(runningFuture)
+            taskPool.remove(runningFuture)
         }
         futureMap[future.id] = future
-        handler.add(future)
+        taskPool.add(future)
     }
 
 
@@ -56,7 +57,7 @@ object StopWatchRegister {
     fun stopFuture(id: String): Boolean {
         val future = futureMap[id] ?: return false
         future.stop()
-        return handler.remove(future)
+        return taskPool.remove(future)
     }
 
 
@@ -74,7 +75,7 @@ object StopWatchRegister {
             return false
         }
         future.toContinue()
-        return handler.add(future)
+        return taskPool.add(future)
     }
 
 
@@ -89,9 +90,8 @@ object StopWatchRegister {
      */
     fun removeFuture(id: String): Boolean {
         val toRemoveFuture = futureMap.remove(id)
-        return handler.remove(toRemoveFuture)
+        return taskPool.remove(toRemoveFuture)
     }
-
 
     /**
      * 秒表注册器销毁
@@ -99,7 +99,7 @@ object StopWatchRegister {
      */
     @Throws(DestroyFailedException::class)
     fun destroy() {
-        handler.destroy()
+        taskPool.destroy()
     }
 
 }

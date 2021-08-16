@@ -1,40 +1,40 @@
 package com.dingdo.module.stopwatch
 
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import javax.security.auth.Destroyable
 
-object StopWatchExecutor : Runnable{
+object StopWatchExecutor : Runnable, Destroyable {
 
     var runningFlag = true
     val lock = Object()
 
     override fun run() {
         while (runningFlag) {
-            val stopWatchFuture: StopWatchFuture? = StopWatchHandler.get()
+            val stopWatchFuture: StopWatchFuture? = StopWatchTaskPool.get()
             if (stopWatchFuture == null) {
-                synchronized(lock){ lock.wait() }
+                synchronized(lock) { lock.wait() }
                 continue
             }
 
-            val startTime: Long = stopWatchFuture.startTime
-            val now = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"))
-            val time = startTime - now
+            val time = stopWatchFuture.startTime - now()
             if (time > 0) {
                 synchronized(lock) { lock.wait(time * 1000) }
                 continue
             }
 
-            val future: StopWatchFuture? = StopWatchHandler.remove()
-            val task = future?.nextTask()
-            task?.execute()
+            val future: StopWatchFuture? = StopWatchTaskPool.remove()
+            future!!.nextTask().execute(future)
 
-            StopWatchHandler.add(future!!)
+            StopWatchTaskPool.add(future)
         }
     }
 
-    fun awake(){
-        synchronized(lock){
+    fun awake() {
+        synchronized(lock) {
             lock.notify()
         }
+    }
+
+    override fun destroy() {
+        runningFlag = false
     }
 }
