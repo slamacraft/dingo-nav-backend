@@ -135,7 +135,7 @@ object NPLUtil {
         val hourPeriodIndex = getIndexBatch(wordList, HOUR_PERIOD.keywords)
         val hourPointIndex = getIndexBatch(wordList, HOUR_POINT.keywords)
 
-        fun getHour_(hour: Int, prefix: String): String {
+        fun _getHour(hour: Int, prefix: String): String {
             if (hour >= 1) {
                 var number = wordList[hour - 1].toInt()
                 val timeWord = wordList[hour - 2]
@@ -154,8 +154,8 @@ object NPLUtil {
         }
 
         return when {
-            hourPointIndex >= 1 -> getHour_(hourPointIndex, "")
-            hourPeriodIndex >= 1 -> getHour_(hourPeriodIndex, "0/")
+            hourPointIndex >= 1 -> _getHour(hourPointIndex, "")
+            hourPeriodIndex >= 1 -> _getHour(hourPeriodIndex, "0/")
             else -> "* "
         }
     }

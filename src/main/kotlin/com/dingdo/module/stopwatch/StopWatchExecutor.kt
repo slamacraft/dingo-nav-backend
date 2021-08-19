@@ -1,5 +1,8 @@
 package com.dingdo.module.stopwatch
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.security.auth.Destroyable
 
 object StopWatchExecutor : Runnable, Destroyable {
@@ -22,9 +25,10 @@ object StopWatchExecutor : Runnable, Destroyable {
             }
 
             val future: StopWatchFuture? = StopWatchTaskPool.remove()
-            future!!.nextTask().execute(future)
-
-            StopWatchTaskPool.add(future)
+            GlobalScope.launch(Dispatchers.Main) {
+                future!!.nextTask().execute(future)
+            }
+            StopWatchTaskPool.add(future!!)
         }
     }
 

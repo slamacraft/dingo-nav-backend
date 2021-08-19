@@ -1,5 +1,7 @@
 package com.dingdo.module.stopwatch
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -58,7 +60,7 @@ open class StopWatchTask(private val task: StopWatchFuture.() -> Unit, val waitT
     /**
      * 执行秒表任务
      */
-    fun execute(future: StopWatchFuture) = task(future)
+    suspend fun execute(future: StopWatchFuture) = withContext(Dispatchers.Main) { task(future) }
 }
 
 fun now(): Long = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"))
