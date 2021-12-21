@@ -19,12 +19,11 @@ object FileUtils {
         val jarPath = ApplicationHome(FileUtils::class.java).source.parentFile.toString()
     }
 
-
-
     /**
      * 以utf-8的格式打开resource下的[path]文件
      * @return [path]文件的文本
      */
+    @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     @JvmStatic
     fun loadFileFromResource(path: String): String {
         return FileUtils::class.java.getResourceAsStream(path.requireNonBlank())
