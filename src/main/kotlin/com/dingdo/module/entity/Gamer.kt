@@ -2,7 +2,7 @@ package com.dingdo.module.entity
 
 import com.dingdo.config.configuration.mybatis.BaseEntity
 
-class GamerAttr : BaseEntity() {
+class GamerAttrEntity : BaseEntity() {
     lateinit var name:String
     var hp:Int = 12
     var hpMax:Int = 12

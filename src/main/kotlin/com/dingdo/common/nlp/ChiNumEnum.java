@@ -1,4 +1,4 @@
-package com.dingdo.common.util.nlp;
+package com.dingdo.common.nlp;
 
 /**
  * 一些声明信息

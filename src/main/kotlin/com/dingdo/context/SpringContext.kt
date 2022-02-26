@@ -1,8 +1,8 @@
-package com.dingdo.common.util
+package com.dingdo.context
 
 import org.springframework.context.ApplicationContext
 
-object SpringContextUtil {
+object SpringContext {
 
     @JvmStatic
     lateinit var applicationContext: ApplicationContext
@@ -12,7 +12,7 @@ object SpringContextUtil {
 
     @JvmStatic
     fun setApplication(applicationContext: ApplicationContext) =
-        applicationContext.also { this.applicationContext = it }
+        applicationContext.also { SpringContext.applicationContext = it }
 
     @JvmStatic
     fun getBean(name: String): Any = applicationContext.getBean(name)
