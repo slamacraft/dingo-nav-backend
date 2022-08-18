@@ -1,6 +1,5 @@
 package com.dingdo.util
 
-import cn.hutool.core.util.StrUtil
 import com.dingdo.service.enums.ClassicEnum
 import org.apache.log4j.Logger
 import org.springframework.boot.system.ApplicationHome
@@ -126,7 +125,7 @@ object FileUtils {
 
 
 fun String.requireNonBlank(): String {
-    if (StrUtil.isBlank(this)) {
+    if (this.isBlank()) {
         throw RuntimeException("文件地址不能为空")
     }
     return this

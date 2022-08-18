@@ -1,13 +1,13 @@
-//package com.dingdo.mvc.service.impl;
+//package com.dingdo.model.service.impl;
 //
 //import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 //import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 //import com.dingdo.component.schedule.model.GroupMsgTaskInfo;
 //import com.dingdo.component.schedule.model.PrivateMsgTaskInfo;
-//import com.dingdo.mvc.mapper.MessageTaskMapper;
-//import com.dingdo.mvc.entities.MessageTaskEntity;
+//import com.dingdo.model.mapper.MessageTaskMapper;
+//import com.dingdo.model.entities.MessageTaskEntity;
 //import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
-//import com.dingdo.mvc.service.MessageTaskService;
+//import com.dingdo.model.service.MessageTaskService;
 //import org.springframework.stereotype.Service;
 //
 //import java.util.List;

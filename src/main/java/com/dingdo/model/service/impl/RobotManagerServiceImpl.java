@@ -1,4 +1,4 @@
-//package com.dingdo.mvc.service.impl;
+//package com.dingdo.model.service.impl;
 //
 //import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 //import com.dingdo.common.annotation.Instruction;
@@ -6,9 +6,9 @@
 //import com.dingdo.common.exception.BusinessException;
 //import com.dingdo.enums.VerificationEnum;
 //import com.dingdo.msgHandler.model.ReqMsg;
-//import com.dingdo.mvc.entities.RobotManagerEntity;
-//import com.dingdo.mvc.mapper.RobotManagerMapper;
-//import com.dingdo.mvc.service.RobotManagerService;
+//import com.dingdo.model.entities.RobotManagerEntity;
+//import com.dingdo.model.mapper.RobotManagerMapper;
+//import com.dingdo.model.service.RobotManagerService;
 //import com.dingdo.util.InstructionUtils;
 //import org.springframework.stereotype.Service;
 //import org.springframework.transaction.annotation.Transactional;

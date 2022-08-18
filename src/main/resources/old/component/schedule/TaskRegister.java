@@ -4,7 +4,7 @@ import com.dingdo.component.schedule.model.ScheduledTask;
 import com.dingdo.component.schedule.factory.TaskFactory;
 import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
 import com.dingdo.component.schedule.model.interfacor.ITaskList;
-import com.dingdo.mvc.service.MessageTaskService;
+import com.dingdo.model.service.MessageTaskService;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;

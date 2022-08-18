@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    	<parent>
-    		<groupId>org.springframework.boot</groupId>
-    		<artifactId>spring-boot-starter-parent</artifactId>
-    		<version>2.2.8.RELEASE</version>
-    		<relativePath/> <!-- lookup parent from repository -->
-    	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.8.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
     <groupId>com.example</groupId>
     <artifactId>springboot-webjar</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -16,8 +16,10 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <kotlin.version>1.4.0</kotlin.version>
+        <kotlin.version>1.6.21</kotlin.version>
         <scala.version>2.12.12</scala.version>
+        <spring-boot-druid.version>1.2.11</spring-boot-druid.version>
+        <mirai.version>2.12.1</mirai.version>
     </properties>
 
     <dependencies>
@@ -42,69 +44,35 @@
             <artifactId>jackson-module-paranamer</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/love.forte.simple-robot-component/component-mirai -->
+        <!--        机器人相关-->
+        <!-- https://mvnrepository.com/artifact/net.mamoe/mirai-core-jvm -->
         <dependency>
-            <groupId>love.forte.simple-robot-component</groupId>
-            <artifactId>component-mirai</artifactId>
-            <version>1.8.3-1.16</version>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-jvm</artifactId>
+            <version>${mirai.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.70</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.typesafe.akka/akka-actor -->
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-actor_2.13</artifactId>
-            <version>2.6.10</version>
-        </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.12</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.11.3</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <version>2.29</version>
-        </dependency>
+<!--        数据库相关-->
         <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.0</version>
+            <version>8.0.30</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.3.2</version>
+            <version>3.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${spring-boot-druid.version}</version>
         </dependency>
         <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
-            <version>3.8.7</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.5.6</version>
+            <version>3.9.1</version>
         </dependency>
 
         <dependency>
@@ -112,20 +80,23 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <!--    Web相关    -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
-            <version>3.0.1</version>
+            <version>3.1.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -134,123 +105,32 @@
             </exclusions>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.spark</groupId>-->
-<!--            <artifactId>spark-mllib_2.12</artifactId>-->
-<!--            <version>3.0.0-preview2</version>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
-<!--         https://mvnrepository.com/artifact/org.apache.spark/spark-mllib-->
+        <!--         https://mvnrepository.com/artifact/org.apache.spark/spark-mllib-->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-mllib_2.12</artifactId>
-            <version>3.0.1</version>
+            <version>3.2.2</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.janino</groupId>
-            <artifactId>janino</artifactId>
-            <version>3.0.8</version>
         </dependency>
 
         <dependency>
             <groupId>com.hankcs</groupId>
             <artifactId>hanlp</artifactId>
-            <version>portable-1.7.8</version>
-        </dependency>
-
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.commons/commons-math3 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-math3</artifactId>-->
-<!--            <version>3.6.1</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-collections4</artifactId>-->
-<!--            <version>4.4</version>-->
-<!--        </dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j -->
-        <dependency>
-            <groupId>net.sourceforge.tess4j</groupId>
-            <artifactId>tess4j</artifactId>
-            <version>4.4.1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.github.jai-imageio/jai-imageio-core -->
-        <dependency>
-            <groupId>com.github.jai-imageio</groupId>
-            <artifactId>jai-imageio-core</artifactId>
-            <version>1.4.0</version>
+            <version>portable-1.8.3</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-            <version>2.1.8.RELEASE</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis-reactive -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
-            <version>2.1.8.RELEASE</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.1.8.RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.2.8.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.9.2</version>
-        </dependency>
-
-
 
     </dependencies>
 
     <build>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -275,7 +155,7 @@
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-<!--                <version>3.2.2</version>-->
+                <!--                <version>3.2.2</version>-->
                 <executions>
                     <execution>
                         <id>compile-scala</id>
@@ -306,16 +186,6 @@
                     </jvmArgs>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <encoding>UTF-8</encoding>-->
-<!--                    <compilerArguments>-->
-<!--                        <verbose />-->
-<!--                        <bootclasspath>${java.home}\lib\rt.jar${path.separator}${java.home}\lib\jce.jar${path.separator}</bootclasspath>-->
-<!--                    </compilerArguments>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 
@@ -328,14 +198,6 @@
             <id>bintray</id>
             <url>https://dl.bintray.com/kotlin/kotlin-eap</url>
         </repository>
-<!--        <repository>-->
-<!--            <snapshots>-->
-<!--                <enabled>false</enabled>-->
-<!--            </snapshots>-->
-<!--            <id>central</id>-->
-<!--            <name>Maven Repository Switchboard</name>-->
-<!--            <url>http://repo2.maven.org/maven2</url>-->
-<!--        </repository>-->
     </repositories>
 
 

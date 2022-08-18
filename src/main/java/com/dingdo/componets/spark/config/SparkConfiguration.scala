@@ -4,10 +4,10 @@ import org.apache.spark.sql.SparkSession
 import org.springframework.context.annotation.{Bean, Configuration}
 
 
-@Configuration
+//@Configuration
 class SparkConfiguration {
 
-  @Bean
+//  @Bean
   def sparkSession(): SparkSession =
     SparkSession.builder
       .appName("Robot")

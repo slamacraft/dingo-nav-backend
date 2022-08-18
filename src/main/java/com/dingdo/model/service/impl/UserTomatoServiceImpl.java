@@ -1,9 +1,9 @@
-package com.dingdo.mvc.service.impl;
+package com.dingdo.model.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dingdo.mvc.entities.UserTomatoEntity;
-import com.dingdo.mvc.mapper.UserTomatoMapper;
-import com.dingdo.mvc.service.UserTomatoService;
+import com.dingdo.model.entities.UserTomatoEntity;
+import com.dingdo.model.mapper.UserTomatoMapper;
+import com.dingdo.model.service.UserTomatoService;
 import org.springframework.stereotype.Service;
 
 /**

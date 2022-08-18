@@ -1,7 +1,7 @@
-package com.dingdo.mvc.mapper;
+package com.dingdo.model.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dingdo.mvc.entities.UserTomatoEntity;
+import com.dingdo.model.entities.UserTomatoEntity;
 
 /**
  * 一些声明信息

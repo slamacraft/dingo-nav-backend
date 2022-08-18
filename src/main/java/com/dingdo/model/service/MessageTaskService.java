@@ -1,7 +1,7 @@
-//package com.dingdo.mvc.service;
+//package com.dingdo.model.service;
 //
 //import com.baomidou.mybatisplus.extension.service.IService;
-//import com.dingdo.mvc.entities.MessageTaskEntity;
+//import com.dingdo.model.entities.MessageTaskEntity;
 //import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
 //
 //import java.util.List;

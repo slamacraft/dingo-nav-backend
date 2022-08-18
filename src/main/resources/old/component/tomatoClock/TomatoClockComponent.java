@@ -5,7 +5,7 @@ import com.dingdo.component.stopwatch.StopWatchRegister;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.PrivateMsgService;
-import com.dingdo.mvc.service.UserTomatoService;
+import com.dingdo.model.service.UserTomatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

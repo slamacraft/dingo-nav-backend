@@ -2,7 +2,7 @@ package com.dingdo.component.schedule.model;
 
 import com.dingdo.config.customContext.InstructionMethodContext;
 import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.mvc.entities.MessageTaskEntity;
+import com.dingdo.model.entities.MessageTaskEntity;
 import com.dingdo.component.schedule.model.interfacor.IPrivateTaskInfo;
 import com.dingdo.component.schedule.model.interfacor.IScheduledRunnable;
 import com.dingdo.msgHandler.service.impl.PrivateMsgServiceImpl;

@@ -2,9 +2,9 @@ package com.dingdo.component.tomatoClock;
 
 import com.dingdo.component.stopwatch.StopWatchFuture;
 import com.dingdo.component.stopwatch.StopWatchTask;
-import com.dingdo.mvc.entities.UserTomatoEntity;
+import com.dingdo.model.entities.UserTomatoEntity;
 import com.dingdo.msgHandler.service.PrivateMsgService;
-import com.dingdo.mvc.service.UserTomatoService;
+import com.dingdo.model.service.UserTomatoService;
 
 /**
  * 番茄钟任务类

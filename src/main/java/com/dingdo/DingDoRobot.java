@@ -1,11 +1,9 @@
 package com.dingdo;
 
-import com.forte.qqrobot.SimpleRobotApplication;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * 一些声明信息
@@ -17,8 +15,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @MapperScan(basePackages = {"com.dingdo.**.mapper"})
 @EnableScheduling
 @SpringBootApplication
-@SimpleRobotApplication
-@EnableSwagger2
 public class DingDoRobot {
 
     public static void main(String[] args) {
