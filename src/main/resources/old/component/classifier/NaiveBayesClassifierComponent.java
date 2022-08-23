@@ -3,7 +3,6 @@ package com.dingdo.component.classifier;
 import com.alibaba.fastjson.JSONObject;
 import com.dingdo.common.exception.ClassifierInitializeException;
 import com.dingdo.enums.ClassicEnum;
-import com.dingdo.util.FileUtil;
 import com.dingdo.util.nlp.NLPUtils;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;

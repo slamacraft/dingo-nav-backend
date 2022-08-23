@@ -1,6 +1,5 @@
 package com.dingdo.util
 
-import cn.hutool.core.util.StrUtil
 import org.springframework.context.ApplicationContext
 
 object SpringContextUtil {
@@ -24,7 +23,7 @@ object SpringContextUtil {
    * @param name bean的名称
    * @return 返回[[Any]]类型的bean
    */
-  def getBean(name: String): Any = getBean(getApplicationContext, name, null)
+  def getBean(name: String): Any = getApplicationContext.getBean(name)
 
   /**
    * 通过class获取Bean.
@@ -33,7 +32,7 @@ object SpringContextUtil {
    * @tparam T bean的类型泛型
    * @return [[T]]
    */
-  def getBean[T](clazz: Class[T]): T = getBean(getApplicationContext, null, clazz)
+  def getBean[T](clazz: Class[T]): T = getApplicationContext.getBean(clazz)
 
   /**
    * 通过name,以及Clazz返回指定的Bean
@@ -43,13 +42,5 @@ object SpringContextUtil {
    * @tparam T bean的类型泛型
    * @return [[T]]
    */
-  def getBean[T](name: String, clazz: Class[T]): T = getBean(getApplicationContext, name, clazz)
-
-
-  private def getBean[T](context: ApplicationContext, name: String, clazz: Class[T]): T = {
-    if (context == null) throw new NullPointerException("applicationContext为空")
-    if (StrUtil.isBlank(name)) context.getBean(clazz)
-    else if (clazz == null) context.getBean(name).asInstanceOf[T]
-    else context.getBean(name, clazz)
-  }
+  def getBean[T](name: String, clazz: Class[T]): T = getApplicationContext.getBean(name, clazz)
 }

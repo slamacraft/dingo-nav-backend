@@ -1,29 +1,22 @@
 package com.dingdo.robot.mirai
 
-import kotlinx.coroutines.CoroutineScope
-import net.mamoe.mirai.BotFactory.BotConfigurationLambda
-import net.mamoe.mirai.event.{GlobalEventChannel, Listener}
-import net.mamoe.mirai.event.events.{FriendMessageEvent, GroupMessageEvent, MessageEvent}
+import net.mamoe.mirai.event.GlobalEventChannel
+import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.utils.BotConfiguration
-import net.mamoe.mirai.{Bot, BotFactory, Mirai}
+import net.mamoe.mirai.{Bot, BotFactory}
 
-object MiraiBot {
-
-  def apply(id: Long, pw: String): MiraiBot = new MiraiBot(id, pw)
-
-  def main(args: Array[String]): Unit = {
-    val bot = MiraiBot(1, "1")
-    val value = bot.registEvent((event: GroupMessageEvent) => {
-
-    })
-  }
-}
 
 class MiraiBot(val id: Long, pw: String) {
 
   // mirai定义的bot
-  val bot: Bot = createAndLoginBot(id, pw)
+  val bot: Bot = MiraiBot.createAndLoginBot(id, pw)
 
+
+}
+
+object MiraiBot {
+
+  def apply(id: Long, pw: String): MiraiBot = new MiraiBot(id, pw)
 
   private def createAndLoginBot(id: Long, pw: String): Bot = {
     val botFactory: BotFactory = BotFactory.INSTANCE
@@ -41,21 +34,10 @@ class MiraiBot(val id: Long, pw: String) {
     miraiBot
   }
 
-
-  def registEvent[A <: MessageEvent]: (A => Unit) => Listener[A] = {
-//    case eventHandle: (GroupMessageEvent => Unit) => {
-//      val eventChannel = GlobalEventChannel.INSTANCE
-//      eventChannel.subscribeAlways(Class[GroupMessageEvent], (event: A) => {
-//        eventHandle(event)
-//      })
-//    }
-    case eventHandle: (FriendMessageEvent => Unit) => {
-      val eventChannel = GlobalEventChannel.INSTANCE
-      eventChannel.subscribeAlways(Class[FriendMessageEvent], (event: A) => {
-        eventHandle(event)
-      })
-    }
+  def main(args: Array[String]): Unit = {
+    val bot = MiraiBot(1, "1")
+    val eventChannel = GlobalEventChannel.INSTANCE
+    val value = eventChannel.subscribeAlways(classOf[FriendMessageEvent], (event: FriendMessageEvent) => {
+    })
   }
-
-
 }

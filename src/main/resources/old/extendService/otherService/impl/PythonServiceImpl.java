@@ -5,7 +5,6 @@ import com.dingdo.enums.CQCodeEnum;
 import com.dingdo.extendService.otherService.PythonService;
 import com.dingdo.msgHandler.model.CQCode;
 import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.util.FileUtil;
 import com.dingdo.util.ImageUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

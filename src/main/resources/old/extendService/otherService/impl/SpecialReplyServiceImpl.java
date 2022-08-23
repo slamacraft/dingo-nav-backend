@@ -5,7 +5,6 @@ import com.dingdo.extendService.model.specialReply.RereadMsgQueue;
 import com.dingdo.extendService.otherService.SpecialReplyService;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.msgHandler.service.impl.GroupMsgServiceImpl;
-import com.dingdo.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
