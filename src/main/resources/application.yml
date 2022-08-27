@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     name: local # 114.116.144.3 13306
-    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/pms?allowMultiQueries=true&serverTimezone=CTT&characterEncoding=utf-8&useUnicode=true&useSSL=false&autoReconnect=true&zeroDateTimeBehavior=convertToNull
-    username: ${MYSQL_PORT_USERNAME:root}
-    password: ${MYSQL_PORT_PASSWORD:13574159100Q}
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/pms?allowMultiQueries=true&characterEncoding=utf-8&useUnicode=true&useSSL=false&autoReconnect=true&zeroDateTimeBehavior=convertToNull
+    username: ${MYSQL_USERNAME:**}
+    password: ${MYSQL_PASSWORD:**}
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
