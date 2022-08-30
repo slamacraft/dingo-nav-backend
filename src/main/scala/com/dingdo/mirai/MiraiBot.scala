@@ -1,4 +1,4 @@
-package com.dingdo.robot.mirai
+package com.dingdo.mirai
 
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.FriendMessageEvent
@@ -11,10 +11,12 @@ class MiraiBot(val id: Long, pw: String) {
   // mirai定义的bot
   val bot: Bot = MiraiBot.createAndLoginBot(id, pw)
 
-
+  MiraiBot.bot = this
 }
 
 object MiraiBot {
+
+  var bot:MiraiBot = _
 
   def apply(id: Long, pw: String): MiraiBot = new MiraiBot(id, pw)
 
