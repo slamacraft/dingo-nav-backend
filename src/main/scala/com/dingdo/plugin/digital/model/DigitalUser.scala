@@ -37,7 +37,7 @@ object DigitalUser {
       (id, alive, triggeredEvent, population, military, religion, wealth) <> (UserEntity.tupled, UserEntity.unapply)
   }
 
-  def user = TableQuery[UserMapper]
+  lazy val user = TableQuery[UserMapper]
 
   case class UserEffectEntity
   (

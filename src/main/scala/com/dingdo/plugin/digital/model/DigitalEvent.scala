@@ -58,6 +58,6 @@ object DigitalEvent {
     = (id, eventName, eventContent, conditionTurn, conditionEvent, population, military, religion, wealth, effect) <> (EventEntity.tupled, EventEntity.unapply)
   }
 
-  def table = TableQuery[EventMapper]
+  lazy val table = TableQuery[EventMapper]
 }
 

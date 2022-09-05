@@ -6,11 +6,11 @@ object BotMsg {
 
   case class MsgEntity
   (
-    id: Long,
+    id: Long = 0,
     userId: Long,
     userName: String,
     groupId: Long,
-    groupName:String,
+    groupName: String,
     content: String
   )
 
@@ -22,14 +22,15 @@ object BotMsg {
     def userName = column[String]("user_name")
 
     def groupId = column[Long]("group_id")
+
     def groupName = column[String]("group_name")
 
     def content = column[String]("content")
 
     override def * =
-      (id, userId,userName, groupId,groupName, content) <> (MsgEntity.tupled, MsgEntity.unapply)
+      (id, userId, userName, groupId, groupName, content) <> (MsgEntity.tupled, MsgEntity.unapply)
   }
 
-  def msg = TableQuery[MsgMapper]
+  lazy val msg = TableQuery[MsgMapper]
 
 }
