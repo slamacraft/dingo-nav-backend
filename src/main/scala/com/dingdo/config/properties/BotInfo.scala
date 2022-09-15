@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component
 
 @Component
 @ConfigurationProperties(prefix = "bot.info")
-class BotProperties {
+class BotInfo {
   var id: Long = _
   var pw: String = _
   var name: String = _
 
-  BotProperties.cfg = this
+  BotInfo.cfg = this
 }
 
-object BotProperties {
-  var cfg: BotProperties = _
+object BotInfo {
+  var cfg: BotInfo = _
 }

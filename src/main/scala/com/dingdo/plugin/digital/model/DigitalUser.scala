@@ -71,6 +71,6 @@ object DigitalUser {
     def wealth = column[Int]("wealth")
 
     override def * =
-      (id, userId, effectId, turn, population, military, religion, wealth) <> (UserEffectEntity.tupled, UserEffectEntity.unapply())
+      (id, userId, effectId, turn, population, military, religion, wealth) <> (UserEffectEntity.tupled, UserEffectEntity.unapply)
   }
 }

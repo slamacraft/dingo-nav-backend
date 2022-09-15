@@ -24,3 +24,11 @@ spring:
       min-evictable-idle-time-millis: 300000 # 连接保持空闲而不被驱逐的最小时间
       filters: stat # 属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有： 监控统计用的filter:stat 日志用的filter:log4j 防御sql注入的filter:wall
       query-timeout: 60 # 查询超时时间,单位：秒
+
+bot:
+  info:
+    id: ${BOT_ID:**}
+    pw: ${BOT_PW:**}
+    name: 测试机器人
+  config:
+    cache-queue-size: 100
