@@ -1,12 +1,11 @@
-package com.dingdo.mirai.msgMemory
+package com.dingdo.mirai.model
 
 import com.dingdo.config.configuration.SlickConfig
 import com.dingdo.mirai.core.MsgHandler
 import net.mamoe.mirai.event.events.{GroupMessageEvent, MessageEvent}
-import net.mamoe.mirai.message.data.SingleMessage
-import slick.jdbc.MySQLProfile.api._
 
 import java.util.stream.Collectors
+import slick.jdbc.MySQLProfile.api._
 
 object MsgSaver extends MsgHandler {
 

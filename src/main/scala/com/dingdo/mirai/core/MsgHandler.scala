@@ -7,17 +7,14 @@ trait MsgHandler {
 
   val eventChannel: GlobalEventChannel = GlobalEventChannel.INSTANCE
 
+  val groupListener: Listener[GroupMessageEvent] = eventChannel.subscribeAlways(classOf[GroupMessageEvent], (event: GroupMessageEvent) => {
+    handleGroupMsg(event)
+  })
+  val friendListener: Listener[FriendMessageEvent] = eventChannel.subscribeAlways(classOf[FriendMessageEvent], (event: FriendMessageEvent) => {
+    handleFriendMsg(event)
+  })
+
   def handleGroupMsg: GroupMessageEvent => Unit = { _ => }
 
   def handleFriendMsg: FriendMessageEvent => Unit = { _ => }
-
-  def register: (Listener[GroupMessageEvent], Listener[FriendMessageEvent]) = {
-    val groupListener = eventChannel.subscribeAlways(classOf[GroupMessageEvent], (event: GroupMessageEvent) => {
-      handleGroupMsg(event)
-    })
-    val friendListener = eventChannel.subscribeAlways(classOf[FriendMessageEvent], (event: FriendMessageEvent) => {
-      handleFriendMsg(event)
-    })
-    (groupListener, friendListener)
-  }
 }

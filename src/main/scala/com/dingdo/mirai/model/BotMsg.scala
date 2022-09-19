@@ -1,4 +1,4 @@
-package com.dingdo.mirai.msgMemory
+package com.dingdo.mirai.model
 
 import slick.jdbc.MySQLProfile.api._
 

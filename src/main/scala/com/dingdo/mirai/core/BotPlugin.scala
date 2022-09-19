@@ -1,13 +1,14 @@
-package com.dingdo.plugin
+package com.dingdo.mirai.core
 
 import net.mamoe.mirai.event.events.MessageEvent
 
 trait BotPlugin {
-  def name(): String
 
-  def version(): String
+  BotPluginHandler.registerPlugin(this)
 
-  def order(): Int
+  def trigger: String
 
   def handle(msg: MessageEvent): Boolean
+
+
 }
