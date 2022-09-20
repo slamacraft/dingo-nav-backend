@@ -7,32 +7,38 @@ import scala.collection.mutable
 
 sealed trait BotMsgHandlerChain {
   def next:BotMsgHandlerChain
-  def handle(msg: MessageEvent):Unit
+  def handle(msg: MessageEvent):Boolean
 }
 
 object MsgHandlerChain extends BotMsgHandlerChain{
   override def next: BotMsgHandlerChain = MsgSaverHandler
-  override def handle(msg: MessageEvent): Unit = {
+  override def handle(msg: MessageEvent): Boolean = {
     var handler = next
-    while (handler != null){
-      handler.handle(msg)
+    var continue = true
+    while (handler != null && continue){
+      continue = handler.handle(msg)
       handler = handler.next
     }
+    true
   }
 }
 
 object MsgSaverHandler extends BotMsgHandlerChain{
   override def next: BotMsgHandlerChain = BotPluginHandler
-  override def handle(msg: MessageEvent): Unit = MsgSaver.saveMsg(msg)
+  override def handle(msg: MessageEvent): Boolean = {
+    MsgSaver.saveMsg(msg)
+    true
+  }
 }
 
 object BotPluginHandler extends BotMsgHandlerChain{
   val plugins = new mutable.HashMap[String, BotPlugin]()
 
   override def next: BotMsgHandlerChain = null
-  override def handle(msg: MessageEvent): Unit = {
+  override def handle(msg: MessageEvent): Boolean = {
     val trigger = msg.getMessage.contentToString()
-    plugins.apply(trigger)
+    plugins.get(trigger)
+      .forall(it => it.handle(msg))
   }
 
   def registerPlugin(plugin: BotPlugin): Unit = plugins(plugin.trigger) = plugin
