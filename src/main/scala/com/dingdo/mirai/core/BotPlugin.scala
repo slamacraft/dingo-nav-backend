@@ -6,7 +6,7 @@ trait BotPlugin {
 
   BotPluginHandler.registerPlugin(this)
 
-  def trigger: String
+  val trigger: String
 
   def handle(msg: MessageEvent): Boolean
 
