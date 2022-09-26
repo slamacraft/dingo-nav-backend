@@ -36,7 +36,7 @@ class GroupMsg(val groupId: Long) {
 
 case class UserMsg(userId: Long, msg: String)
 
-class MsgQueue[A](size: Int)(implicit val classTag:ClassTag[A]) extends mutable.Iterable[A] {
+class MsgQueue[A:ClassTag](size: Int) extends mutable.Iterable[A] {
 
   val msgArray = new Array[A](size)
   var len: Int = 0
