@@ -21,6 +21,7 @@
         <spring-boot-druid.version>1.2.11</spring-boot-druid.version>
         <mirai.version>2.12.1</mirai.version>
         <slick.version>3.3.3</slick.version>
+        <mysql.version>8.0.30</mysql.version>
     </properties>
 
     <dependencies>
@@ -58,7 +59,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.30</version>
+            <version>${mysql.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

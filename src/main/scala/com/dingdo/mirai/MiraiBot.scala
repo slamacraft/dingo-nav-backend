@@ -1,7 +1,8 @@
 package com.dingdo.mirai
 
+import com.dingdo.mirai.core.MsgHandlerChain
 import net.mamoe.mirai.event.GlobalEventChannel
-import net.mamoe.mirai.event.events.FriendMessageEvent
+import net.mamoe.mirai.event.events.{FriendMessageEvent, GroupMessageEvent, MessageEvent}
 import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.{Bot, BotFactory}
 
@@ -17,6 +18,7 @@ class MiraiBot(val id: Long, pw: String) {
 object MiraiBot {
 
   var bot:MiraiBot = _
+  val eventChannel: GlobalEventChannel = GlobalEventChannel.INSTANCE
 
   def apply(id: Long, pw: String): MiraiBot = new MiraiBot(id, pw)
 
@@ -33,13 +35,16 @@ object MiraiBot {
     })
 
     miraiBot.login()
+
+    // 注册事件
+    eventChannel.subscribeAlways(classOf[MessageEvent], (event: MessageEvent) => {
+      MsgHandlerChain.handle(event)
+    })
+
     miraiBot
   }
 
   def main(args: Array[String]): Unit = {
     val bot = MiraiBot(1, "1")
-    val eventChannel = GlobalEventChannel.INSTANCE
-    val value = eventChannel.subscribeAlways(classOf[FriendMessageEvent], (event: FriendMessageEvent) => {
-    })
   }
 }
