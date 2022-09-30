@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties(prefix = "bot.config")
 class BotConfig {
   var cacheQueueSize:Int = _
+  var filterFile: String = _
 
   BotConfig.cfg = this
 }

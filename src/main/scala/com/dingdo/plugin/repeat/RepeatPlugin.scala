@@ -18,6 +18,9 @@ class RepeatPlugin{
           .forall(it => it.msg.endsWith(msg))
 
         // todo 进行复读
+        if(toRepeat){
+          groupEvent.getGroup.sendMessage(msg)
+        }
       }
       case _ =>
     }

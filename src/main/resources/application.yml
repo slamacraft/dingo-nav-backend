@@ -32,3 +32,4 @@ bot:
     name: 测试机器人
   config:
     cache-queue-size: 100
+    filter-file: filter # 过滤消息文件，文件每行为一个过滤项，支持字符和正则表达式，只要匹配就不会处理该消息

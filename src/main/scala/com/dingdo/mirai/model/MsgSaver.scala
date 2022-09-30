@@ -10,8 +10,10 @@ import slick.jdbc.MySQLProfile.api._
 object MsgSaver extends MsgHandler {
 
   def saveMsg(event: MessageEvent): Unit = {
+    // [图片]
     val msgContent = event.getMessage.stream()
       .map[String](_.contentToString())
+      .filter(it => !it.matches("\\[.*]"))
       .collect(Collectors.joining())
 
     val (groupId, groupName) = event match {
