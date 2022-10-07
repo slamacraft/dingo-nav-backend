@@ -11,6 +11,7 @@ import scala.collection.mutable
 
 sealed trait BotMsgHandlerChain {
   def next: BotMsgHandlerChain
+
   def handle(msg: MessageEvent): Boolean
 }
 
@@ -31,11 +32,13 @@ object MsgHandlerChain extends BotMsgHandlerChain {
 object MsgFilterHandler extends BotMsgHandlerChain {
 
   private var filterList: List[String] = _
+
   override def next: BotMsgHandlerChain = MsgSaverHandler
+
   override def handle(msg: MessageEvent): Boolean = {
     val msgContent = msg.getMessage.stream()
       .map[String](_.contentToString())
-      .filter(it => getFilterList.forall(filter=> it.matches(filter)))
+      .filter(it => getFilterList.forall(filter => it.matches(filter)))
       .collect(Collectors.joining())
 
     msgContent.nonEmpty
@@ -43,7 +46,9 @@ object MsgFilterHandler extends BotMsgHandlerChain {
 
   private def getFilterList: List[String] = {
     if (filterList != null) return filterList
-    filterList = FileUtil.loadFileFromResource(BotConfig.cfg.filterFile)(_.lines().collect(Collectors.toList[String]()))
+    filterList = FileUtil.loadFileFromResource(BotConfig.cfg.filterFile) {
+      _.lines().collect(Collectors.toList[String]())
+    }
       .asScala.toList
     filterList
   }
@@ -58,6 +63,7 @@ object MsgSaverHandler extends BotMsgHandlerChain {
   }
 }
 
+// todo 需要处理用户长时间处于插件内的情况，插件处理器待优化
 object BotPluginHandler extends BotMsgHandlerChain {
   val plugins = new mutable.HashMap[String, BotPlugin]()
 
