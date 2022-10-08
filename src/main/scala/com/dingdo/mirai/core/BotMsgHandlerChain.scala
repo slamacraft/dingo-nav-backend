@@ -63,18 +63,18 @@ object MsgSaverHandler extends BotMsgHandlerChain {
   }
 }
 
-// todo 需要处理用户长时间处于插件内的情况，插件处理器待优化
+// todo 需要处理用户长时间处于插件内的情况，插件处理器待优化，这玩意需要做的比较复杂
 object BotPluginHandler extends BotMsgHandlerChain {
-  val plugins = new mutable.HashMap[String, BotPlugin]()
+  val plugins = new mutable.MutableList[BotPlugin]()
 
   override def next: BotMsgHandlerChain = null
 
   override def handle(msg: MessageEvent): Boolean = {
-    val trigger = msg.getMessage.contentToString()
-    plugins.get(trigger)
-      .forall(it => it.handle(msg))
+    val msgStr = msg.getMessage.contentToString()
+    plugins.find(_.trigger(msgStr))
+      .forall(_.handle(msg))
   }
 
-  def registerPlugin(plugin: BotPlugin): Unit = plugins(plugin.trigger) = plugin
+  def registerPlugin(plugin: BotPlugin): Unit = plugins += plugin
 }
 
