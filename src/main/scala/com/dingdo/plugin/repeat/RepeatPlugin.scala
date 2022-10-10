@@ -4,6 +4,7 @@ import com.dingdo.mirai.context.MsgCacheContext
 import com.dingdo.mirai.core.BotPlugin
 import net.mamoe.mirai.event.events.{GroupMessageEvent, MessageEvent}
 
+// todo 复读要去掉已复读过的句子
 class RepeatPlugin{
 
   // todo 重复次数
