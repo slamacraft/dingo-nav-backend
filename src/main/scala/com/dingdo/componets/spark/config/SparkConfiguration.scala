@@ -1,7 +1,6 @@
 package com.dingdo.componets.spark.config
 
 import org.apache.spark.sql.SparkSession
-import org.springframework.context.annotation.{Bean, Configuration}
 
 
 //@Configuration

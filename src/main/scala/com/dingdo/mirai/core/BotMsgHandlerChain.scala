@@ -64,19 +64,25 @@ object MsgSaverHandler extends BotMsgHandlerChain {
 }
 
 object BotPluginHandler extends BotMsgHandlerChain {
-  val plugins = new mutable.MutableList[BotPlugin]()
-  val pluginHolder = new mutable.HashMap[Long, BotPlugin]()
+  val parallelPlugins = new mutable.MutableList[ParallelBotPlugin]()
+  val blockPlugins = new mutable.MutableList[BlockBotPlugin]()
+  val pluginHolder = new mutable.HashMap[Long, BlockBotPlugin]()
 
   override def next: BotMsgHandlerChain = null
 
   override def handle(msg: MessageEvent): Boolean = {
     val sendId = msg.getSender.getId
-    val holdPlugin = pluginHolder.remove(sendId)
+    val msgStr = msg.getMessage.contentToString()
+
+    parallelPlugins.filter(_.trigger(msgStr))
+      .foreach(_.handle(msg))
+
+    val holdBlockPlugin = pluginHolder.remove(sendId)
 
     // forall 如果是empty则true，否则为函数的返回值
-    holdPlugin.orElse {
-      val msgStr = msg.getMessage.contentToString()
-      plugins.find(_.trigger(msgStr))
+
+    holdBlockPlugin.orElse {
+      blockPlugins.find(_.trigger(msgStr))
     }.forall { it =>
       val hold = it.handle(msg)
       if (!hold) {
@@ -86,6 +92,9 @@ object BotPluginHandler extends BotMsgHandlerChain {
     }
   }
 
-  def registerPlugin(plugin: BotPlugin): Unit = plugins += plugin
+  def registerPlugin(plugin: BotPlugin): Unit = plugin match {
+    case p: ParallelBotPlugin => parallelPlugins += p
+    case p: BlockBotPlugin => blockPlugins += p
+  }
 }
 

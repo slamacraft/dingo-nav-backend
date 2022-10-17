@@ -2,7 +2,6 @@ package com.dingdo.util
 
 import lombok.extern.slf4j.Slf4j
 import org.apache.commons.lang3.StringUtils
-import org.apache.log4j.Logger
 import org.springframework.boot.system.ApplicationHome
 
 import java.io._

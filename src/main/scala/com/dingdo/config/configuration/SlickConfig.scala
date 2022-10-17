@@ -2,8 +2,8 @@ package com.dingdo.config.configuration
 
 import org.springframework.beans.factory.annotation.{Configurable, Value}
 import org.springframework.context.annotation.Bean
-import slick.jdbc.MySQLProfile.backend.DatabaseDef
 import slick.jdbc.MySQLProfile.api._
+import slick.jdbc.MySQLProfile.backend.DatabaseDef
 
 import javax.sql.DataSource
 

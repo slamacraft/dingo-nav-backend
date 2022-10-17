@@ -2,7 +2,7 @@ package com.dingdo.mirai
 
 import com.dingdo.mirai.core.MsgHandlerChain
 import net.mamoe.mirai.event.GlobalEventChannel
-import net.mamoe.mirai.event.events.{FriendMessageEvent, GroupMessageEvent, MessageEvent}
+import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.{Bot, BotFactory}
 

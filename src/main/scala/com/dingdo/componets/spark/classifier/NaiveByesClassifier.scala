@@ -1,10 +1,7 @@
 package com.dingdo.componets.spark.classifier
 
-import org.apache.spark.ml.classification.NaiveBayes
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 
 //@Component
 class NaiveByesClassifier {

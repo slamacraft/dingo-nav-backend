@@ -1,6 +1,5 @@
 package com.dingdo.config.configuration
 
-import com.dingdo.config.AppRunListener
 import org.springframework.context.annotation.{Bean, Configuration}
 import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.web.client.RestTemplate

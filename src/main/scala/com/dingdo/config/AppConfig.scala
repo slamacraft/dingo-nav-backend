@@ -2,11 +2,9 @@ package com.dingdo.config
 
 import com.dingdo.config.AppConfig.logger
 import com.dingdo.util.SpringContextUtil
-import lombok.extern.slf4j.Slf4j
 import org.apache.log4j.Logger
 import org.springframework.beans.factory.annotation.Configurable
 import org.springframework.context.ApplicationListener
-import org.springframework.context.annotation.Bean
 import org.springframework.context.event.ContextRefreshedEvent
 
 @Configurable

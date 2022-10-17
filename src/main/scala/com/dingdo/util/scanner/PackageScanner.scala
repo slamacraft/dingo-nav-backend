@@ -1,11 +1,10 @@
 package com.dingdo.util.scanner
 
-import java.io.{File, FileFilter, IOException}
-import java.net.{JarURLConnection, URISyntaxException, URL}
+import java.io.{File, IOException}
+import java.net.{JarURLConnection, URL}
 import java.util
 import java.util.function.Predicate
 import java.util.jar.{JarEntry, JarFile}
-import java.util.stream.Collectors
 import scala.collection.mutable
 
 object PackageScanner {

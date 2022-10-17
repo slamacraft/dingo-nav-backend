@@ -1,7 +1,7 @@
 package com.dingdo.mirai.core
 
-import net.mamoe.mirai.event.{GlobalEventChannel, Listener}
 import net.mamoe.mirai.event.events.{FriendMessageEvent, GroupMessageEvent}
+import net.mamoe.mirai.event.{GlobalEventChannel, Listener}
 
 trait MsgHandler {
 
