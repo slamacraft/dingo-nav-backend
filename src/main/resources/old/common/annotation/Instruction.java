@@ -2,7 +2,10 @@ package com.dingdo.common.annotation;
 
 import com.dingdo.msgHandler.model.ReqMsg;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.util.Map;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

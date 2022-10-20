@@ -1,8 +1,8 @@
 package com.dingdo.msgHandler.service.impl;
 
-import com.dingdo.component.otherComponent.SaveMsgComponent;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
+import com.dingdo.component.otherComponent.SaveMsgComponent;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.ServiceFromApi;
 import com.dingdo.extendService.otherService.SpecialReplyService;

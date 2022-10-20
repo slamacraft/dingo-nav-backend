@@ -1,12 +1,12 @@
 package com.dingdo.extendService.otherService.impl;
 
-import com.dingdo.component.schedule.TaskRegister;
-import com.dingdo.component.schedule.model.GroupMsgTaskInfo;
-import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
-import com.dingdo.component.schedule.model.interfacor.ITaskList;
-import com.dingdo.component.schedule.model.PrivateMsgTaskInfo;
 import com.dingdo.common.annotation.Instruction;
 import com.dingdo.common.annotation.VerifiAnnotation;
+import com.dingdo.component.schedule.TaskRegister;
+import com.dingdo.component.schedule.model.GroupMsgTaskInfo;
+import com.dingdo.component.schedule.model.PrivateMsgTaskInfo;
+import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
+import com.dingdo.component.schedule.model.interfacor.ITaskList;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.ScheduledService;
 import com.dingdo.msgHandler.model.ReqMsg;

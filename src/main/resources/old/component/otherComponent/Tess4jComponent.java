@@ -7,7 +7,6 @@ import com.dingdo.enums.CQCodeEnum;
 import com.dingdo.enums.UrlEnum;
 import com.dingdo.enums.VerificationEnum;
 import com.dingdo.extendService.otherService.PythonService;
-
 import com.dingdo.msgHandler.model.CQCode;
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.dingdo.util.ImageUtil;

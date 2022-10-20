@@ -1,7 +1,6 @@
 package com.dingdo.extendService.knowledgeService;
 
 import com.dingdo.extendService.MsgExtendService;
-
 import com.dingdo.msgHandler.model.ReqMsg;
 
 public interface ZhidaoService extends MsgExtendService {

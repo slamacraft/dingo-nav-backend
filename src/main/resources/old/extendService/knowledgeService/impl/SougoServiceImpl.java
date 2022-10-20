@@ -1,7 +1,6 @@
 package com.dingdo.extendService.knowledgeService.impl;
 
 import com.dingdo.extendService.knowledgeService.SougoService;
-
 import com.dingdo.msgHandler.model.ReqMsg;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;

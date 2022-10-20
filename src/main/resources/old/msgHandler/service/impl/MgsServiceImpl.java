@@ -1,7 +1,7 @@
 package com.dingdo.msgHandler.service.impl;
 
-import com.dingdo.config.customContext.InstructionMethodContext;
 import com.dingdo.component.otherComponent.Tess4jComponent;
+import com.dingdo.config.customContext.InstructionMethodContext;
 import com.dingdo.msgHandler.factory.CQCodeFactory;
 import com.dingdo.msgHandler.model.CQCode;
 import com.dingdo.msgHandler.model.ReqMsg;
