@@ -50,6 +50,5 @@ class RepeatPlugin extends ParallelBotPlugin{
    */
   override def handle(msg: MessageEvent): Unit = {
     repeat(msg)
-    true
   }
 }

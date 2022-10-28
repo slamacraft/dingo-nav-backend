@@ -11,9 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @SpringBootApplication
 class DingDoRobot
 
-object DingDoRobot {
-  def main(args: Array[String]): Unit = {
-    val springApplication = new SpringApplication(classOf[DingDoRobot])
-    springApplication.run(args: _*)
-  }
+object DingDoRobot extends App {
+  val springApplication = new SpringApplication(classOf[DingDoRobot])
+  springApplication.run(args: _*)
 }

@@ -80,7 +80,6 @@ object BotPluginHandler extends BotMsgHandlerChain {
     val holdBlockPlugin = pluginHolder.remove(sendId)
 
     // forall 如果是empty则true，否则为函数的返回值
-
     holdBlockPlugin.orElse {
       blockPlugins.find(_.trigger(msgStr))
     }.forall { it =>
