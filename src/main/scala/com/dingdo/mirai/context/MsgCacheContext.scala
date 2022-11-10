@@ -7,7 +7,7 @@ import scala.collection.mutable
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
-object MsgCacheContext {
+class MsgCacheContext(val botId: Long) {
   private val groupMsg = new mutable.HashMap[Long, GroupMsg]()
   private val userMsg = new mutable.HashMap[Long, MsgQueue[UserMsg]]()
 
@@ -36,7 +36,7 @@ class GroupMsg(val groupId: Long) {
 
 case class UserMsg(userId: Long, msg: String)
 
-class MsgQueue[A:ClassTag](size: Int) extends mutable.Iterable[A] {
+class MsgQueue[A: ClassTag](size: Int) extends mutable.Iterable[A] {
 
   val msgArray = new Array[A](size)
   var len: Int = 0

@@ -1,5 +1,6 @@
 package com.dingdo.mirai
 
+import com.dingdo.mirai.context.MsgCacheContext
 import com.dingdo.mirai.core.MsgHandlerChain
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.MessageEvent
@@ -10,41 +11,30 @@ import net.mamoe.mirai.{Bot, BotFactory}
 class MiraiBot(val id: Long, pw: String) {
 
   // mirai定义的bot
-  val bot: Bot = MiraiBot.createAndLoginBot(id, pw)
+  private val bot: Bot = MiraiBot.botFactory.newBot(id, pw, (config: BotConfiguration) => {
+    config.fileBasedDeviceInfo()
+    config.setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy.REGISTER)  // 切换心跳策略
+    config.getContactListCache.setGroupMemberListCacheEnabled(true)  // 开启群成员列表缓存
+  })
 
-  MiraiBot.bot = this
+  // 消息缓存
+  val msgCacheContent = new MsgCacheContext(id)
+  // 初始化后立即注册到管理器
+  BotManager.registerBot(this)
+
+  def login: MiraiBot ={
+    bot.login()
+    // 注册事件处理器
+    MiraiBot.eventChannel.subscribeAlways(classOf[MessageEvent], (event: MessageEvent) => {
+      MsgHandlerChain.handle(event)
+    })
+    this
+  }
 }
 
 object MiraiBot {
-
-  var bot:MiraiBot = _
+  val botFactory: BotFactory = BotFactory.INSTANCE
   val eventChannel: GlobalEventChannel = GlobalEventChannel.INSTANCE
 
   def apply(id: Long, pw: String): MiraiBot = new MiraiBot(id, pw)
-
-  private def createAndLoginBot(id: Long, pw: String): Bot = {
-    val botFactory: BotFactory = BotFactory.INSTANCE
-
-    val miraiBot = botFactory.newBot(id, pw, (config: BotConfiguration) => {
-      config.fileBasedDeviceInfo()
-      // 切换心跳策略
-      config.setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy.REGISTER)
-      // 开启群成员列表缓存
-      val cache = config.getContactListCache
-      cache.setGroupMemberListCacheEnabled(true)
-    })
-
-    miraiBot.login()
-
-    // 注册事件
-    eventChannel.subscribeAlways(classOf[MessageEvent], (event: MessageEvent) => {
-      MsgHandlerChain.handle(event)
-    })
-
-    miraiBot
-  }
-
-  def main(args: Array[String]): Unit = {
-    val bot = MiraiBot(1, "1")
-  }
 }

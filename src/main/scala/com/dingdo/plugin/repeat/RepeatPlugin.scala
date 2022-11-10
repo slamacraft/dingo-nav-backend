@@ -25,14 +25,14 @@ class RepeatPlugin extends ParallelBotPlugin{
     val msg = groupEvent.getMessage.contentToString
     val groupId = groupEvent.getGroup.getId
 
-    val groupMsg = MsgCacheContext.group(groupId)
-    val toRepeat = groupMsg.msg.slice(1, repeatCount)
-      .forall(it => it.msg.endsWith(msg) && groupRepeat(groupId) != msg)
+//    val groupMsg = MsgCacheContext.group(groupId)
+//    val toRepeat = groupMsg.msg.slice(1, repeatCount)
+//      .forall(it => it.msg.endsWith(msg) && groupRepeat(groupId) != msg)
 
-    if (toRepeat) {
-      groupEvent.getGroup.sendMessage(msg)
-      groupRepeat(groupId) = msg
-    }
+//    if (toRepeat) {
+//      groupEvent.getGroup.sendMessage(msg)
+//      groupRepeat(groupId) = msg
+//    }
   }
 
   /**

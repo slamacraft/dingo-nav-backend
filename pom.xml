@@ -19,9 +19,10 @@
         <kotlin.version>1.6.21</kotlin.version>
         <scala.version>2.12.12</scala.version>
         <spring-boot-druid.version>1.2.11</spring-boot-druid.version>
-        <mirai.version>2.12.1</mirai.version>
+        <mirai.version>2.13.0</mirai.version>
         <slick.version>3.3.3</slick.version>
         <mysql.version>8.0.30</mysql.version>
+<!--        <mongodb.version>2.7.4</mongodb.version>-->
     </properties>
 
     <dependencies>
@@ -46,7 +47,7 @@
             <artifactId>jackson-module-paranamer</artifactId>
         </dependency>
 
-        <!--        机器人相关-->
+        <!--        机器人核心-->
         <!-- https://mvnrepository.com/artifact/net.mamoe/mirai-core-jvm -->
         <dependency>
             <groupId>net.mamoe</groupId>
@@ -55,29 +56,35 @@
         </dependency>
 
 <!--        数据库相关-->
+<!--        mysql的，暂时不用了-->
         <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${spring-boot-druid.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>mysql</groupId>-->
+<!--            <artifactId>mysql-connector-java</artifactId>-->
+<!--            <version>${mysql.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba</groupId>-->
+<!--            <artifactId>druid-spring-boot-starter</artifactId>-->
+<!--            <version>${spring-boot-druid.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework</groupId>-->
+<!--            <artifactId>spring-tx</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-jdbc</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.typesafe.slick</groupId>-->
+<!--            <artifactId>slick_2.12</artifactId>-->
+<!--            <version>${slick.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe.slick</groupId>
-            <artifactId>slick_2.12</artifactId>
-            <version>${slick.version}</version>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+<!--            <version>${mongodb.version}</version>-->
         </dependency>
 
 <!--        SpringBoot配置-->
@@ -93,25 +100,24 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.12</artifactId>
-            <version>3.1.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.spark</groupId>-->
+<!--            <artifactId>spark-core_2.12</artifactId>-->
+<!--            <version>3.1.3</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.slf4j</groupId>-->
+<!--                    <artifactId>slf4j-log4j12</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
-        <!--         https://mvnrepository.com/artifact/org.apache.spark/spark-mllib-->
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-mllib_2.12</artifactId>
-            <version>3.2.2</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.spark</groupId>-->
+<!--            <artifactId>spark-mllib_2.12</artifactId>-->
+<!--            <version>3.2.2</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.hankcs</groupId>

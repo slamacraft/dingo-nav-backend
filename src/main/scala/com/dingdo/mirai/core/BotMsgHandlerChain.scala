@@ -1,7 +1,7 @@
 package com.dingdo.mirai.core
 
 import com.dingdo.config.properties.BotConfig
-import com.dingdo.mirai.model.MsgSaver
+import com.dingdo.mirai.MsgSaver
 import com.dingdo.util.FileUtil
 import net.mamoe.mirai.event.events.MessageEvent
 
@@ -29,6 +29,7 @@ object MsgHandlerChain extends BotMsgHandlerChain {
   }
 }
 
+// 需要重做，可配置化
 object MsgFilterHandler extends BotMsgHandlerChain {
 
   private var filterList: List[String] = _
@@ -58,7 +59,7 @@ object MsgSaverHandler extends BotMsgHandlerChain {
   override def next: BotMsgHandlerChain = BotPluginHandler
 
   override def handle(msg: MessageEvent): Boolean = {
-    MsgSaver.saveMsg(msg)
+    MsgSaver.instance += msg
     true
   }
 }

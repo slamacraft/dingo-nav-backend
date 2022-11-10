@@ -3,6 +3,7 @@ package com.dingdo.mirai.core
 import net.mamoe.mirai.event.events.MessageEvent
 
 sealed trait BotPlugin {
+  type Config
 
   /**
    * 自动注册到 BotPluginHandler
@@ -13,6 +14,13 @@ sealed trait BotPlugin {
    * 插件的触发语句，触发后将进入插件的触发语句内
    */
   val trigger: String => Boolean
+
+  def init(config:Config):BotPlugin
+
+  def update(config:Config):BotPlugin = {
+
+    this
+  }
 }
 
 trait ParallelBotPlugin extends BotPlugin{

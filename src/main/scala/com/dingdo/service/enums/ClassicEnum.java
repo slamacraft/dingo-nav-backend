@@ -1,13 +1,7 @@
 package com.dingdo.service.enums;
 
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 记录着每个服务对应的激活语料库文件地址
@@ -87,26 +81,26 @@ public enum ClassicEnum {
      * @return
      */
     @Deprecated
-    public static Map<String, String> getAllFileSrc() {
-        ClassicEnum[] values = ClassicEnum.values();
-        Map<String, String> resultList = new HashMap<>();
-
-        for (int i = 0; i < values.length; i++) {
-            if (StringUtils.isBlank(values[i].getServiceName())
-                    && values[i].getValue() - (int) values[i].getValue() == 0) {
-                for (int j = i + 1; j < values.length; j++) {
-                    if (StringUtils.isNotBlank(values[j].getServiceName())) {
-//                        double sub = values[j].getValue() - values[i].getValue();
-                        if ((int) values[j].getValue() == (int) values[i].getValue()) {
-                            resultList.put(values[i].getFileName() + values[j].getFileName(), values[j].getFileName());
-                        }
-                    }
-                }
-            }
-        }
-
-        return resultList;
-    }
+//    public static Map<String, String> getAllFileSrc() {
+//        ClassicEnum[] values = ClassicEnum.values();
+//        Map<String, String> resultList = new HashMap<>();
+//
+//        for (int i = 0; i < values.length; i++) {
+//            if (StringUtils.isBlank(values[i].getServiceName())
+//                    && values[i].getValue() - (int) values[i].getValue() == 0) {
+//                for (int j = i + 1; j < values.length; j++) {
+//                    if (StringUtils.isNotBlank(values[j].getServiceName())) {
+////                        double sub = values[j].getValue() - values[i].getValue();
+//                        if ((int) values[j].getValue() == (int) values[i].getValue()) {
+//                            resultList.put(values[i].getFileName() + values[j].getFileName(), values[j].getFileName());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return resultList;
+//    }
 
 
     /**
@@ -116,29 +110,29 @@ public enum ClassicEnum {
      * key: layer
      * value: filePath
      */
-    public static Map<Double, String> getAllLayerFileMap() {
-        Stream<ClassicEnum> valuesStream = Arrays.stream(values());
-
-        // 获取过滤出ServiceName为null, 且其分类值value为整数的enum
-        // 并将其封装为一个Map
-        // key: value, value: FileName
-        Map<Double, String> layerSrcPathMap = valuesStream.filter(
-                item -> StringUtils.isBlank(item.getServiceName())
-                        && Math.ceil(item.getValue()) == Math.floor(item.getValue())
-        ).collect(Collectors.toMap(
-                item -> Math.rint(item.getValue()), ClassicEnum::getFileName)
-        );
-
-        // 获取ServiceName不为null的enum, 并通过其分类值向下取整，
-        // 从上面layerSrcPathMap中获取文件夹路径，并与自身文件名拼接
-        // 获得完整的文件路径，并封装为一个Map
-        // key: value, value: filePath
-        return valuesStream.filter(item -> StringUtils.isNotBlank(item.getServiceName()))
-                .collect(Collectors.toMap(
-                        ClassicEnum::getValue,
-                        item -> layerSrcPathMap.get(Math.ceil(item.getValue())) + item.getFileName()
-                ));
-    }
+//    public static Map<Double, String> getAllLayerFileMap() {
+//        Stream<ClassicEnum> valuesStream = Arrays.stream(values());
+//
+//        // 获取过滤出ServiceName为null, 且其分类值value为整数的enum
+//        // 并将其封装为一个Map
+//        // key: value, value: FileName
+//        Map<Double, String> layerSrcPathMap = valuesStream.filter(
+//                item -> StringUtils.isBlank(item.getServiceName())
+//                        && Math.ceil(item.getValue()) == Math.floor(item.getValue())
+//        ).collect(Collectors.toMap(
+//                item -> Math.rint(item.getValue()), ClassicEnum::getFileName)
+//        );
+//
+//        // 获取ServiceName不为null的enum, 并通过其分类值向下取整，
+//        // 从上面layerSrcPathMap中获取文件夹路径，并与自身文件名拼接
+//        // 获得完整的文件路径，并封装为一个Map
+//        // key: value, value: filePath
+//        return valuesStream.filter(item -> StringUtils.isNotBlank(item.getServiceName()))
+//                .collect(Collectors.toMap(
+//                        ClassicEnum::getValue,
+//                        item -> layerSrcPathMap.get(Math.ceil(item.getValue())) + item.getFileName()
+//                ));
+//    }
 
     // ==========================================get&set============================================
 

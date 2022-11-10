@@ -2,28 +2,9 @@ server:
   port: 8081
 
 spring:
-  datasource:
-    name: local # 114.116.144.3 13306
-    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/pms?allowMultiQueries=true&characterEncoding=utf-8&useUnicode=true&useSSL=false&autoReconnect=true&zeroDateTimeBehavior=convertToNull
-    username: ${MYSQL_USERNAME:**}
-    password: ${MYSQL_PASSWORD:**}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      initial-size: 2  # 默认值：0，初始化时建立物理连接的个数
-      max-active: 10  # 默认值：8，最大连接池数量
-      min-idle: 1 # 默认值：0，最小连接池数量
-      max-wait: 30000 # 默认值：-1，获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁
-      validation-query: select 'x' # 默认值：null，用来检测连接是否有效的sql，要求是一个查询语句，常用select 'x'。如果validation-query为null，test-on-borrow、test-on-return、test-while-idle都不会起作用。
-      validation-query-timeout: 30 # 默认值：-1，单位：秒，检测连接是否有效的超时时间。底层调用jdbc Statement对象的void setQueryTimeout(int seconds)方法
-      test-on-borrow: true # 默认值：true，申请连接时执行 validation-query 检测连接是否有效，做了这个配置会降低性能
-      test-on-return: false # 默认值：false, 归还连接时执行 validation-query 检测连接是否有效，做了这个配置会降低性能
-      test-while-idle: true # 默认值：false,建议配置为true,不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于 time-between-eviction-runs-millis，执行 validation-query检测连接是否有效
-      keep-alive: true # 默认值：false，连接池中的min-idle数量以内的连接，空闲时间超过min-evictable-idle-time-millis，则会执行keep-alive操作。
-      time-between-eviction-runs-millis: 60000 # Destroy线程检测连接的间隔时间
-      min-evictable-idle-time-millis: 300000 # 连接保持空闲而不被驱逐的最小时间
-      filters: stat # 属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有： 监控统计用的filter:stat 日志用的filter:log4j 防御sql注入的filter:wall
-      query-timeout: 60 # 查询超时时间,单位：秒
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_HOST:127.0.0.1:27017}/${MONGO_DB:bot}
 
 bot:
   info:

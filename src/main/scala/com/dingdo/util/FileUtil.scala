@@ -1,7 +1,6 @@
 package com.dingdo.util
 
 import lombok.extern.slf4j.Slf4j
-import org.apache.commons.lang3.StringUtils
 import org.springframework.boot.system.ApplicationHome
 
 import java.io._
@@ -23,11 +22,12 @@ object FileUtil { // 使用log4j打印日志
     private[FileUtil] val jarUrl: String = {
       val home = new ApplicationHome(FileUtil.getClass)
       val jarFile: File = home.getSource
-      if (jarFile == null || StringUtils.isBlank(jarFile.getParentFile.toString)) {
-        "/python/CQPython/static"
-      } else {
-        jarFile.getParentFile.toString
-      }
+//      if (jarFile == null || jarFile.getParentFile.toString ==null || ) {
+//        "/python/CQPython/static"
+//      } else {
+//        jarFile.getParentFile.toString
+//      }
+      ""
     }
   }
 
