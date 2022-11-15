@@ -1,4 +1,4 @@
-package com.dingdo.util.scanner
+package com.dingdo.common.util.scanner
 
 import java.io.{File, IOException}
 import java.net.{JarURLConnection, URL}

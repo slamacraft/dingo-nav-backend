@@ -1,4 +1,4 @@
-package com.dingdo.util
+package com.dingdo.common.util
 
 import lombok.extern.slf4j.Slf4j
 import org.springframework.boot.system.ApplicationHome

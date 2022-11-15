@@ -1,6 +1,6 @@
-package com.dingdo.util.nlp
+package com.dingdo.common.util.nlp
 
-import com.dingdo.util.nlp.TimeEnum._
+import com.dingdo.common.util.nlp.TimeEnum._
 import com.hankcs.hanlp.HanLP
 import com.hankcs.hanlp.seg.Segment
 import com.hankcs.hanlp.seg.common.Term

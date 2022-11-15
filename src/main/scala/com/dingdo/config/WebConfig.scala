@@ -1,4 +1,4 @@
-package com.dingdo.config.configuration
+package com.dingdo.config
 
 import org.springframework.context.annotation.{Bean, Configuration}
 import org.springframework.http.client.SimpleClientHttpRequestFactory

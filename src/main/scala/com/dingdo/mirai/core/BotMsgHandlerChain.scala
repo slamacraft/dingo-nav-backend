@@ -2,7 +2,7 @@ package com.dingdo.mirai.core
 
 import com.dingdo.config.properties.BotConfig
 import com.dingdo.mirai.MsgSaver
-import com.dingdo.util.FileUtil
+import com.dingdo.common.util.FileUtil
 import net.mamoe.mirai.event.events.MessageEvent
 
 import java.util.stream.Collectors

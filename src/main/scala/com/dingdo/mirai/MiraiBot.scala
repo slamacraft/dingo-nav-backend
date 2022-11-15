@@ -8,7 +8,7 @@ import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.{Bot, BotFactory}
 
 
-class MiraiBot(val id: Long, pw: String) {
+class MiraiBot(val id: Long,val pw: String) {
 
   // mirai定义的bot
   private val bot: Bot = MiraiBot.botFactory.newBot(id, pw, (config: BotConfiguration) => {
@@ -18,16 +18,12 @@ class MiraiBot(val id: Long, pw: String) {
   })
 
   // 消息缓存
-  val msgCacheContent = new MsgCacheContext(id)
+  val msgCache = new MsgCacheContext(id)
   // 初始化后立即注册到管理器
   BotManager.registerBot(this)
 
   def login: MiraiBot ={
     bot.login()
-    // 注册事件处理器
-    MiraiBot.eventChannel.subscribeAlways(classOf[MessageEvent], (event: MessageEvent) => {
-      MsgHandlerChain.handle(event)
-    })
     this
   }
 }
@@ -35,6 +31,9 @@ class MiraiBot(val id: Long, pw: String) {
 object MiraiBot {
   val botFactory: BotFactory = BotFactory.INSTANCE
   val eventChannel: GlobalEventChannel = GlobalEventChannel.INSTANCE
-
+  // 注册全局事件处理器
+  MiraiBot.eventChannel.subscribeAlways(classOf[MessageEvent], (event: MessageEvent) => {
+    MsgHandlerChain.handle(event)
+  })
   def apply(id: Long, pw: String): MiraiBot = new MiraiBot(id, pw)
 }

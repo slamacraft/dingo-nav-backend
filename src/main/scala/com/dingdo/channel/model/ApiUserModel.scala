@@ -7,4 +7,5 @@ class ApiLoginReq {
 
 class ApiLoginResp{
   var id:Long = _
+  var token:String = _
 }

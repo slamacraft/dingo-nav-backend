@@ -10,6 +10,6 @@ object BotManager {
     botList += bot
   }
 
-  def getBot(id: Long): MiraiBot = botList.find(_.id == id).orNull
+  def getBot(id: Long): Option[MiraiBot] = botList.find(_.id == id)
 
 }

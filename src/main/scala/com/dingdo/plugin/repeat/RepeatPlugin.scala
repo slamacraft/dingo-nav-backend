@@ -51,4 +51,8 @@ class RepeatPlugin extends ParallelBotPlugin{
   override def handle(msg: MessageEvent): Unit = {
     repeat(msg)
   }
+
+  override type Config = this.type
+
+  override def init(config: RepeatPlugin.this.type): BotPlugin = ???
 }
