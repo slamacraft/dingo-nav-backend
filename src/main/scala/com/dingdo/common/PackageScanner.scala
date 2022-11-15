@@ -1,4 +1,4 @@
-package com.dingdo.common.util.scanner
+package com.dingdo.common
 
 import java.io.{File, IOException}
 import java.net.{JarURLConnection, URL}
@@ -13,11 +13,6 @@ object PackageScanner {
 
 class PackageScanner(var classLoader: ClassLoader) {
 
-  /**
-   * 指定类加载器的构造方法
-   *
-   * @param classLoader
-   */
   val classes: mutable.Set[Class[_]] = new mutable.HashSet[Class[_]]
 
   @throws[ClassNotFoundException]
