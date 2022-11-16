@@ -13,7 +13,6 @@ import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.reflect.ClassTag
-import scala.util.Random
 
 
 @Component
@@ -80,4 +79,14 @@ class LocalCacheContext extends ICacheContext {
     }
   }
 
+  override def remove[T](key: String)(implicit tag: ClassTag[T]): Option[T] = {
+    Option(cacheMap(key)).map { it =>
+      cacheMap.remove(key)
+      JsonMapper.jsonToObj(it)(tag)
+    }.orElse {
+      val it = getExpireCache(key)(tag)
+      it.map(_ => expireCacheMap.remove(key))
+      it
+    }
+  }
 }

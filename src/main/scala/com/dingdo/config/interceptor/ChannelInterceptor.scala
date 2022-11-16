@@ -26,12 +26,12 @@ class ChannelInterceptor extends HandlerInterceptor {
       else request.getParameter(TOKEN_PARAM)
     }
 
-    cacheContext[BotEntity](token)
+    cacheContext[Long](token)
       .orElse(throw BusinessException("40101", "用户尚未登录"))
       .foreach { it =>
         val localContext = CurrentContext.get
-        localContext.id = it.id
-        localContext.name = it.name
+        localContext.id = it
+        localContext.token = token
       }
     super.preHandle(request, response, handler)
   }
