@@ -30,7 +30,7 @@ class ApiUserService extends IApiUserService {
       }.getOrElse(throw BusinessException("账号或密码错误"))
   }
 
-  def logout(): Unit = {
+  override def logout(): Unit = {
     cacheContext.remove[Long](CurrentContext.get.token)
   }
 

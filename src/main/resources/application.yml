@@ -5,6 +5,9 @@ spring:
   data:
     mongodb:
       uri: mongodb://${MONGO_HOST:127.0.0.1:27017}/${MONGO_DB:bot}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 bot:
   info:
@@ -14,3 +17,16 @@ bot:
   config:
     cache-queue-size: 100
     filter-file: filter # 过滤消息文件，文件每行为一个过滤项，支持字符和正则表达式，只要匹配就不会处理该消息
+
+swagger:
+  host: 127.0.0.1:${server.port}
+  base-package: com.dingdo.channel
+  version: 0.0.1.BETA
+  description: 机器人接口
+  contact:
+    name: slamacraft
+    email: slamacraft@foxmail
+    url: https://github.com/slamacraft/DingDo-robot-for-QQ
+  authorization:
+    name: Authorization
+    key-name: Authorization

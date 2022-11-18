@@ -1,11 +1,22 @@
 package com.dingdo.channel.model
 
+import io.swagger.annotations.{ApiModel, ApiModelProperty}
+
+import scala.beans.BeanProperty
+
+@ApiModel("登录req")
 class ApiLoginReq {
-  var id:Long = _
-  var pw:String = _
+  @BeanProperty
+  @ApiModelProperty("qq号")
+  var id: Long = _
+  @BeanProperty
+  @ApiModelProperty("密码")
+  var pw: String = _
 }
 
-class ApiLoginResp{
-  var id:Long = _
-  var token:String = _
+class ApiLoginResp {
+  @BeanProperty
+  var id: Long = _
+  @BeanProperty
+  var token: String = _
 }

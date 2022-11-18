@@ -2,16 +2,23 @@ package com.dingdo.channel.controller
 
 import com.dingdo.channel.model.{ApiLoginReq, ApiLoginResp}
 import com.dingdo.channel.service.IApiUserService
+import io.swagger.annotations.{Api, ApiOperation}
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.{PostMapping, RequestBody}
 
+@Api("用户控制器")
 @Controller("/user")
 class ApiUserController {
-  private var apiUserService:IApiUserService = _
+  @Autowired
+  private var apiUserService: IApiUserService = _
 
+  @ApiOperation("登录")
   @PostMapping(Array("/login"))
-  def login(req: ApiLoginReq): ApiLoginResp = {
-    apiUserService.login(req)
-  }
+  def login(@RequestBody req: ApiLoginReq): ApiLoginResp = apiUserService.login(req)
+
+  @ApiOperation("登出")
+  @PostMapping(Array("/logout"))
+  def logout(): Unit = apiUserService.logout()
 
 }

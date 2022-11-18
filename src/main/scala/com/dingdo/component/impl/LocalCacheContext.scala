@@ -28,10 +28,14 @@ class LocalCacheContext extends ICacheContext {
   }
 
 
-  override def apply[T](key: String)(implicit tag: ClassTag[T]): Option[T] =
-    Option(cacheMap(key)).map {
+  override def apply[T](key: String)(implicit tag: ClassTag[T]): Option[T] = {
+    if (key == null) {
+      return None
+    }
+    cacheMap.get(key).map {
       JsonMapper.jsonToObj(_)(tag)
     }.orElse(getExpireCache(key)(tag))
+  }
 
 
   def getExpireCache[T](key: String)(implicit tag: ClassTag[T]): Option[T] = {
@@ -53,6 +57,8 @@ class LocalCacheContext extends ICacheContext {
     }
   }
 
+  @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.SECONDS)
+  def scheduledClearKey(): Unit = clearExpiredKey()
 
   /**
    * 每分钟清理一次过期key
@@ -60,8 +66,7 @@ class LocalCacheContext extends ICacheContext {
    * @param maxClearCount 一次最多清理的数理 默认20
    */
   @tailrec
-  @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.SECONDS)
-  final def clearExpiredKet(maxClearCount: Int = 20): Unit = {
+  final def clearExpiredKey(maxClearCount: Int = 20): Unit = {
     // 随机抽取20个
     val randomIdx = RandomUtil.randomList(1, expireCacheMap.size(), maxClearCount)
 
@@ -75,12 +80,12 @@ class LocalCacheContext extends ICacheContext {
     toRemoveKeys.foreach(expireCacheMap.remove(_)) // 移除过期的key
 
     if (toRemoveKeys.size >= maxClearCount / 4) { // 如果过期的比例大于 1/4，继续进行清理
-      clearExpiredKet(maxClearCount)
+      clearExpiredKey(maxClearCount)
     }
   }
 
   override def remove[T](key: String)(implicit tag: ClassTag[T]): Option[T] = {
-    Option(cacheMap(key)).map { it =>
+    cacheMap.get(key).map { it =>
       cacheMap.remove(key)
       JsonMapper.jsonToObj(it)(tag)
     }.orElse {
