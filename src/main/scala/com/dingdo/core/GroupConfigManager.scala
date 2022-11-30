@@ -1,6 +1,6 @@
-package com.dingdo.mirai
+package com.dingdo.core
 
-import com.dingdo.model.mapper.{GroupConfigMapper, PluginConfigMapper}
+import com.dingdo.core.model.mapper.{GroupConfigMapper, PluginConfigMapper}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 

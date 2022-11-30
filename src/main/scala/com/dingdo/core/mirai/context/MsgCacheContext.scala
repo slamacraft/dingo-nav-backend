@@ -1,4 +1,4 @@
-package com.dingdo.mirai.context
+package com.dingdo.core.mirai.context
 
 import com.dingdo.config.properties.BotConfig
 import net.mamoe.mirai.event.events.{FriendMessageEvent, GroupMessageEvent, MessageEvent}

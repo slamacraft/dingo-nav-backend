@@ -1,6 +1,6 @@
-package com.dingdo.model.mapper
+package com.dingdo.core.model.mapper
 
-import com.dingdo.model.entity.GroupConfigEntity
+import com.dingdo.core.model.entity.GroupConfigEntity
 import org.springframework.data.mongodb.repository.MongoRepository
 
 trait GroupConfigMapper extends MongoRepository[GroupConfigEntity, Long] {

@@ -1,4 +1,4 @@
-package com.dingdo.model.entity
+package com.dingdo.core.model.entity
 
 import net.mamoe.mirai.event.events.{GroupMessageEvent, MessageEvent}
 import org.springframework.data.annotation.{CreatedDate, Id}

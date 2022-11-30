@@ -1,7 +1,7 @@
 package com.dingdo.plugin.repeat
 
-import com.dingdo.mirai.context.MsgCacheContext
-import com.dingdo.mirai.core.{BotPlugin, ParallelBotPlugin}
+import com.dingdo.core.mirai.context.MsgCacheContext
+import com.dingdo.core.mirai.core.{BotPlugin, ParallelBotPlugin}
 import net.mamoe.mirai.event.events.{GroupMessageEvent, MessageEvent}
 
 import scala.collection.mutable

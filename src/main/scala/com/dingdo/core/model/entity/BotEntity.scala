@@ -1,4 +1,4 @@
-package com.dingdo.model.entity
+package com.dingdo.core.model.entity
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document

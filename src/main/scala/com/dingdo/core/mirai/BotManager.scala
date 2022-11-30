@@ -1,4 +1,4 @@
-package com.dingdo.mirai
+package com.dingdo.core.mirai
 
 import scala.collection.mutable
 

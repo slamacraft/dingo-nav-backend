@@ -43,7 +43,7 @@ class LocalCacheContext extends ICacheContext {
       .filter { it =>
         val isExpired = it.isExpired
         if (isExpired) expireCacheMap.remove(key) // 如果过期了，还要惰性移除
-        isExpired
+        !isExpired
       }
       .map(it => JsonMapper.jsonToObj(it.value)(tag))
   }

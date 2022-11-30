@@ -1,7 +1,7 @@
-package com.dingdo.mirai.core
+package com.dingdo.core.mirai.core
 
 import com.dingdo.config.properties.BotConfig
-import com.dingdo.mirai.MsgSaver
+import com.dingdo.core.mirai.MsgSaver
 import com.dingdo.common.util.FileUtil
 import net.mamoe.mirai.event.events.MessageEvent
 

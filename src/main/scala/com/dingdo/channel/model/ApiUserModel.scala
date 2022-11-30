@@ -11,7 +11,7 @@ class ApiLoginReq {
   var id: Long = _
   @BeanProperty
   @ApiModelProperty("密码")
-  var pw: String = _
+  var pwd: String = _
 }
 
 class ApiLoginResp {

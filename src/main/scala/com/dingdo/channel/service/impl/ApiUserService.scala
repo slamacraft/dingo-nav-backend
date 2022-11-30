@@ -5,7 +5,7 @@ import com.dingdo.channel.model.{ApiLoginReq, ApiLoginResp}
 import com.dingdo.channel.service.IApiUserService
 import com.dingdo.common.exceptions.BusinessException
 import com.dingdo.component.ICacheContext
-import com.dingdo.mirai.{BotManager, MiraiBot}
+import com.dingdo.core.mirai.{BotManager, MiraiBot}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -18,8 +18,8 @@ class ApiUserService extends IApiUserService {
 
   override def login(req: ApiLoginReq): ApiLoginResp = {
     BotManager.getBot(req.id)
-      .orElse(Option(MiraiBot(req.id, req.pw).login))
-      .filter(_.pw == req.pw)
+      .orElse(Option(MiraiBot(req.id, req.pwd).login))
+      .filter(_.pw == req.pwd)
       .map { it =>
         val token = UUID.randomUUID().toString
         cacheContext.cache(token, it.id)

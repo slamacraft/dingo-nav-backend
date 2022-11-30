@@ -1,4 +1,4 @@
-package com.dingdo.mirai.core
+package com.dingdo.core.mirai.core
 
 import net.mamoe.mirai.event.events.MessageEvent
 

@@ -3,7 +3,7 @@ package com.dingdo.config.interceptor
 import com.dingdo.channel.context.CurrentContext
 import com.dingdo.common.exceptions.BusinessException
 import com.dingdo.component.ICacheContext
-import com.dingdo.model.entity.BotEntity
+import com.dingdo.core.model.entity.BotEntity
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
@@ -44,7 +44,7 @@ class ChannelInterceptor extends HandlerInterceptor {
 
   override def afterCompletion(request: HttpServletRequest, response: HttpServletResponse, handler: Any, ex: Exception): Unit = {
     super.afterCompletion(request, response, handler, ex)
-    CurrentContext.remove
+    CurrentContext.remove()
   }
 
 }

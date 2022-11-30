@@ -40,7 +40,9 @@ class AppConfig extends ApplicationListener[ContextRefreshedEvent] with WebMvcCo
         "/v2/api-docs",
         "/swagger-resources",
         "/swagger-resources/**",
-        "/user/login"
+        "/user/login",
+        "/null/swagger-resources/**",
+        "/webjars/**"
       )
   }
 
@@ -62,7 +64,7 @@ class AppConfig extends ApplicationListener[ContextRefreshedEvent] with WebMvcCo
       errorAttributes.remove("error")
       getError(webRequest) match {
         case e: BusinessException =>
-          errorAttributes.put("errorCode", e.code)
+          errorAttributes.put("code", e.code)
           errorAttributes.put("message", e.getMessage)
         case _ =>
       }
