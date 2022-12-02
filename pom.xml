@@ -19,9 +19,10 @@
         <kotlin.version>1.6.21</kotlin.version>
         <scala.version>2.12.12</scala.version>
         <spring-boot-druid.version>1.2.11</spring-boot-druid.version>
-        <mirai.version>2.13.0</mirai.version>
+        <mirai.version>2.12.3</mirai.version>
         <slick.version>3.3.3</slick.version>
         <mysql.version>8.0.30</mysql.version>
+        <swagger.version>1.7.0.RELEASE</swagger.version>
 <!--        <mongodb.version>2.7.4</mongodb.version>-->
     </properties>
 
@@ -54,6 +55,11 @@
             <artifactId>mirai-core-jvm</artifactId>
             <version>${mirai.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-utils</artifactId>
+            <version>${mirai.version}</version>
+        </dependency>
 
 <!--        数据库相关-->
 <!--        mysql的，暂时不用了-->
@@ -84,7 +90,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
-<!--            <version>${mongodb.version}</version>-->
         </dependency>
 
 <!--        SpringBoot配置-->
@@ -97,6 +102,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.spring4all</groupId>
+            <artifactId>swagger-spring-boot-starter</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->

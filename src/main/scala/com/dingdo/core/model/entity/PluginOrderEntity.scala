@@ -3,11 +3,10 @@ package com.dingdo.core.model.entity
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
-@Document
-class PluginConfigEntity {
+@Document("pluginOrder")
+class PluginOrderEntity {
   @Id
-  var id: Long = _
-  var botId: Long = _
-  var groupId: Long = _
-  var plugin:String = _
+  var name: String = _
+  var parentName: String = _
+  var enable: Boolean = _
 }

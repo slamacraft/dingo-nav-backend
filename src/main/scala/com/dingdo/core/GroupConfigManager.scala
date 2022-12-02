@@ -1,6 +1,6 @@
 package com.dingdo.core
 
-import com.dingdo.core.model.mapper.{GroupConfigMapper, PluginConfigMapper}
+import com.dingdo.core.model.mapper.{GroupConfigMapper, PluginOrderMapper}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -10,7 +10,7 @@ class GroupConfigManager {
   @Autowired
   var groupConfigMapper:GroupConfigMapper = _
   @Autowired
-  var pluginConfigMapper:PluginConfigMapper = _
+  var pluginConfigMapper:PluginOrderMapper = _
 
 
 
