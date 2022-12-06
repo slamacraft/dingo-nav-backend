@@ -1,8 +1,8 @@
 package com.dingdo.core.mirai
 
 import com.dingdo.core.mirai.core.MsgHandler
-import com.dingdo.core.model.entity.BotMsgEntity
-import com.dingdo.core.model.mapper.BotMsgMapper
+import com.dingdo.plugin.basis.model.entity.BotMsgEntity
+import com.dingdo.plugin.basis.model.mapper.BotMsgMapper
 import net.mamoe.mirai.event.events.MessageEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

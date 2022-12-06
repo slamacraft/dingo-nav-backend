@@ -1,4 +1,4 @@
-package com.dingdo.core.model.entity
+package com.dingdo.plugin.basis.model.entity
 
 import net.mamoe.mirai.event.events.{GroupMessageEvent, MessageEvent}
 import org.springframework.data.annotation.{CreatedDate, Id}
@@ -12,18 +12,19 @@ import java.util.stream.Collectors
 class BotMsgEntity {
   @Id
   var id: Long = _
+  var name: String = _
   var botId: Long = _
+  var groupId: Long = _
   var userId: Long = _
   var userName: String = _
-  var groupId: Long = _
   var groupName: String = _
   var content: String = _
   @CreatedDate
   var createTime: LocalDateTime = _
 }
 
-object BotMsgEntity{
-  def build(event: MessageEvent): BotMsgEntity ={
+object BotMsgEntity {
+  def build(event: MessageEvent): BotMsgEntity = {
     val msgContent = event.getMessage.stream()
       .map[String](_.contentToString())
       .collect(Collectors.joining())

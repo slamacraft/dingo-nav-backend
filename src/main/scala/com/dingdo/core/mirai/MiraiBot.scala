@@ -19,8 +19,10 @@ class MiraiBot(val id: Long, val pw: String) {
     config.setProtocol(MiraiProtocol.ANDROID_PAD)
   })
 
+
   // 消息缓存
   val msgCache = new MsgCacheContext(id)
+
 
   def login: MiraiBot = {
 //    bot.login()
@@ -30,7 +32,7 @@ class MiraiBot(val id: Long, val pw: String) {
 }
 
 object MiraiBot {
-  val botFactory: BotFactory = BotFactory.INSTANCE
+  private val botFactory: BotFactory = BotFactory.INSTANCE
   val eventChannel: GlobalEventChannel = GlobalEventChannel.INSTANCE
   // 注册全局事件处理器
   MiraiBot.eventChannel.subscribeAlways(classOf[MessageEvent], (event: MessageEvent) => {

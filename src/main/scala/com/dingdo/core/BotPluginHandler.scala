@@ -1,6 +1,6 @@
 package com.dingdo.core
 
-import com.dingdo.core.mirai.{BotMsg, OneMsg}
+import com.dingdo.core.mirai.OneMsg
 import com.dingdo.core.model.entity.PluginOrderEntity
 import com.dingdo.core.model.mapper.PluginOrderMapper
 import com.dingdo.core.plugin.BotPlugin
@@ -12,77 +12,95 @@ import org.springframework.data.mongodb.core.query.{Criteria, Query, Update}
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
-import java.util
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.stream.Collectors
 import scala.collection.mutable
-import scala.collection.JavaConverters._
 import scala.language.postfixOps
 
 
 @Component
 class BotPluginHandler extends ApplicationContextAware {
-  private val pluginChildMap = new mutable.HashMap[String, mutable.Buffer[BotPlugin]] // 正查集
-  //  private val pluginParentMap = new mutable.HashMap[BotPlugin, String] // 反查集
-  private val pluginList = new mutable.MutableList[BotPlugin]
+  private val pluginList = new mutable.MutableList[PluginConfig]
   @Autowired
   private var pluginOrderMapper: PluginOrderMapper = _
   @Autowired
   private var mongoTemplate: MongoTemplate = _
 
+  class PluginConfig(val plugin: BotPlugin, val config: PluginOrderEntity) {
+    val childList = new ConcurrentLinkedQueue[BotPlugin]
+  }
+
   override def setApplicationContext(applicationContext: ApplicationContext): Unit = {
     val plugins = applicationContext.getBeansOfType(classOf[BotPlugin]).values()
-    pluginList ++= plugins.asScala
-
-    val parentNameMap = pluginOrderMapper.findAll().asScala.groupBy(_.parentName)
+    val pluginConfigEntities = pluginOrderMapper.findAll()
 
     // 检查是否有重复名称的插件
-    val pluginNameMap = plugins.stream()
-      .collect(Collectors.groupingBy[BotPlugin, String](_.name))
+    plugins.stream().collect(Collectors.groupingBy[BotPlugin, String](_.name))
 
-    for {(parentName, pluginOrder) <- parentNameMap} {
-      val childNames = pluginOrder.map(_.name)
-      pluginChildMap += parentName -> pluginList.filter(it => childNames.contains(it.name)).toBuffer
+    val parentNameMap = pluginConfigEntities.stream()
+      .collect(Collectors.groupingBy[PluginOrderEntity, String](_.name))
+
+    // 初始化列表
+    val pluginList = plugins.stream().flatMap { it =>
+      pluginConfigEntities.stream()
+        .filter(config => it.name == config)
+        .map(config => new PluginConfig(it, config))
+    }.collect(Collectors.toList[PluginConfig])
+
+    pluginList.forEach { it =>
+      Option(parentNameMap.get(it.plugin.name)).map { configList =>
+        configList.stream().flatMap { config =>
+          plugins.stream().filter { plugin => plugin.name == config.name }
+        }.collect(Collectors.toList[BotPlugin])
+      }.foreach { childPlugin =>
+        it.childList.addAll(childPlugin)
+      }
     }
   }
+
 
   def handle(msg: MessageEvent): Unit = {
-    val msgHandleStack = new util.Stack[(BotMsg, BotPlugin)]
-    msgHandleStack.push(msg, BotPlugin)
 
-    while (!msgHandleStack.isEmpty) {
-      val (msg, plugin) = msgHandleStack.pop()
-      val handleResult = plugin(msg)
+    def handler_2(inputMsg: OneMsg, pluginConfig: PluginConfig): Unit = pluginConfig.plugin(inputMsg) match {
+      case handleResult: OneMsg =>
+        pluginConfig.childList.forEach { it =>
+          handler_2(handleResult, pluginList.filter(_.plugin == it).head)
+        }
+      case _ =>
+    }
 
-      handleResult match {
-        case msg: OneMsg =>
-          val childList = pluginChildMap(plugin.name)
-          for (it <- childList reverse) {
-            msgHandleStack.add((msg, it))
-          }
-        case _ =>
-      }
+    for (elem <- pluginList.filter(it => it.config.parentName == BotPlugin.name)) {
+      handler_2(msg, elem)
     }
   }
+
 
   @Transactional
-  def updatePluginOrderBatch(updateList: mutable.Seq[(String, String)]): Unit = {
-    for ((name, parentName) <- updateList) {
-      updatePluginOrder(name, parentName)
+  def updatePluginOrderBatch(updateList: mutable.Seq[(String, String, Boolean)]): Unit = {
+    for ((name, parentName, enable) <- updateList) {
+      updatePluginOrder(name, parentName, enable)
     }
   }
 
-  private def updatePluginOrder(name: String, parentName: String): Unit = {
-    pluginList.find(_.name == name).foreach { plugin =>
-      for ((_, plugins) <- pluginChildMap) {
-        plugins -= plugin
-      }
-      pluginChildMap(parentName) += plugin
+
+  private def updatePluginOrder(name: String, parentName: String, enable: Boolean = true): Unit = {
+    pluginList.find(_.plugin.name == name).foreach { pluginConfig =>
+      // 从父插件的子集中移除本插件
+      val config = pluginConfig.config
+      pluginList.find(_.plugin.name == config.parentName)
+        .foreach(_.childList.remove(pluginConfig))
+      // 将自己插入到新的父插件的子集中
+      pluginList.find(_.plugin.name == parentName)
+        .foreach(_.childList.add(pluginConfig.plugin))
+      // 修改自身配置
+      config.parentName = parentName
+      config.enable = enable
     }
 
     // 更新mongoDB
     mongoTemplate.updateFirst(
       Query.query(Criteria.where("name").is(name)),
-      Update.update("parentName", parentName),
+      Update.update("parentName", parentName).set("enable", enable),
       classOf[PluginOrderEntity]
     )
   }

@@ -17,12 +17,12 @@ import scala.reflect.ClassTag
 
 @Component
 class LocalCacheContext extends ICacheContext {
-  private val cacheMap = new mutable.HashMap[String, String]()
+  private val cacheMap = new mutable.HashMap[String, _]()
   private val expireCacheMap = new java.util.concurrent.ConcurrentHashMap[String, ExpireValue]()
 
 
-  class ExpireValue(val value: String, val ttl: Long) {
-    val expiredTime: Long = LocalDateTime.now().getLong(ChronoField.INSTANT_SECONDS) + ttl
+  class ExpireValue(val value: Any, val ttl: Long) {
+    private val expiredTime: Long = LocalDateTime.now().getLong(ChronoField.INSTANT_SECONDS) + ttl
 
     def isExpired: Boolean = LocalDateTime.now().getLong(ChronoField.INSTANT_SECONDS) > expiredTime
   }
@@ -32,20 +32,17 @@ class LocalCacheContext extends ICacheContext {
     if (key == null) {
       return None
     }
-    cacheMap.get(key).map {
-      JsonMapper.jsonToObj(_)(tag)
-    }.orElse(getExpireCache(key)(tag))
+    cacheMap.get(key).map(_.asInstanceOf[T]).orElse(getExpireCache(key)(tag))
   }
 
 
-  def getExpireCache[T](key: String)(implicit tag: ClassTag[T]): Option[T] = {
+  private def getExpireCache[T: ClassTag](key: String): Option[T] = {
     Option(expireCacheMap.get(key))
       .filter { it =>
         val isExpired = it.isExpired
         if (isExpired) expireCacheMap.remove(key) // 如果过期了，还要惰性移除
         !isExpired
-      }
-      .map(it => JsonMapper.jsonToObj(it.value)(tag))
+      }.map(it => it.value.asInstanceOf[T])
   }
 
 
@@ -66,7 +63,7 @@ class LocalCacheContext extends ICacheContext {
    * @param maxClearCount 一次最多清理的数理 默认20
    */
   @tailrec
-  final def clearExpiredKey(maxClearCount: Int = 20): Unit = {
+  private final def clearExpiredKey(maxClearCount: Int = 20): Unit = {
     // 随机抽取20个
     val randomIdx = RandomUtil.randomList(1, expireCacheMap.size(), maxClearCount)
 
@@ -87,7 +84,7 @@ class LocalCacheContext extends ICacheContext {
   override def remove[T](key: String)(implicit tag: ClassTag[T]): Option[T] = {
     cacheMap.get(key).map { it =>
       cacheMap.remove(key)
-      JsonMapper.jsonToObj(it)(tag)
+      it.asInstanceOf[T]
     }.orElse {
       val it = getExpireCache(key)(tag)
       it.map(_ => expireCacheMap.remove(key))

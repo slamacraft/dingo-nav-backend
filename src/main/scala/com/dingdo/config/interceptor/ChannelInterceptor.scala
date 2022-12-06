@@ -3,7 +3,6 @@ package com.dingdo.config.interceptor
 import com.dingdo.channel.context.CurrentContext
 import com.dingdo.common.exceptions.BusinessException
 import com.dingdo.component.ICacheContext
-import com.dingdo.core.model.entity.BotEntity
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor

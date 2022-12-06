@@ -1,5 +1,7 @@
 package com.dingdo.core.mirai
 
+import net.mamoe.mirai.Bot
+
 import scala.collection.mutable
 
 object BotManager {
@@ -12,4 +14,5 @@ object BotManager {
 
   def getBot(id: Long): Option[MiraiBot] = botList.find(_.id == id)
 
+  implicit def getBot(bot: Bot): MiraiBot = getBot(bot.getId).get
 }
