@@ -1,7 +1,5 @@
-package com.dingdo.core.plugin
+package com.dingdo.core
 
-import com.dingdo.core.BotPluginHandler
-import com.dingdo.core.mirai.core.BotPluginHandler
 import com.dingdo.core.mirai.{BotMsg, OneMsg}
 
 trait BotPlugin {
@@ -22,8 +20,4 @@ object BotPlugin extends BotPlugin {
    * 插件会如何处理单条消息
    */
   override def apply(msg: OneMsg): BotMsg = msg
-
-  def toConfig: BotPluginHandler#PluginConfig = {
-    new BotPluginHandler.PluginConfig
-  }
 }

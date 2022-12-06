@@ -1,6 +1,6 @@
 package com.dingdo.core.mirai
 
-import com.dingdo.core.mirai.context.MsgCacheContext
+import com.dingdo.core.{BotPluginHandler, MsgCacheContext}
 import com.dingdo.core.mirai.core.MsgHandlerChain
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.MessageEvent
@@ -36,7 +36,7 @@ object MiraiBot {
   val eventChannel: GlobalEventChannel = GlobalEventChannel.INSTANCE
   // 注册全局事件处理器
   MiraiBot.eventChannel.subscribeAlways(classOf[MessageEvent], (event: MessageEvent) => {
-    MsgHandlerChain.handle(event)
+    BotPluginHandler.INSTANCE.handle(event)
   })
 
   def apply(id: Long, pw: String): MiraiBot = new MiraiBot(id, pw)

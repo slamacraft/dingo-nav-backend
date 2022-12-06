@@ -1,7 +1,7 @@
 package com.dingdo.plugin.basis
 
+import com.dingdo.core.BotPlugin
 import com.dingdo.core.mirai.{BotMsg, NoneMsg, OneMsg}
-import com.dingdo.core.plugin.BotPlugin
 import com.dingdo.plugin.basis.model.mapper.MsgFilterConfigMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

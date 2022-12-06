@@ -1,7 +1,7 @@
 package com.dingdo.plugin.basis
 
+import com.dingdo.core.BotPlugin
 import com.dingdo.core.mirai.{BotMsg, OneMsg}
-import com.dingdo.core.plugin.BotPlugin
 import com.dingdo.plugin.basis.model.entity.BotMsgEntity
 import com.dingdo.plugin.basis.model.mapper.BotMsgMapper
 import org.springframework.beans.factory.annotation.Autowired

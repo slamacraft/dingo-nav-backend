@@ -1,8 +1,8 @@
 package com.dingdo.plugin.basis
 
+import com.dingdo.core.BotPlugin
 import com.dingdo.core.mirai.BotManager._
 import com.dingdo.core.mirai.{BotMsg, OneMsg}
-import com.dingdo.core.plugin.BotPlugin
 import net.mamoe.mirai.event.events.{GroupMessageEvent, MessageEvent}
 
 import scala.collection.mutable

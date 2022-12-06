@@ -3,7 +3,6 @@ package com.dingdo.core
 import com.dingdo.core.mirai.OneMsg
 import com.dingdo.core.model.entity.PluginOrderEntity
 import com.dingdo.core.model.mapper.PluginOrderMapper
-import com.dingdo.core.plugin.BotPlugin
 import net.mamoe.mirai.event.events.MessageEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.{ApplicationContext, ApplicationContextAware}
@@ -25,6 +24,8 @@ class BotPluginHandler extends ApplicationContextAware {
   private var pluginOrderMapper: PluginOrderMapper = _
   @Autowired
   private var mongoTemplate: MongoTemplate = _
+  // 初始化伴生对象
+  BotPluginHandler.INSTANCE = this
 
   class PluginConfig(val plugin: BotPlugin, val config: PluginOrderEntity) {
     val childList = new ConcurrentLinkedQueue[BotPlugin]
@@ -106,3 +107,9 @@ class BotPluginHandler extends ApplicationContextAware {
   }
 
 }
+
+object BotPluginHandler {
+  var INSTANCE: BotPluginHandler = _
+}
+
+
