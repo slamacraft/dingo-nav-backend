@@ -1,7 +1,7 @@
-package com.dingdo.extendService.knowledgeService.impl;
+package com.dingo.extendService.knowledgeService.impl;
 
-import com.dingdo.enums.UrlEnum;
-import com.dingdo.extendService.knowledgeService.SearchFromWikiService;
+import com.dingo.enums.UrlEnum;
+import com.dingo.extendService.knowledgeService.SearchFromWikiService;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.jsoup.Jsoup;

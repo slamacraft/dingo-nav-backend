@@ -1,6 +1,6 @@
-package com.dingdo.extendService.musicService.impl;
+package com.dingo.extendService.musicService.impl;
 
-import com.dingdo.extendService.musicService.RandomMusicService;
+import com.dingo.extendService.musicService.RandomMusicService;
 
 @Deprecated
 public class RandomMusicServiceImpl implements RandomMusicService {

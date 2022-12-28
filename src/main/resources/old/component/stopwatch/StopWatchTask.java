@@ -1,4 +1,4 @@
-package com.dingdo.component.stopwatch;
+package com.dingo.component.stopwatch;
 
 /**
  * 秒表任务具体的执行方法类

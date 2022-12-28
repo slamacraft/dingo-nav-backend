@@ -1,6 +1,6 @@
-package com.dingdo.extendService.knowledgeService;
+package com.dingo.extendService.knowledgeService;
 
-import com.dingdo.extendService.MsgExtendService;
+import com.dingo.extendService.MsgExtendService;
 
 public interface SougoService extends MsgExtendService {
 

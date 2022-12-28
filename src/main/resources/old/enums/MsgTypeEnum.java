@@ -1,6 +1,6 @@
-package com.dingdo.enums;
+package com.dingo.enums;
 
-import com.dingdo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.model.ReqMsg;
 import com.forte.qqrobot.beans.messages.NicknameAble;
 import com.forte.qqrobot.beans.messages.RemarkAble;
 import com.forte.qqrobot.beans.messages.msgget.GroupMsg;

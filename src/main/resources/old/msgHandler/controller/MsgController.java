@@ -1,7 +1,7 @@
-package com.dingdo.msgHandler.controller;
+package com.dingo.msgHandler.controller;
 
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.msgHandler.service.MsgService;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.service.MsgService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
-package com.dingdo.extendService.otherService;
+package com.dingo.extendService.otherService;
 
 
-import com.dingdo.robot.botDto.ReplyMsg;
-import com.dingdo.robot.botDto.ReqMsg;
+import com.dingo.robot.botDto.ReplyMsg;
+import com.dingo.robot.botDto.ReqMsg;
 
 public interface ServiceFromApi {
 

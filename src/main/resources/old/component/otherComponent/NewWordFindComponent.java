@@ -1,4 +1,4 @@
-package com.dingdo.component.otherComponent;
+package com.dingo.component.otherComponent;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -49,7 +49,7 @@ public class NewWordFindComponent {
         // {["word": freq]}
         word_freq = word_list.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-//        this.saveNewWord("src/main/python/CQPython/test/txt.txt", word_freq);
+//        this.saveNewWord("src/main/python/CQPython/com.dingdo.test/txt.txt", word_freq);
 
         return word_freq;
     }

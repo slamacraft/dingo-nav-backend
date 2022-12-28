@@ -1,13 +1,13 @@
-package com.dingdo.msgHandler.service.impl;
+package com.dingo.msgHandler.service.impl;
 
-import com.dingdo.component.otherComponent.Tess4jComponent;
-import com.dingdo.config.customContext.InstructionMethodContext;
-import com.dingdo.msgHandler.factory.CQCodeFactory;
-import com.dingdo.msgHandler.model.CQCode;
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.msgHandler.service.MsgHandleService;
-import com.dingdo.msgHandler.service.MsgService;
-import com.dingdo.util.CQCodeUtil;
+import com.dingo.component.otherComponent.Tess4jComponent;
+import com.dingo.config.customContext.InstructionMethodContext;
+import com.dingo.msgHandler.factory.CQCodeFactory;
+import com.dingo.msgHandler.model.CQCode;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.service.MsgHandleService;
+import com.dingo.msgHandler.service.MsgService;
+import com.dingo.util.CQCodeUtil;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;

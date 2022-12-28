@@ -1,12 +1,12 @@
-package com.dingdo.extendService.otherService.impl;
+package com.dingo.extendService.otherService.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dingdo.enums.UrlEnum;
-import com.dingdo.extendService.model.MsgFromSiZhi.ChatMsg;
-import com.dingdo.extendService.otherService.ServiceFromApi;
-import com.dingdo.robot.botDto.ReplyMsg;
-import com.dingdo.robot.botDto.ReqMsg;
-import com.dingdo.robot.botDto.factory.BotDtoFactory;
+import com.dingo.enums.UrlEnum;
+import com.dingo.extendService.model.MsgFromSiZhi.ChatMsg;
+import com.dingo.extendService.otherService.ServiceFromApi;
+import com.dingo.robot.botDto.ReplyMsg;
+import com.dingo.robot.botDto.ReqMsg;
+import com.dingo.robot.botDto.factory.BotDtoFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import static com.dingdo.robot.enums.MsgTypeEnum.PRIVATE;
+import static com.dingo.robot.enums.MsgTypeEnum.PRIVATE;
 
 
 @Service

@@ -1,12 +1,12 @@
-package com.dingdo.component.schedule.model;
+package com.dingo.component.schedule.model;
 
-import com.dingdo.component.schedule.model.interfacor.IGroupTaskInfo;
-import com.dingdo.component.schedule.model.interfacor.IScheduledRunnable;
-import com.dingdo.config.customContext.InstructionMethodContext;
-import com.dingdo.model.entities.MessageTaskEntity;
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.msgHandler.service.impl.GroupMsgServiceImpl;
-import com.dingdo.util.SpringContextUtils;
+import com.dingo.component.schedule.model.interfacor.IGroupTaskInfo;
+import com.dingo.component.schedule.model.interfacor.IScheduledRunnable;
+import com.dingo.config.customContext.InstructionMethodContext;
+import com.dingo.model.entities.MessageTaskEntity;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.service.impl.GroupMsgServiceImpl;
+import com.dingo.util.SpringContextUtils;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

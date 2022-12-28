@@ -1,4 +1,4 @@
-package com.dingdo.extendService.musicService;
+package com.dingo.extendService.musicService;
 
 public interface RandomMusicService {
 }

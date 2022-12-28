@@ -1,10 +1,10 @@
-package com.dingdo.extendService.otherService.impl;
+package com.dingo.extendService.otherService.impl;
 
-import com.dingdo.extendService.model.specialReply.RereadMsgInfo;
-import com.dingdo.extendService.model.specialReply.RereadMsgQueue;
-import com.dingdo.extendService.otherService.SpecialReplyService;
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.msgHandler.service.impl.GroupMsgServiceImpl;
+import com.dingo.extendService.model.specialReply.RereadMsgInfo;
+import com.dingo.extendService.model.specialReply.RereadMsgQueue;
+import com.dingo.extendService.otherService.SpecialReplyService;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.service.impl.GroupMsgServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;

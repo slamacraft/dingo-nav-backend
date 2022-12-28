@@ -1,10 +1,10 @@
-package com.dingdo.component.otherComponent;
+package com.dingo.component.otherComponent;
 
-import com.dingdo.common.annotation.Instruction;
-import com.dingdo.common.annotation.VerifiAnnotation;
-import com.dingdo.enums.VerificationEnum;
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.util.InstructionUtils;
+import com.dingo.common.annotation.Instruction;
+import com.dingo.common.annotation.VerifiAnnotation;
+import com.dingo.enums.VerificationEnum;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.util.InstructionUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 

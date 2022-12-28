@@ -1,6 +1,6 @@
-package com.dingdo.common.annotation;
+package com.dingo.common.annotation;
 
-import com.dingdo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.model.ReqMsg;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

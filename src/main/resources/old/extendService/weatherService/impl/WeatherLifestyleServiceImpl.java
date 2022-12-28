@@ -1,9 +1,9 @@
-package com.dingdo.extendService.weatherService.impl;
+package com.dingo.extendService.weatherService.impl;
 
-import com.dingdo.extendService.model.weather.Weather;
-import com.dingdo.extendService.weatherService.AbstractWeatherService;
-import com.dingdo.extendService.weatherService.WeatherLifestyleService;
-import com.dingdo.msgHandler.model.ReqMsg;
+import com.dingo.extendService.model.weather.Weather;
+import com.dingo.extendService.weatherService.AbstractWeatherService;
+import com.dingo.extendService.weatherService.WeatherLifestyleService;
+import com.dingo.msgHandler.model.ReqMsg;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 

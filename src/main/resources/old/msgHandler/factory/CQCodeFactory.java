@@ -1,9 +1,9 @@
-package com.dingdo.msgHandler.factory;
+package com.dingo.msgHandler.factory;
 
-import com.dingdo.common.exception.CQCodeConstructException;
-import com.dingdo.enums.CQCodeEnum;
-import com.dingdo.msgHandler.model.CQCode;
-import com.dingdo.util.InstructionUtils;
+import com.dingo.common.exception.CQCodeConstructException;
+import com.dingo.enums.CQCodeEnum;
+import com.dingo.msgHandler.model.CQCode;
+import com.dingo.util.InstructionUtils;
 import org.apache.log4j.Logger;
 
 import java.util.LinkedList;

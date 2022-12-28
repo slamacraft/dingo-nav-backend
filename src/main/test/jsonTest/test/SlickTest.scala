@@ -1,7 +1,7 @@
 package jsonTest.test
 
-import com.dingdo.config.configuration.SlickConfig
-import com.dingdo.plugin.digital.model.DigitalEvent
+import com.dingo.config.configuration.SlickConfig
+import com.dingo.plugin.digital.model.DigitalEvent
 import slick.dbio.Effect
 import slick.jdbc.MySQLProfile
 import slick.sql.FixedSqlStreamingAction

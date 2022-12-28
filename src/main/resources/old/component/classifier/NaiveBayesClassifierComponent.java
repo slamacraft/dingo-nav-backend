@@ -1,9 +1,9 @@
-package com.dingdo.component.classifier;
+package com.dingo.component.classifier;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dingdo.common.exception.ClassifierInitializeException;
-import com.dingdo.enums.ClassicEnum;
-import com.dingdo.util.nlp.NLPUtils;
+import com.dingo.common.exception.ClassifierInitializeException;
+import com.dingo.enums.ClassicEnum;
+import com.dingo.util.nlp.NLPUtils;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import org.apache.commons.lang3.StringUtils;

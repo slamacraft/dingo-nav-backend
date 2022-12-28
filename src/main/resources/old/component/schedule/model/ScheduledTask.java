@@ -1,4 +1,4 @@
-package com.dingdo.component.schedule.model;
+package com.dingo.component.schedule.model;
 
 import java.util.concurrent.ScheduledFuture;
 

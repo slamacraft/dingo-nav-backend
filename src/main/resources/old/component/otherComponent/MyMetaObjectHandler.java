@@ -1,4 +1,4 @@
-package com.dingdo.component.otherComponent;
+package com.dingo.component.otherComponent;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;

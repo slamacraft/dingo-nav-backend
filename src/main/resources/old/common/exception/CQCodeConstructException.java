@@ -1,4 +1,4 @@
-package com.dingdo.common.exception;
+package com.dingo.common.exception;
 
 /**
  * 一些声明信息

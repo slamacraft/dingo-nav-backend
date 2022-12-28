@@ -1,4 +1,4 @@
-package com.dingdo.component.schedule.model.interfacor;
+package com.dingo.component.schedule.model.interfacor;
 
 import java.util.List;
 import java.util.stream.Stream;

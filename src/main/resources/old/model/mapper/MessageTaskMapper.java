@@ -1,7 +1,7 @@
-package com.dingdo.model.mapper;
+package com.dingo.model.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dingdo.model.entities.MessageTaskEntity;
+import com.dingo.model.entities.MessageTaskEntity;
 
 /**
  * 一些声明信息

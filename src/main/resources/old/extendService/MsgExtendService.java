@@ -1,7 +1,7 @@
-package com.dingdo.extendService;
+package com.dingo.extendService;
 
 
-import com.dingdo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.model.ReqMsg;
 
 /**
  * 功能服务接口

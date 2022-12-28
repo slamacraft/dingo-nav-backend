@@ -1,4 +1,4 @@
-package com.dingdo.model.entities;
+package com.dingo.model.entities;
 
 
 import com.baomidou.mybatisplus.annotation.FieldFill;

@@ -1,4 +1,4 @@
-package com.dingdo.extendService.knowledgeService;
+package com.dingo.extendService.knowledgeService;
 
 public interface SearchFromWikiService {
 }

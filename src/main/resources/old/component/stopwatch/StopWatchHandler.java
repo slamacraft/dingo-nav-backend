@@ -1,4 +1,4 @@
-package com.dingdo.component.stopwatch;
+package com.dingo.component.stopwatch;
 
 import org.apache.commons.collections.buffer.PriorityBuffer;
 

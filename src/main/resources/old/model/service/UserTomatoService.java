@@ -1,7 +1,7 @@
-package com.dingdo.model.service;
+package com.dingo.model.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dingdo.model.entities.UserTomatoEntity;
+import com.dingo.model.entities.UserTomatoEntity;
 
 /**
  * @author slamacraft

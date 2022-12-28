@@ -1,15 +1,15 @@
-package com.dingdo.msgHandler.service.impl;
+package com.dingo.msgHandler.service.impl;
 
-import com.dingdo.common.annotation.Instruction;
-import com.dingdo.common.annotation.VerifiAnnotation;
-import com.dingdo.component.otherComponent.SaveMsgComponent;
-import com.dingdo.enums.VerificationEnum;
-import com.dingdo.extendService.otherService.ServiceFromApi;
-import com.dingdo.extendService.otherService.SpecialReplyService;
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.msgHandler.service.GroupMsgService;
-import com.dingdo.util.CQCodeUtil;
-import com.dingdo.util.InstructionUtils;
+import com.dingo.common.annotation.Instruction;
+import com.dingo.common.annotation.VerifiAnnotation;
+import com.dingo.component.otherComponent.SaveMsgComponent;
+import com.dingo.enums.VerificationEnum;
+import com.dingo.extendService.otherService.ServiceFromApi;
+import com.dingo.extendService.otherService.SpecialReplyService;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.service.GroupMsgService;
+import com.dingo.util.CQCodeUtil;
+import com.dingo.util.InstructionUtils;
 import com.forte.qqrobot.bot.BotManager;
 import com.forte.qqrobot.bot.BotSender;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.dingdo.common.exception;
+package com.dingo.common.exception;
 
 public class CheckException extends RuntimeException {
     private static final long serialVersionUID = 1L;

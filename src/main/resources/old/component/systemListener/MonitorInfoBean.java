@@ -1,4 +1,4 @@
-package com.dingdo.component.systemListener;
+package com.dingo.component.systemListener;
 
 /**
  * 查看本机内存

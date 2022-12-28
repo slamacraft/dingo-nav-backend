@@ -1,4 +1,4 @@
-package com.dingdo.enums;
+package com.dingo.enums;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -1,12 +1,12 @@
-package com.dingdo.common.aspect;
+package com.dingo.common.aspect;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.dingdo.common.annotation.VerifiAnnotation;
-import com.dingdo.common.exception.CheckException;
-import com.dingdo.enums.VerificationEnum;
-import com.dingdo.model.entities.RobotManagerEntity;
-import com.dingdo.model.service.RobotManagerService;
-import com.dingdo.msgHandler.model.ReqMsg;
+import com.dingo.common.annotation.VerifiAnnotation;
+import com.dingo.common.exception.CheckException;
+import com.dingo.enums.VerificationEnum;
+import com.dingo.model.entities.RobotManagerEntity;
+import com.dingo.model.service.RobotManagerService;
+import com.dingo.msgHandler.model.ReqMsg;
 import com.forte.qqrobot.beans.messages.result.inner.Friend;
 import com.forte.qqrobot.beans.messages.result.inner.GroupMember;
 import com.forte.qqrobot.bot.BotManager;

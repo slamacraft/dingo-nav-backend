@@ -1,8 +1,8 @@
-package com.dingdo.extendService.knowledgeService.impl;
+package com.dingo.extendService.knowledgeService.impl;
 
-import com.dingdo.enums.UrlEnum;
-import com.dingdo.extendService.knowledgeService.ZhidaoService;
-import com.dingdo.msgHandler.model.ReqMsg;
+import com.dingo.enums.UrlEnum;
+import com.dingo.extendService.knowledgeService.ZhidaoService;
+import com.dingo.msgHandler.model.ReqMsg;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HTMLParser;

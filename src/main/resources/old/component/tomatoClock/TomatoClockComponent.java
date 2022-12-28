@@ -1,11 +1,11 @@
-package com.dingdo.component.tomatoClock;
+package com.dingo.component.tomatoClock;
 
-import com.dingdo.common.annotation.Instruction;
-import com.dingdo.component.stopwatch.StopWatchFuture;
-import com.dingdo.component.stopwatch.StopWatchRegister;
-import com.dingdo.model.service.UserTomatoService;
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.msgHandler.service.PrivateMsgService;
+import com.dingo.common.annotation.Instruction;
+import com.dingo.component.stopwatch.StopWatchFuture;
+import com.dingo.component.stopwatch.StopWatchRegister;
+import com.dingo.model.service.UserTomatoService;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.service.PrivateMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

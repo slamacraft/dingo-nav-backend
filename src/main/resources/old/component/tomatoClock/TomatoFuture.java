@@ -1,10 +1,10 @@
-package com.dingdo.component.tomatoClock;
+package com.dingo.component.tomatoClock;
 
-import com.dingdo.component.stopwatch.StopWatchFuture;
-import com.dingdo.component.stopwatch.StopWatchTask;
-import com.dingdo.model.entities.UserTomatoEntity;
-import com.dingdo.model.service.UserTomatoService;
-import com.dingdo.msgHandler.service.PrivateMsgService;
+import com.dingo.component.stopwatch.StopWatchFuture;
+import com.dingo.component.stopwatch.StopWatchTask;
+import com.dingo.model.entities.UserTomatoEntity;
+import com.dingo.model.service.UserTomatoService;
+import com.dingo.msgHandler.service.PrivateMsgService;
 
 /**
  * 番茄钟任务类

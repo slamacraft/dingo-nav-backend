@@ -1,9 +1,9 @@
-package com.dingdo.component.schedule.model;
+package com.dingo.component.schedule.model;
 
-import com.dingdo.component.schedule.model.interfacor.IScheduledRunnable;
-import com.dingdo.component.schedule.model.interfacor.ISystemTaskInfo;
-import com.dingdo.config.customContext.InstructionMethodContext;
-import com.dingdo.util.SpringContextUtils;
+import com.dingo.component.schedule.model.interfacor.IScheduledRunnable;
+import com.dingo.component.schedule.model.interfacor.ISystemTaskInfo;
+import com.dingo.config.customContext.InstructionMethodContext;
+import com.dingo.util.SpringContextUtils;
 
 import java.time.LocalDateTime;
 

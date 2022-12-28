@@ -1,4 +1,4 @@
-package com.dingdo.component.classifier;
+package com.dingo.component.classifier;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.Pipeline;

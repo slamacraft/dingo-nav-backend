@@ -1,4 +1,4 @@
-package com.dingdo.common.exception;
+package com.dingo.common.exception;
 
 /**
  * @author slamacraft

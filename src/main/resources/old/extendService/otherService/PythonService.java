@@ -1,6 +1,6 @@
-package com.dingdo.extendService.otherService;
+package com.dingo.extendService.otherService;
 
-import com.dingdo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.model.ReqMsg;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;

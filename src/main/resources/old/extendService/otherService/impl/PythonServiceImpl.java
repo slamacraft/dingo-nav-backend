@@ -1,11 +1,11 @@
-package com.dingdo.extendService.otherService.impl;
+package com.dingo.extendService.otherService.impl;
 
-import com.dingdo.common.annotation.Instruction;
-import com.dingdo.enums.CQCodeEnum;
-import com.dingdo.extendService.otherService.PythonService;
-import com.dingdo.msgHandler.model.CQCode;
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.util.ImageUtil;
+import com.dingo.common.annotation.Instruction;
+import com.dingo.enums.CQCodeEnum;
+import com.dingo.extendService.otherService.PythonService;
+import com.dingo.msgHandler.model.CQCode;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.util.ImageUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;

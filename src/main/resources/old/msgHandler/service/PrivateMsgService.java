@@ -1,4 +1,4 @@
-package com.dingdo.msgHandler.service;
+package com.dingo.msgHandler.service;
 
 
 /**

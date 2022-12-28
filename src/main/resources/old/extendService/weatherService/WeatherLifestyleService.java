@@ -1,6 +1,6 @@
-package com.dingdo.extendService.weatherService;
+package com.dingo.extendService.weatherService;
 
-import com.dingdo.extendService.MsgExtendService;
+import com.dingo.extendService.MsgExtendService;
 
 /**
  * 查询生活指数服务

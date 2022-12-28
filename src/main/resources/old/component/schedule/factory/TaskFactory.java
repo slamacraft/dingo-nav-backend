@@ -1,7 +1,7 @@
-package com.dingdo.component.schedule.factory;
+package com.dingo.component.schedule.factory;
 
-import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
-import com.dingdo.component.schedule.model.interfacor.ITaskList;
+import com.dingo.component.schedule.model.interfacor.ITaskInfo;
+import com.dingo.component.schedule.model.interfacor.ITaskList;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

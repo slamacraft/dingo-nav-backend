@@ -1,14 +1,14 @@
-package com.dingdo.component.systemListener;
+package com.dingo.component.systemListener;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.dingdo.common.annotation.Instruction;
-import com.dingdo.common.annotation.VerifiAnnotation;
-import com.dingdo.component.schedule.TaskRegister;
-import com.dingdo.component.schedule.model.SystemTaskInfo;
-import com.dingdo.enums.RedisEnum;
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.util.InstructionUtils;
+import com.dingo.common.annotation.Instruction;
+import com.dingo.common.annotation.VerifiAnnotation;
+import com.dingo.component.schedule.TaskRegister;
+import com.dingo.component.schedule.model.SystemTaskInfo;
+import com.dingo.enums.RedisEnum;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.util.InstructionUtils;
 import com.sun.management.OperatingSystemMXBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

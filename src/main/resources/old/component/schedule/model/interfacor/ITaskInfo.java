@@ -1,4 +1,4 @@
-package com.dingdo.component.schedule.model.interfacor;
+package com.dingo.component.schedule.model.interfacor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

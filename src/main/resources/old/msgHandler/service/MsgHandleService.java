@@ -1,7 +1,7 @@
-package com.dingdo.msgHandler.service;
+package com.dingo.msgHandler.service;
 
 
-import com.dingdo.msgHandler.model.ReqMsg;
+import com.dingo.msgHandler.model.ReqMsg;
 
 public interface MsgHandleService {
 

@@ -1,10 +1,10 @@
-package com.dingdo.component.schedule;
+package com.dingo.component.schedule;
 
-import com.dingdo.component.schedule.factory.TaskFactory;
-import com.dingdo.component.schedule.model.ScheduledTask;
-import com.dingdo.component.schedule.model.interfacor.ITaskInfo;
-import com.dingdo.component.schedule.model.interfacor.ITaskList;
-import com.dingdo.model.service.MessageTaskService;
+import com.dingo.component.schedule.factory.TaskFactory;
+import com.dingo.component.schedule.model.ScheduledTask;
+import com.dingo.component.schedule.model.interfacor.ITaskInfo;
+import com.dingo.component.schedule.model.interfacor.ITaskList;
+import com.dingo.model.service.MessageTaskService;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;

@@ -1,4 +1,4 @@
-package com.dingdo.enums;
+package com.dingo.enums;
 
 /**
  * 拼音的枚举类

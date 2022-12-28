@@ -1,4 +1,4 @@
-package com.dingdo.enums;
+package com.dingo.enums;
 
 /**
  * 存放在redis中的枚举

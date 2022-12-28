@@ -1,4 +1,4 @@
-package com.dingdo.component.classifier;//package com.dingdo.component;
+package com.dingo.component.classifier;//package com.dingdo.component;
 //
 //import com.dingdo.enums.ClassicEnum;
 //import com.dingdo.util.FileUtil;

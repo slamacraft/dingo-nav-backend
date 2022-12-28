@@ -1,4 +1,4 @@
-package com.dingdo.common.exception;
+package com.dingo.common.exception;
 
 public class ClassifierInitializeException extends RuntimeException{
     private static final long serialVersionUID = 1L;

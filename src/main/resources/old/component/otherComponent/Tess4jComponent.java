@@ -1,15 +1,15 @@
-package com.dingdo.component.otherComponent;
+package com.dingo.component.otherComponent;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dingdo.common.annotation.Instruction;
-import com.dingdo.common.annotation.VerifiAnnotation;
-import com.dingdo.enums.CQCodeEnum;
-import com.dingdo.enums.UrlEnum;
-import com.dingdo.enums.VerificationEnum;
-import com.dingdo.extendService.otherService.PythonService;
-import com.dingdo.msgHandler.model.CQCode;
-import com.dingdo.msgHandler.model.ReqMsg;
-import com.dingdo.util.ImageUtil;
+import com.dingo.common.annotation.Instruction;
+import com.dingo.common.annotation.VerifiAnnotation;
+import com.dingo.enums.CQCodeEnum;
+import com.dingo.enums.UrlEnum;
+import com.dingo.enums.VerificationEnum;
+import com.dingo.extendService.otherService.PythonService;
+import com.dingo.msgHandler.model.CQCode;
+import com.dingo.msgHandler.model.ReqMsg;
+import com.dingo.util.ImageUtil;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.collections4.CollectionUtils;

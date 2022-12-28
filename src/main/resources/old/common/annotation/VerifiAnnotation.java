@@ -1,6 +1,6 @@
-package com.dingdo.common.annotation;
+package com.dingo.common.annotation;
 
-import com.dingdo.enums.VerificationEnum;
+import com.dingo.enums.VerificationEnum;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
