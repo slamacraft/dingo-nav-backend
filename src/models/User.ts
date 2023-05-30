@@ -1,16 +1,10 @@
 import { Document, model, Schema } from "mongoose";
 
-/**
- * Type to model the User Schema for TypeScript.
- * @param email:string
- * @param password:string
- * @param avatar:string
- */
-
 export type TUser = {
   email: string;
   password: string;
-  avatar: string;
+  name: string;
+  avatar: string; // 头像
 };
 
 /**
@@ -34,6 +28,10 @@ const userSchema: Schema = new Schema({
   password: {
     type: String,
     required: true,
+  },
+  name: {
+    type: String,
+    require: true,
   },
   avatar: {
     type: String,

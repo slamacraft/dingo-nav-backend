@@ -4,7 +4,7 @@ import HttpStatusCodes from "http-status-codes";
 
 import auth from "../../middleware/auth";
 import Profile, { TProfile, IProfile } from "../../models/Profiles";
-import Request from "../../types/Request";
+import Request from "../../types/api/Request";
 import User, { IUser } from "../../models/User";
 
 const router: Router = Router();

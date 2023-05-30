@@ -16,8 +16,6 @@ export const service = axios.create({
 // 配置请求拦截器，请求头设置token
 service.interceptors.request.use(
   (options: InternalAxiosRequestConfig) => {
-
-    options.withCredentials = true
     return options;
   },
   (error) => Promise.reject(error)
@@ -26,12 +24,6 @@ service.interceptors.request.use(
 // 配置响应拦截
 service.interceptors.response.use(
   (res) => {
-    const code: number = res.data.code;
-    // eslint-disable-next-line eqeqeq
-    if (code && code != 200) {
-      // 发送请求失败,将信息返回出去
-      return Promise.reject(res.data);
-    }
     return res.data;
   },
   (error) => {

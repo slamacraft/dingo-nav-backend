@@ -1,5 +1,6 @@
 {
   "mongoURI": "mongodb://127.0.0.1:27017/articledb",
   "jwtSecret": "jwtSecretToken",
-  "jwtExpiration": 360000
+  "jwtExpiration": 360000,
+  "Access-Control-Allow-Origin": "http://localhost:8080"
 }

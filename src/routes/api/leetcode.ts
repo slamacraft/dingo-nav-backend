@@ -1,19 +1,29 @@
 import { Response, Router } from "express";
 
-import Request from "../../types/Request";
-import { getQuestionOfToday } from "../transport/leetcode";
+import Request from "../../types/api/Request";
+import {
+  getQuestion,
+  getQuestionOfToday,
+  getQuestionState,
+} from "../transport/leetcode";
+import { credentials } from "../../middleware/headerCfg";
 
 const router: Router = Router();
 
-// @route   GET api/auth
-// @desc    Get authenticated user given the token
-// @access  Private
-router.get("/", async (req: Request, res: Response) => {
-  let resp = await getQuestionOfToday().catch((err) => {
-    return err
-  });
-  console.log(resp);
-  res.json(resp);
-});
+router.get(
+  "/questionOfToday",
+  credentials,
+  async (req: Request, res: Response) => {
+    let resp = await getQuestionOfToday().then(async (resp) => {
+      let quesiont = await getQuestion(resp.questionTitle);
+      let state = await getQuestionState(resp.questionTitle);
+      return {
+        question: quesiont,
+        state: state,
+      };
+    });
+    res.json(resp);
+  }
+);
 
 export default router;
