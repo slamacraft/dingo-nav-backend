@@ -1,29 +1,29 @@
 import bcrypt from "bcryptjs";
-import config from "config";
-import { Router, Response } from "express";
+import { Response, Router } from "express";
 import { check, validationResult } from "express-validator";
 import gravatar from "gravatar";
 import HttpStatusCodes from "http-status-codes";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 
-import Payload from "../../types/Payload";
-import Request from "../../types/Request";
-import User, { IUser, TUser } from "../../models/User";
+import { credentials } from "src/middleware/headerCfg";
+import { sign } from "src/utils/jwtUtil";
+import User, { IUser } from "../../models/User";
+import Payload from "../../types/api/Payload";
+import Request from "../../types/api/Request";
 
 const router: Router = Router();
 
 // @route   POST api/user
 // @desc    Register user given their email and password, returns the token upon successful registration
 // @access  Public
-router.post(
+router.put(
   "/",
   [
-    check("email", "Please include a valid email").isEmail(),
-    check(
-      "password",
-      "Please enter a password with 6 or more characters"
-    ).isLength({ min: 6 }),
+    check("email", "请输入有效的邮箱").isEmail(),
+    check("name", "请输入用户名").isLength({ max: 20 }),
+    check("password", "请输入最少6位字符的密码").isLength({ min: 6 }),
   ],
+  credentials,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -33,58 +33,40 @@ router.post(
     }
 
     const { email, password } = req.body;
-    try {
-      let user: IUser = await User.findOne({ email });
+    let user: IUser = await User.findOne({ email });
 
-      if (user) {
-        return res.status(HttpStatusCodes.BAD_REQUEST).json({
-          errors: [
-            {
-              msg: "User already exists",
-            },
-          ],
-        });
-      }
-
-      const options: gravatar.Options = {
-        s: "200",
-        r: "pg",
-        d: "mm",
-      };
-
-      const avatar = gravatar.url(email, options);
-
-      const salt = await bcrypt.genSalt(10);
-      const hashed = await bcrypt.hash(password, salt);
-
-      // Build user object based on TUser
-      const userFields: TUser = {
-        email,
-        password: hashed,
-        avatar,
-      };
-
-      user = new User(userFields);
-
-      await user.save();
-
-      const payload: Payload = {
-        userId: user.id,
-      };
-
-      jwt.sign(
-        payload,
-        config.get("jwtSecret"),
-        { expiresIn: config.get("jwtExpiration") },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
-        }
-      );
-    } catch (err) {
-      console.error(err.message);
-      res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send("Server Error");
+    if (user) {
+      return res.status(HttpStatusCodes.BAD_REQUEST).json({
+        errMsg: "用户已注册，请勿重复注册",
+      });
     }
+
+    const avatar = gravatar.url(email, {
+      s: "200",
+      r: "pg",
+      d: "mm",
+    }); // 生成头像
+    // 密码加盐与加密
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(password, salt);
+
+    // Build user object based on TUser
+    user = new User({
+      email,
+      password: hashed,
+      avatar,
+    });
+
+    await user.save();
+
+    const payload: Payload = {
+      userId: user.id,
+    };
+
+    sign(payload, (err, token) => {
+      if (err) throw err;
+      res.json({ token });
+    });
   }
 );
 
