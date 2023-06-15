@@ -1,6 +1,12 @@
 {
   "mongoURI": "mongodb://127.0.0.1:27017/articledb",
   "jwtSecret": "jwtSecretToken",
-  "jwtExpiration": 360000,
-  "Access-Control-Allow-Origin": "http://localhost:8080"
+  "jwtExpiration": 1296000,
+  "Access-Control-Allow-Origin": "http://localhost:8080",
+  "node-cache":{
+    "stdTTL": 7200,
+    "checkperiod": 600,
+    "useClones": false,
+    "deleteOnExpire": true
+  }
 }

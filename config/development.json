@@ -1,0 +1,9 @@
+{
+  "mongoURI": "mongodb://127.0.0.1:27017/articledb",
+  "Access-Control-Allow-Origin": "http://127.0.0.1:8080",
+  "github": {
+    "appId": "e0940e41c39f1f6718c9",
+    "appSecret": "8fb3e39a53125033ac9fb5cb81aaa1a3058ffe56",
+    "token": "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"
+  }
+}

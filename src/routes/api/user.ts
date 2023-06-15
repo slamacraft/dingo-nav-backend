@@ -5,17 +5,25 @@ import gravatar from "gravatar";
 import HttpStatusCodes from "http-status-codes";
 // import jwt from "jsonwebtoken";
 
-import { credentials } from "src/middleware/headerCfg";
-import { sign } from "src/utils/jwtUtil";
+import { sign } from "src/utils/JwtUtil";
 import User, { IUser } from "../../models/User";
 import Payload from "../../types/api/Payload";
 import Request from "../../types/api/Request";
+import auth from "src/middleware/auth";
 
 const router: Router = Router();
 
-// @route   POST api/user
-// @desc    Register user given their email and password, returns the token upon successful registration
-// @access  Public
+/**
+ * 获取用户信息
+ */
+router.get("/", auth, async (req: Request, res: Response) => {
+  const user: IUser = await User.findById(req.userId).select("-password");
+  res.json(user);
+});
+
+/**
+ * 注册用户
+ */
 router.put(
   "/",
   [
@@ -23,7 +31,6 @@ router.put(
     check("name", "请输入用户名").isLength({ max: 20 }),
     check("password", "请输入最少6位字符的密码").isLength({ min: 6 }),
   ],
-  credentials,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -65,7 +72,13 @@ router.put(
 
     sign(payload, (err, token) => {
       if (err) throw err;
-      res.json({ token });
+      res.json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        token: token,
+      });
     });
   }
 );

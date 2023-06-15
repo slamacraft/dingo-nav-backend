@@ -1,36 +1,33 @@
-
 import bcrypt from "bcryptjs";
-import { Router, Response } from "express";
+import config from "config";
+import { Response, Router } from "express";
 import { check, validationResult } from "express-validator";
 import HttpStatusCodes from "http-status-codes";
+import nodeCache from "src/cache/nodeCache";
 
-import auth from "../../middleware/auth";
+import auth from "src/middleware/auth";
+import { sign } from "src/utils/JwtUtil";
+import { getParamMap } from "src/utils/UrlUtil";
+import User, { IUser } from "../../models/User";
 import Payload from "../../types/api/Payload";
 import Request from "../../types/api/Request";
-import User, { IUser } from "../../models/User";
-import { sign } from "../../utils/jwtUtil";
-import { credentials } from "src/middleware/headerCfg";
+import {
+  getAccessToken,
+  getUserByCode,
+  listUserEmail,
+} from "../transport/github";
 
 const router: Router = Router();
 
-// @route   GET api/auth
-// @desc    Get authenticated user given the token
-// @access  Private
-router.get("/", auth, async (req: Request, res: Response) => {
-  const user: IUser = await User.findById(req.userId).select("-password");
-  res.json(user);
-});
-
-// @route   POST api/auth
-// @desc    Login user and get token
-// @access  Public
+/**
+ * 登录接口
+ */
 router.post(
   "/",
   [
     check("email", "请输入有效的邮箱").isEmail(),
     check("password", "请输入密码").exists(),
   ],
-  credentials,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -67,10 +64,94 @@ router.post(
           .json({ errMsg: err.message });
       }
       res.json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
         token: token,
       });
     });
   }
 );
+
+router.post(
+  "/github",
+  [check("code", "Code不能为空").exists()],
+  async (req: Request, res: Response) => {
+    // 校验
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res
+        .status(HttpStatusCodes.BAD_REQUEST)
+        .json({ errMsg: errors.array()[0].msg });
+    }
+
+    // 获取github用户信息
+    let token: string = config.get("github.token");
+    if (!token) {
+      let code = req.body.code;
+      let accessTokenResp = await getAccessToken(code);
+      console.debug(accessTokenResp.accessToken);
+      if (!accessTokenResp.accessToken) {
+        return res.json({ errMsg: "accessToken获取失败" });
+      }
+      token = getParamMap(accessTokenResp.accessToken).get("access_token");
+    }
+
+    let githubUserPromise = getUserByCode(token);
+    let listUserEmailPromise = listUserEmail(token);
+
+    let githubUserResp = await githubUserPromise;
+    let listUserEmailResp = await listUserEmailPromise;
+
+    console.log(githubUserResp, listUserEmailResp);
+
+    if (githubUserResp && listUserEmailResp) {
+      // 获取到用户信息后，查询本地是否有保存，
+      // 没有保存就让用户去注册
+      // 有保存直接返回token
+      let userEmail = listUserEmailResp.list.filter((it) => it.primary)[0];
+      let saveUser = await User.findOne({ email: userEmail.email });
+
+      let result: any = {
+        email: userEmail.email,
+        name: githubUserResp.name,
+        avatar: githubUserResp.avatarUrl,
+      };
+
+      if (!saveUser) {
+        let newUser = new User({
+          email: userEmail.email,
+          name: githubUserResp.name,
+          avatar: githubUserResp.avatarUrl,
+          password: "Unit",
+        });
+        await newUser.save();
+        result.id = newUser.id;
+      } else {
+        result.id = saveUser.id;
+      }
+      return sign({ userId: result.id }, (err, token) => {
+        if (err) {
+          return res
+            .status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ errMsg: err.message });
+        }
+        result.token = token;
+        res.json(result);
+      });
+    }
+    return res.json({
+      errMsg: "获取用户信息失败",
+    });
+  }
+);
+
+router.delete("/", auth, (req: Request, res: Response) => {
+  nodeCache.getCache().del(req.token);
+  res.json({
+    success: true,
+  });
+});
 
 export default router;

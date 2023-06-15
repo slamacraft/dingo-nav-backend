@@ -6,13 +6,11 @@ import {
   getQuestionOfToday,
   getQuestionState,
 } from "../transport/leetcode";
-import { credentials } from "../../middleware/headerCfg";
 
 const router: Router = Router();
 
 router.get(
   "/questionOfToday",
-  credentials,
   async (req: Request, res: Response) => {
     let resp = await getQuestionOfToday().then(async (resp) => {
       let quesiont = await getQuestion(resp.questionTitle);
