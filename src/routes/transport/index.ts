@@ -1,4 +1,5 @@
-import axios, { InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
+import {ServerErr} from "src/types/error/ServerErr";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 axios.defaults.withCredentials = true;
@@ -13,24 +14,26 @@ export const service = axios.create({
 });
 
 // 配置请求拦截器，请求头设置token
-service.interceptors.request.use(
-  (options: InternalAxiosRequestConfig) => {
-    if (options.data) {
-      // console.log(options.url, "请求内容:", options.data);
-    }
-    return options;
-  },
-  (error) => Promise.reject(error)
-);
+// service.interceptors.request.use(
+//   (options: InternalAxiosRequestConfig) => {
+//     if (options.data) {
+//       // console.log(options.url, "请求内容:", options.data);
+//     }
+//     return options;
+//   },
+//   (error) => Promise.reject(error)
+// );
 
 // 配置响应拦截
-// service.interceptors.response.use(
-//   (res) => {
-//     return res;
-//   },
-//   (error) => {
-//     // 错误信息处理，例如请求超时等
-//     console.error(error.messsage);
-//     // return Promise.reject(error.message);
-//   }
-// );
+service.interceptors.response.use(
+  (res) => {
+    return res;
+  },
+  (error) => {
+    // 错误信息处理，例如请求超时等
+    // console.error(error.messsage);
+    // return Promise.reject(error.message);
+    let response = error.response;
+    return Promise.reject(new ServerErr(response.data.message, error.status))
+  }
+);

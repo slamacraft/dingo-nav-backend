@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "axios";
+import {HttpStatusCode} from "axios";
 
 export class ServerErr extends Error {
   errCode: number = HttpStatusCode.InternalServerError;

@@ -1,15 +1,16 @@
 import bodyParser from "body-parser";
-import { config } from "config";
-import express, { Errback, NextFunction, Request, Response } from "express";
+import {config} from "config";
+import express, {Errback, NextFunction, Request, Response} from "express";
 import "module-alias/register";
 
 import HttpStatusCodes from "http-status-codes";
-import { ServerErr } from "src/types/error/ServerErr";
+import {ServerErr} from "src/types/error/ServerErr";
 import connectDB from "../config/database";
 import auth from "./routes/api/auth";
 import leetcode from "./routes/api/leetcode";
 import profile from "./routes/api/profile";
 import user from "./routes/api/user";
+import * as process from "process";
 
 const app = express();
 
@@ -40,7 +41,7 @@ app.all("*", function (req, res, next) {
 // Express configuration
 app.set("port", process.env.PORT || 5000);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 
 // @route   GET /
 // @desc    Test Base API
@@ -60,7 +61,7 @@ app.use((err: Errback, req: Request, res: Response, next: NextFunction) => {
     err instanceof ServerErr
       ? err.errCode
       : HttpStatusCodes.INTERNAL_SERVER_ERROR;
-  res.status(errCode).json({ message: err });
+  res.status(errCode).json({errMsg: err});
 });
 
 const port = app.get("port");

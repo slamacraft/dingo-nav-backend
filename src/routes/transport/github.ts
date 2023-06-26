@@ -1,35 +1,31 @@
 import config from "config";
-import {
-  GetAccessTokenResp,
-  GetUserResp,
-  ListUserEmailResp,
-  UserEmail,
-} from "src/types/transport/Github";
-import { service } from "./index";
+import {GetAccessTokenResp, GetUserResp, ListUserEmailResp, UserEmail,} from "src/types/transport/Github";
+import {service} from "./index";
+import {ServerErr} from "error/ServerErr";
 
 const githubBaseUrl = "https://github.com";
 const getAccessTokenUrl = "/login/oauth/access_token";
 const getUserUrl = "https://api.github.com/user";
 const listUserEmailUrl = "https://api.github.com/user/emails";
 
-export function getAccessToken(code: string): Promise<GetAccessTokenResp> {
+export function getAccessToken(code: string): Promise<GetAccessTokenResp | ServerErr> {
   return service({
     url: githubBaseUrl + getAccessTokenUrl,
     method: "POST",
-    data: JSON.stringify({ 
+    data: JSON.stringify({
       client_id: config.get("github.appId"),
       client_secret: config.get("github.appSecret"),
       code: code,
     }),
   }).then((resp) => {
     if (resp) {
-      return { accessToken: resp.data };
+      return {accessToken: resp.data};
     }
-    return { accessToken: undefined };
-  });
+    return {accessToken: undefined};
+  }, e => e);
 }
 
-export function getUserByCode(accessToken: string): Promise<GetUserResp> {
+export function getUserByCode(accessToken: string): Promise<GetUserResp | ServerErr> {
   return service({
     url: getUserUrl,
     method: "GET",
@@ -44,10 +40,10 @@ export function getUserByCode(accessToken: string): Promise<GetUserResp> {
       name: resp.data.login, // 用户名称
       avatarUrl: resp.data.avatar_url, // 用户头像
     };
-  });
+  }, (reason) => reason);
 }
 
-export function listUserEmail(accessToken: string): Promise<ListUserEmailResp> {
+export function listUserEmail(accessToken: string): Promise<ListUserEmailResp | ServerErr> {
   return service({
     url: listUserEmailUrl,
     method: "GET",
@@ -68,5 +64,5 @@ export function listUserEmail(accessToken: string): Promise<ListUserEmailResp> {
     return {
       list: list,
     };
-  });
+  }, e => e);
 }
