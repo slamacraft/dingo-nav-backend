@@ -1,10 +1,15 @@
-import { Document, model, Schema } from "mongoose";
+import {Document, model, Schema} from "mongoose";
 
-export type TUser = {
-  email: string;
-  password: string;
-  name: string;
-  avatar: string; // 头像
+export type TUserWidget = {
+    userId: string
+    fixed: boolean
+    left: number,
+    top: number,
+    title: string,
+    desc: string,
+    html: string,
+    createTime: Date
+    updateTime: Date
 };
 
 /**
@@ -17,32 +22,46 @@ export type TUser = {
  * @param avatar:string
  */
 
-export interface IUser extends TUser, Document {}
+export interface IUserWidget extends TUserWidget, Document {
+}
 
-const userSchema: Schema = new Schema({
-  userId: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    require: true,
-  },
-  avatar: {
-    type: String,
-  },
-  createTime: {
-    type: Date,
-    default: Date.now,
-  },
-  updateTime: {
-    type: Date,
-    default: Date.now,
-  },
+const userWidgetSchema: Schema = new Schema({
+    userId: {
+        type: String,
+        required: true,
+    },
+    fixed: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
+    left: {
+        type: Number,
+        default: 64
+    },
+    top: {
+        type: Number,
+        default: 65
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    desc: {
+        type: String,
+        require: true,
+    },
+    html: {
+        type: String,
+    },
+    createTime: {
+        type: Date,
+        default: Date.now,
+    },
+    updateTime: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 /**
@@ -55,6 +74,6 @@ const userSchema: Schema = new Schema({
  * @param avatar:string
  */
 
-const User = model<IUser>("User", userSchema);
+const UserWidget = model<IUserWidget>("UserWidget", userWidgetSchema);
 
-export default User;
+export default UserWidget;

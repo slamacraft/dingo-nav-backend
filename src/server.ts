@@ -1,5 +1,5 @@
 import bodyParser from "body-parser";
-import {config} from "config";
+import config from "config";
 import express, {Errback, NextFunction, Request, Response} from "express";
 import "module-alias/register";
 

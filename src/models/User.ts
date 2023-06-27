@@ -1,10 +1,11 @@
-import { Document, model, Schema } from "mongoose";
+import {Document, model, Schema} from "mongoose";
 
 export type TUser = {
-  email: string;
-  password: string;
-  name: string;
-  avatar: string; // 头像
+    email: string;
+    password: string;
+    name: string;
+    avatar: string; // 头像
+    createTime: Date;
 };
 
 /**
@@ -17,29 +18,30 @@ export type TUser = {
  * @param avatar:string
  */
 
-export interface IUser extends TUser, Document {}
+export interface IUser extends TUser, Document {
+}
 
 const userSchema: Schema = new Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    require: true,
-  },
-  avatar: {
-    type: String,
-  },
-  createTime: {
-    type: Date,
-    default: Date.now,
-  },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    name: {
+        type: String,
+        require: true,
+    },
+    avatar: {
+        type: String,
+    },
+    createTime: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 /**
