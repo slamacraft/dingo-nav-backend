@@ -41,7 +41,7 @@ const userWidgetSchema: Schema = new Schema({
     },
     top: {
         type: Number,
-        default: 65
+        default: 64
     },
     title: {
         type: String,

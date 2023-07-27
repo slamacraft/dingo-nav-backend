@@ -31,6 +31,15 @@ router.get("/list", auth, async (req: Request, res: Response) => {
     res.json(userWidget);
 });
 
+router.put("/", auth,
+    [
+        check("title", "套件标题不能为空").notEmpty(),
+        check("desc", "套件描述不能为空").notEmpty(),
+        check("html", "套件内容不能为空").notEmpty(),
+    ],
+    async (req: Request, res: Response) => {
+
+})
 
 
 export default router;
