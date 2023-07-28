@@ -3,33 +3,33 @@ import {Response, Router} from "express";
 import Request from "../../types/api/Request";
 import auth from "src/middleware/auth";
 import UserWidget from "src/models/UserWidget";
-import {check, validationResult} from "express-validator";
-import HttpStatusCodes from "http-status-codes";
+import {check} from "express-validator";
+import validator from "src/middleware/validator";
 
 const router: Router = Router();
 
 router.get("/", auth,
     [check("id", "Id不能为空").notEmpty()],
+    validator,
     async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res
-                .status(HttpStatusCodes.BAD_REQUEST)
-                .json({errors: errors.array()});
-        }
-        const userWidget = await UserWidget.findById(req.body.id)
+        const userWidget = await UserWidget.findOne({
+            id: req.body.id,
+            isDelete: false
+        })
         res.json(userWidget);
     })
 
 /**
  * 获取用户自定义套件列表
  */
-router.get("/list", auth, async (req: Request, res: Response) => {
-    const userWidget = await UserWidget.find({
-        userId: req.userId
-    })
-    res.json(userWidget);
-});
+router.get("/list", auth,
+    async (req: Request, res: Response) => {
+        const userWidget = await UserWidget.find({
+            userId: req.userId,
+            isDelete: false
+        })
+        res.json(userWidget);
+    });
 
 router.put("/", auth,
     [
@@ -37,9 +37,32 @@ router.put("/", auth,
         check("desc", "套件描述不能为空").notEmpty(),
         check("html", "套件内容不能为空").notEmpty(),
     ],
+    validator,
     async (req: Request, res: Response) => {
+        let {title, desc, html} = req.body
+        req.userId = "1"
+        let widget = await UserWidget.insertMany({
+            userId: req.userId,
+            title: title,
+            desc: desc,
+            html: html
+        })
 
-})
+        return res.json(widget[0])
+    })
+
+router.delete("/", auth,
+    [
+        check("id", "Id不能为空").notEmpty()
+    ],
+    validator,
+    async (req: Request, res: Response) => {
+        await UserWidget.logicDeleteById(req.body.id)
+
+        return res.json({
+            "msg": "ok"
+        })
+    })
 
 
 export default router;

@@ -1,11 +1,11 @@
 import {Document, model, Schema} from "mongoose";
+import {IBase, LogicDelete, schemaConfig} from "src/models/base";
 
 export type TUser = {
     email: string;
     password: string;
     name: string;
     avatar: string; // 头像
-    createTime: Date;
 };
 
 /**
@@ -21,7 +21,7 @@ export type TUser = {
 export interface IUser extends TUser, Document {
 }
 
-const userSchema: Schema = new Schema({
+const userSchema: Schema = new Schema(Object.assign({
     email: {
         type: String,
         required: true,
@@ -38,11 +38,7 @@ const userSchema: Schema = new Schema({
     avatar: {
         type: String,
     },
-    createTime: {
-        type: Date,
-        default: Date.now,
-    },
-});
+}, IBase), schemaConfig);
 
 /**
  * Mongoose Model based on TUser for TypeScript.
@@ -54,6 +50,6 @@ const userSchema: Schema = new Schema({
  * @param avatar:string
  */
 
-const User = model<IUser>("User", userSchema);
+const User = model<IUser, LogicDelete<IUser, any>>("User", userSchema);
 
 export default User;

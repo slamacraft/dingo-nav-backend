@@ -1,16 +1,12 @@
 import {Document, model, Schema} from "mongoose";
+import {IBase, LogicDelete, schemaConfig, TBase} from "src/models/base";
 
 export type TUserWidget = {
     userId: string
-    fixed: boolean
-    left: number,
-    top: number,
     title: string,
     desc: string,
     html: string,
-    createTime: Date
-    updateTime: Date
-};
+} & TBase;
 
 /**
  * Mongoose Document based on TUser for TypeScript.
@@ -25,23 +21,10 @@ export type TUserWidget = {
 export interface IUserWidget extends TUserWidget, Document {
 }
 
-const userWidgetSchema: Schema = new Schema({
+const userWidgetSchema: Schema = new Schema(Object.assign({
     userId: {
         type: String,
         required: true,
-    },
-    fixed: {
-        type: Boolean,
-        default: false,
-        required: true
-    },
-    left: {
-        type: Number,
-        default: 64
-    },
-    top: {
-        type: Number,
-        default: 64
     },
     title: {
         type: String,
@@ -53,16 +36,8 @@ const userWidgetSchema: Schema = new Schema({
     },
     html: {
         type: String,
-    },
-    createTime: {
-        type: Date,
-        default: Date.now,
-    },
-    updateTime: {
-        type: Date,
-        default: Date.now,
-    },
-});
+    }
+}, IBase), schemaConfig);
 
 /**
  * Mongoose Model based on TUser for TypeScript.
@@ -74,6 +49,6 @@ const userWidgetSchema: Schema = new Schema({
  * @param avatar:string
  */
 
-const UserWidget = model<IUserWidget>("UserWidget", userWidgetSchema);
+const UserWidget = model<IUserWidget, LogicDelete<IUserWidget, any>>("UserWidget", userWidgetSchema);
 
 export default UserWidget;

@@ -11,6 +11,7 @@ import leetcode from "./routes/api/leetcode";
 import profile from "./routes/api/profile";
 import user from "./routes/api/user";
 import * as process from "process";
+import userWidget from "src/routes/api/userWidget";
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use("/api/auth", auth);
 app.use("/api/user", user);
 app.use("/api/profile", profile);
 app.use("/api/leetcode", leetcode);
+app.use("/api/user/widget", userWidget)
 
 app.use((err: Errback, req: Request, res: Response, next: NextFunction) => {
   console.error(err);

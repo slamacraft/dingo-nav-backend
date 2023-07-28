@@ -13,12 +13,11 @@ import nodeCache from "src/cache/nodeCache";
 export default function (req: Request, res: Response, next: NextFunction) {
   // Get token from header
   const token = req.header("Authorization");
-
   // Check if no token
   if (!token) {
     return res
       .status(HttpStatusCodes.UNAUTHORIZED)
-      .json({ msg: "No token, authorization denied" });
+      .json({ msg: "没有Token，授权失败" });
   }
   // Verify token
   try {
