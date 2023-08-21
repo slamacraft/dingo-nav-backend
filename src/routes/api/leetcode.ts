@@ -13,10 +13,10 @@ router.get(
   "/questionOfToday",
   async (req: Request, res: Response) => {
     let resp = await getQuestionOfToday().then(async (resp) => {
-      let quesiont = await getQuestion(resp.questionTitle);
+      let question = await getQuestion(resp.questionTitle);
       // let state = await getQuestionState(resp.questionTitle);
       return {
-        question: quesiont,
+        question: question,
         // state: state,
       };
     });
