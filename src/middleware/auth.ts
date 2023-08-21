@@ -6,11 +6,10 @@ import { NextFunction, Response } from "express";
 import HttpStatusCodes from "http-status-codes";
 import jwt from "jsonwebtoken";
 
-import Payload from "../types/api/Payload";
-import Request from "../types/api/Request";
+import  {Req, Payload} from "api/Req";
 import nodeCache from "src/cache/nodeCache";
 
-export default function (req: Request, res: Response, next: NextFunction) {
+export default function (req: Req, res: Response, next: NextFunction) {
   // Get token from header
   const token = req.header("Authorization");
   // Check if no token

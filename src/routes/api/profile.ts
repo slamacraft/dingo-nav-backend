@@ -4,7 +4,7 @@ import HttpStatusCodes from "http-status-codes";
 
 import auth from "../../middleware/auth";
 import Profile, { TProfile, IProfile } from "../../models/Profiles";
-import Request from "../../types/api/Request";
+import {Req} from "api/Req";
 import User, { IUser } from "../../models/User";
 
 const router: Router = Router();
@@ -12,7 +12,7 @@ const router: Router = Router();
 // @route   GET api/profile/me
 // @desc    Get current user's profile
 // @access  Private
-router.get("/me", auth, async (req: Request, res: Response) => {
+router.get("/me", auth, async (req: Req, res: Response) => {
   try {
     const profile: IProfile = await Profile.findOne({
       user: req.userId,
@@ -45,7 +45,7 @@ router.post(
     check("lastName", "Last Name is required").not().isEmpty(),
     check("username", "Username is required").not().isEmpty(),
   ],
-  async (req: Request, res: Response) => {
+  async (req: Req, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
@@ -104,7 +104,7 @@ router.post(
 // @route   GET api/profile
 // @desc    Get all profiles
 // @access  Public
-router.get("/", async (_req: Request, res: Response) => {
+router.get("/", async (_req: Req, res: Response) => {
   try {
     const profiles: IProfile[] = await Profile.find().populate("user", [
       "avatar",
@@ -120,7 +120,7 @@ router.get("/", async (_req: Request, res: Response) => {
 // @route   GET api/profile/user/:userId
 // @desc    Get profile by userId
 // @access  Public
-router.get("/user/:userId", async (req: Request, res: Response) => {
+router.get("/user/:userId", async (req: Req, res: Response) => {
   try {
     const profile: IProfile = await Profile.findOne({
       user: req.params.userId,
@@ -146,7 +146,7 @@ router.get("/user/:userId", async (req: Request, res: Response) => {
 // @route   DELETE api/profile
 // @desc    Delete profile and user
 // @access  Private
-router.delete("/", auth, async (req: Request, res: Response) => {
+router.delete("/", auth, async (req: Req, res: Response) => {
   try {
     // Remove profile
     await Profile.findOneAndRemove({ user: req.userId });

@@ -9,8 +9,7 @@ import auth from "src/middleware/auth";
 import {sign} from "src/utils/JwtUtil";
 import {getParamMap} from "src/utils/UrlUtil";
 import User, {IUser} from "../../models/User";
-import Payload from "../../types/api/Payload";
-import Request from "../../types/api/Request";
+import {Req} from "api/Req";
 import {getAccessToken, getUserByCode, listUserEmail,} from "../transport/github";
 import {ServerErr} from "src/types/error/ServerErr";
 
@@ -25,7 +24,7 @@ router.post(
     check("email", "请输入有效的邮箱").isEmail(),
     check("password", "请输入密码").exists(),
   ],
-  async (req: Request, res: Response) => {
+  async (req: Req, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
@@ -50,11 +49,9 @@ router.post(
         .json({errMsg: "密码错误"});
     }
 
-    const payload: Payload = {
-      userId: user.id,
-    };
-
-    sign(payload, (err, token) => {
+    sign({
+        userId: user.id,
+    }, (err, token) => {
       if (err) {
         return res
           .status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -74,7 +71,7 @@ router.post(
 router.post(
   "/github",
   [check("code", "Code不能为空").exists()],
-  async (req: Request, res: Response, next: any) => {
+  async (req: Req, res: Response, next: any) => {
 
     // 校验
     const errors = validationResult(req);
@@ -152,7 +149,7 @@ router.post(
   }
 );
 
-router.delete("/", auth, (req: Request, res: Response) => {
+router.delete("/", auth, (req: Req, res: Response) => {
   nodeCache.getCache().del(req.token);
   res.json({
     success: true,
