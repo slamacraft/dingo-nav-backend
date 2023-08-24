@@ -23,7 +23,26 @@ router.get("/", auth, async (req: Req, res: Response) => {
 });
 
 router.get("/list", auth,
-  //todo
+  async (req: Req, res: Response) => {
+    const user: IUser[] = await User.find().select("-password");
+    res.json({
+      list: user
+    });
+  }
+)
+
+router.get("/page", auth,
+  [
+    check("pageNum", "页数不能为空").notEmpty(),
+    check("pageSize", "页大小不能为空").notEmpty()
+  ],
+  validator,
+  async (req: Req, res: Response) => {
+    const user: IUser[] = await User.find().select("-password");
+    res.json({
+      list: user
+    });
+  }
 )
 
 /**
@@ -82,7 +101,7 @@ router.put(
 
 router.delete("/", auth,
   [
-    check("id", "id不能为空").isEmail(),
+    check("id", "id不能为空").notEmpty(),
   ],
   validator,
   async (req: Req, res: Response) => {
