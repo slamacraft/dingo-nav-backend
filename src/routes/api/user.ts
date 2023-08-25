@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import {Response, Router} from "express";
-import {check} from "express-validator";
+import {check, param} from "express-validator";
 import gravatar from "gravatar";
 import HttpStatusCodes from "http-status-codes";
 // import jwt from "jsonwebtoken";
@@ -24,7 +24,9 @@ router.get("/", auth, async (req: Req, res: Response) => {
 
 router.get("/list", auth,
   async (req: Req, res: Response) => {
-    const user: IUser[] = await User.find().select("-password");
+    const user: IUser[] = await User.find({
+      isDeleted: false
+    }).select("-password");
     res.json({
       list: user
     });
@@ -33,12 +35,16 @@ router.get("/list", auth,
 
 router.get("/page", auth,
   [
-    check("pageNum", "页数不能为空").notEmpty(),
-    check("pageSize", "页大小不能为空").notEmpty()
+    param(["pageNum", "pageSize"], "页数和页大小不能为空").notEmpty(),
+    param(["pageNum", "pageSize"], "页数和页大小不能是非数值").isNumeric({no_symbols: true}),
+    param(["pageNum", "pageSize"], "页数和页大小不能小于1").toInt().if((input: number, meta: any) => input >= 1)
   ],
   validator,
   async (req: Req, res: Response) => {
-    const user: IUser[] = await User.find().select("-password");
+    let {pageNumStr, pageSizeStr} = req.params
+    let pageNum = Number.parseInt(pageNumStr)
+    let pageSize = Number.parseInt(pageSizeStr)
+    const user: IUser[] = await User.find().skip((pageNum - 1) * pageSize).limit(pageNum).select("-password");
     res.json({
       list: user
     });
