@@ -12,6 +12,8 @@ import profile from "./routes/api/profile";
 import user from "./routes/api/user";
 import * as process from "process";
 import userWidget from "src/routes/api/userWidget";
+import {Res} from "api/Res";
+import {Req} from "api/Req";
 
 const app = express();
 
@@ -28,8 +30,7 @@ app.all("*", function (req, res, next) {
       : config.get("Access-Control-Allow-Origin")
   );
   res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Content-Length, Authorization, Accept, X-Requested-With, yourHeaderFeild"
+    "Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With, yourHeaderFeild"
   );
   res.header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS");
   if (req.method === "OPTIONS") {
@@ -43,6 +44,21 @@ app.all("*", function (req, res, next) {
 app.set("port", process.env.PORT || 5000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use((req: Req, res: Res, next: NextFunction) => {
+  // 设置好格式化响应的函数
+  res.result = (json) => res.json(json)
+  res.error = (msg = "服务器开小差，请联系管理员", code = 500) => res.result({
+    code: code,
+    msg: msg
+  })
+  res.success = (data) => res.result({
+    code: 200,
+    msg: "成功",
+    data: data
+  })
+  next()
+})
+
 
 // @route   GET /
 // @desc    Test Base API

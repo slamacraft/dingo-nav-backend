@@ -12,6 +12,8 @@ import User, {IUser} from "../../models/User";
 import {Req} from "api/Req";
 import {getAccessToken, getUserByCode, listUserEmail,} from "../transport/github";
 import {ServerErr} from "src/types/error/ServerErr";
+import {Res} from "api/Res";
+import validator from "src/middleware/validator";
 
 const router: Router = Router();
 
@@ -24,13 +26,8 @@ router.post(
     check("email", "请输入有效的邮箱").isEmail(),
     check("password", "请输入密码").exists(),
   ],
-  async (req: Req, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res
-        .status(HttpStatusCodes.BAD_REQUEST)
-        .json({errors: errors.array()});
-    }
+  validator,
+  async (req: Req, res: Res) => {
 
     const {email, password} = req.body;
     let user: IUser = await User.findOne({email});
@@ -38,7 +35,7 @@ router.post(
     if (!user) {
       return res
         .status(HttpStatusCodes.BAD_REQUEST)
-        .json({errMsg: "用户尚未注册"});
+        .error("用户尚未注册", 403);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -46,18 +43,18 @@ router.post(
     if (!isMatch) {
       return res
         .status(HttpStatusCodes.BAD_REQUEST)
-        .json({errMsg: "密码错误"});
+        .error("密码错误", 403);
     }
 
     sign({
-        userId: user.id,
+      userId: user.id,
     }, (err, token) => {
       if (err) {
         return res
           .status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-          .json({errMsg: err.message});
+          .error(err.message)
       }
-      res.json({
+      res.success({
         id: user.id,
         name: user.name,
         email: user.email,
