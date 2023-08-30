@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import config from "config";
-import {Response, Router} from "express";
-import {check, validationResult} from "express-validator";
+import {Router} from "express";
+import {check} from "express-validator";
 import HttpStatusCodes from "http-status-codes";
 import nodeCache from "src/cache/nodeCache";
 
@@ -68,16 +68,8 @@ router.post(
 router.post(
   "/github",
   [check("code", "Code不能为空").exists()],
-  async (req: Req, res: Response, next: any) => {
-
-    // 校验
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res
-        .status(HttpStatusCodes.BAD_REQUEST)
-        .json({errMsg: errors.array()[0].msg});
-    }
-
+  validator,
+  async (req: Req, res: Res, next: any) => {
     // 获取github用户信息
     let token: string = config.get("github.token");
     if (!token) {
@@ -86,9 +78,8 @@ router.post(
       if (accessTokenResp instanceof ServerErr) {
         return next(accessTokenResp)
       }
-      console.debug(accessTokenResp.accessToken);
       if (!accessTokenResp.accessToken) {
-        return res.json({errMsg: "accessToken获取失败"});
+        return res.error("accessToken获取失败");
       }
       token = getParamMap(accessTokenResp.accessToken).get("access_token");
     }
@@ -134,10 +125,10 @@ router.post(
         if (err) {
           return res
             .status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
-            .json({errMsg: err.message});
+            .error(err.message);
         }
         result.token = token;
-        res.json(result);
+        res.success(result);
       });
     }
     return res.json({
@@ -146,11 +137,9 @@ router.post(
   }
 );
 
-router.delete("/", auth, (req: Req, res: Response) => {
+router.delete("/", auth, (req: Req, res: Res) => {
   nodeCache.getCache().del(req.token);
-  res.json({
-    success: true,
-  });
+  res.success();
 });
 
 export default router;
