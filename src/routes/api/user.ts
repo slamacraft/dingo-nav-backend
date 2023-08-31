@@ -9,7 +9,7 @@ import User, {IUser} from "../../models/User";
 import {Req} from "api/Req";
 import auth from "src/middleware/auth";
 import userWidget from "src/models/UserWidget";
-import {OK} from "api/Res";
+import {OK, Res} from "api/Res";
 import validator from "src/middleware/validator";
 
 const router: Router = Router();
@@ -17,17 +17,17 @@ const router: Router = Router();
 /**
  * 获取用户信息
  */
-router.get("/", auth, async (req: Req, res: Response) => {
+router.get("/", auth, async (req: Req, res: Res) => {
   const user: IUser = await User.findById(req.userId).select("-password");
-  res.json(user);
+  res.success(user);
 });
 
 router.get("/list", auth,
-  async (req: Req, res: Response) => {
+  async (req: Req, res: Res) => {
     const user: IUser[] = await User.find({
       isDeleted: false
     }).select("-password");
-    res.json({
+    res.success({
       list: user
     });
   }
@@ -40,12 +40,12 @@ router.get("/page", auth,
     param(["pageNum", "pageSize"], "页数和页大小不能小于1").toInt().if((input: number, meta: any) => input >= 1)
   ],
   validator,
-  async (req: Req, res: Response) => {
+  async (req: Req, res: Res) => {
     let {pageNumStr, pageSizeStr} = req.params
     let pageNum = Number.parseInt(pageNumStr)
     let pageSize = Number.parseInt(pageSizeStr)
     const user: IUser[] = await User.find().skip((pageNum - 1) * pageSize).limit(pageNum).select("-password");
-    res.json({
+    res.success({
       list: user
     });
   }
@@ -62,7 +62,7 @@ router.put(
     check("password", "请输入最少6位字符的密码").isLength({min: 6}),
   ],
   validator,
-  async (req: Req, res: Response) => {
+  async (req: Req, res: Res) => {
     const {email, password} = req.body;
     let user: IUser = await User.findOne({email});
 
@@ -94,7 +94,7 @@ router.put(
       userId: user.id,
     }, (err, token) => {
       if (err) throw err;
-      res.json({
+      res.success({
         id: user.id,
         name: user.name,
         email: user.email,
@@ -110,10 +110,10 @@ router.delete("/", auth,
     check("id", "id不能为空").notEmpty(),
   ],
   validator,
-  async (req: Req, res: Response) => {
+  async (req: Req, res: Res) => {
     let id = req.body.id
     await userWidget.logicDeleteById(id)
-    res.json(OK)
+    res.success(OK)
   }
 )
 
