@@ -1,34 +1,35 @@
-import {Response, Router} from "express";
+import {Router} from "express";
 // import jwt from "jsonwebtoken";
 import {Req} from "api/Req";
 import auth from "src/middleware/auth";
 import UserWidget from "src/models/UserWidget";
 import {check} from "express-validator";
 import validator from "src/middleware/validator";
+import {Res} from "api/Res";
 
 const router: Router = Router();
 
 router.get("/", auth,
     [check("id", "Id不能为空").notEmpty()],
     validator,
-    async (req: Req, res: Response) => {
+    async (req: Req, res: Res) => {
         const userWidget = await UserWidget.findOne({
             id: req.body.id,
             isDelete: false
         })
-        res.json(userWidget);
+        res.success(userWidget);
     })
 
 /**
  * 获取用户自定义套件列表
  */
 router.get("/list", auth,
-    async (req: Req, res: Response) => {
+    async (req: Req, res: Res) => {
         const userWidget = await UserWidget.find({
             userId: req.userId,
             isDelete: false
         })
-        res.json({
+        res.success({
           list: userWidget
         });
     });
@@ -40,7 +41,7 @@ router.put("/", auth,
         check("html", "套件内容不能为空").notEmpty(),
     ],
     validator,
-    async (req: Req, res: Response) => {
+    async (req: Req, res: Res) => {
         let {title, desc, html} = req.body
         req.userId = "1"
         let widget = await UserWidget.insertMany({
@@ -50,7 +51,7 @@ router.put("/", auth,
             html: html
         })
 
-        return res.json(widget[0])
+        return res.success(widget[0])
     })
 
 router.delete("/", auth,
@@ -58,12 +59,10 @@ router.delete("/", auth,
         check("id", "Id不能为空").notEmpty()
     ],
     validator,
-    async (req: Req, res: Response) => {
+    async (req: Req, res: Res) => {
         await UserWidget.logicDeleteById(req.body.id)
 
-        return res.json({
-            "msg": "ok"
-        })
+        return res.success()
     })
 
 
