@@ -1,13 +1,13 @@
 package com.dingo.core.msgHandle
 
-import com.dingo.core.robot.mirai.MiraiRobotInitializer
+import com.dingo.core.mirai.BotInitializer
 import com.dingo.context.UserContext
 import com.dingo.core.dfa.UserStage
 import com.dingo.enums.UserStageEnum
 import net.mamoe.mirai.event.events.MessageEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 @Component
 class StageDistributor {
@@ -17,8 +17,8 @@ class StageDistributor {
 
     @PostConstruct
     fun registerMiraiEvent() {
-        MiraiRobotInitializer.registeredGroupMsgEvent { msgHandle(it) }
-        MiraiRobotInitializer.registeredFriendMsgEvent { msgHandle(it) }
+        BotInitializer.registeredGroupMsgEvent { msgHandle(it) }
+        BotInitializer.registeredFriendMsgEvent { msgHandle(it) }
     }
 
     private fun msgHandle(msgEvent: MessageEvent) {

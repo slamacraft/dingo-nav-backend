@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.8.RELEASE</version>
+        <version>3.1.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
@@ -15,12 +15,13 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <java.version>1.8</java.version>
-        <kotlin.version>1.6.0</kotlin.version>
-        <kotlin-coroutines.version>1.5.0</kotlin-coroutines.version>
+        <java.version>17</java.version>
+        <spring-boot.version>3.1.0</spring-boot.version>
+        <kotlin.version>1.9.22</kotlin.version>
+<!--        <kotlin-coroutines.version>1.8</kotlin-coroutines.version>-->
         <scala.version>2.12.12</scala.version>
         <hutool.version>5.7.17</hutool.version>
-        <mirai.version>2.9.0-RC2</mirai.version>
+        <mirai.version>2.16.0</mirai.version>
         <elasticsearch.version>7.16.0</elasticsearch.version>
     </properties>
 
@@ -36,12 +37,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.4.3.4</version>
+            <version>8.0.20</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
@@ -79,17 +75,11 @@
             <version>2.1.8.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.1.8.RELEASE</version>
+            <version>${spring-boot.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -98,26 +88,37 @@
             </exclusions>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.gnu.gettext/libintl -->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.logging.log4j</groupId>-->
+<!--            <artifactId>log4j-api</artifactId>-->
+<!--            <version>2.16.0</version>-->
+<!--        </dependency>-->
+
+        <!-- Minio 文件存储 -->
         <dependency>
-            <groupId>org.gnu.gettext</groupId>
-            <artifactId>libintl</artifactId>
-            <version>0.18.3</version>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.2.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.16.0</version>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-spring-boot-starter</artifactId>
+            <version>0.47.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-java-time</artifactId>
+            <version>0.47.0</version>
         </dependency>
 
 <!--        es客户端-->
-        <dependency>
-            <groupId>co.elastic.clients</groupId>
-            <artifactId>elasticsearch-java</artifactId>
-            <version>7.16.1</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>co.elastic.clients</groupId>-->
+<!--            <artifactId>elasticsearch-java</artifactId>-->
+<!--            <version>7.16.1</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 
@@ -200,6 +201,11 @@
             <id>central</id>
             <name>Maven Repository Switchboard</name>
             <url>http://repo2.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>mavenCentral</id>
+            <name>mavenCentral</name>
+            <url>https://repo1.maven.org/maven2/</url>
         </repository>
     </repositories>
 

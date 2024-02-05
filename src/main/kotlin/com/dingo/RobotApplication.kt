@@ -1,15 +1,15 @@
 package com.dingo
 
-import org.mybatis.spring.annotation.MapperScan
 import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.jetbrains.exposed.spring.autoconfigure.ExposedAutoConfiguration
 
-@MapperScan(basePackages = ["com.dingo.module.**.mapper"])
 @SpringBootApplication
 @EnableConfigurationProperties
-open class RobotApplication {
-}
+@ImportAutoConfiguration(ExposedAutoConfiguration::class)
+open class RobotApplication
 
 fun main(args: Array<String>) {
     val springApplication = SpringApplication(RobotApplication::class.java)

@@ -1,6 +1,6 @@
 package com.dingo.core.dfa
 
-import com.dingo.core.robot.mirai.MsgSender
+import com.dingo.core.mirai.MsgSender
 import com.dingo.enums.UserStageEnum
 import net.mamoe.mirai.event.events.MessageEvent
 

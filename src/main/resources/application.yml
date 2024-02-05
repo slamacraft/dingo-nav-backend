@@ -1,10 +1,8 @@
 # =============================== 核心配置 ================================
 # ----------------- bot -------------------
-bots:
-  core:
-    loginInfo: # 机器人的账号密码
-      - 123456:654321a
-      - 654321:123456z
+bot:
+  id: 123456
+  pw: 654321
 
 # ----------------- sizhi -----------------
 sizhi:
@@ -20,26 +18,17 @@ spring:
 
   # ================================= 连接配置 ==================================
   # ---------------- redis ----------------
-  redis:
-    database: 0
-    host: localhost
-    port: 6379
-    password:
-    timeout: 1000 # 超时时间，毫秒
-
   # ----------------- mysql ------------------
   datasource:
-    driver-class-name:
-    username:
-    password:
-    url:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:192.168.110.199:3306}/${DATABASE:ys_portal_dev}?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: ${DB_USERNAME:slamacraft}
+    password: ${DB_PASSWORD:13574159100Q}
     filters: stat,wall,log4j
-
-# ---------------- mybatis ----------------
-mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
-
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  data:
+    redis:
+      password:
+      database: 0
+      host: localhost
+      port: 6379
+      timeout: 1000
