@@ -18,7 +18,7 @@
         <java.version>17</java.version>
         <spring-boot.version>3.1.0</spring-boot.version>
         <kotlin.version>1.9.22</kotlin.version>
-<!--        <kotlin-coroutines.version>1.8</kotlin-coroutines.version>-->
+        <!--        <kotlin-coroutines.version>1.8</kotlin-coroutines.version>-->
         <scala.version>2.12.12</scala.version>
         <hutool.version>5.7.17</hutool.version>
         <mirai.version>2.16.0</mirai.version>
@@ -38,6 +38,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.20</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+            <version>2.9.8</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
@@ -62,11 +68,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-aop</artifactId>-->
-<!--            <version>2.1.8.RELEASE</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-aop</artifactId>-->
+        <!--            <version>2.1.8.RELEASE</version>-->
+        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis-reactive -->
         <dependency>
@@ -88,12 +94,12 @@
             </exclusions>
         </dependency>
 
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.logging.log4j</groupId>-->
-<!--            <artifactId>log4j-api</artifactId>-->
-<!--            <version>2.16.0</version>-->
-<!--        </dependency>-->
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.logging.log4j</groupId>-->
+        <!--            <artifactId>log4j-api</artifactId>-->
+        <!--            <version>2.16.0</version>-->
+        <!--        </dependency>-->
 
         <!-- Minio 文件存储 -->
         <dependency>
@@ -113,12 +119,12 @@
             <version>0.47.0</version>
         </dependency>
 
-<!--        es客户端-->
-<!--        <dependency>-->
-<!--            <groupId>co.elastic.clients</groupId>-->
-<!--            <artifactId>elasticsearch-java</artifactId>-->
-<!--            <version>7.16.1</version>-->
-<!--        </dependency>-->
+        <!--        es客户端-->
+        <!--        <dependency>-->
+        <!--            <groupId>co.elastic.clients</groupId>-->
+        <!--            <artifactId>elasticsearch-java</artifactId>-->
+        <!--            <version>7.16.1</version>-->
+        <!--        </dependency>-->
 
     </dependencies>
 

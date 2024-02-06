@@ -1,11 +1,16 @@
 package com.dingo.module.punch.entity
 
+import com.dingo.core.module.BaseEntity
+import com.dingo.core.module.BaseTable
 import com.dingo.core.module.Entity
 import com.dingo.core.module.Table
 
-class PunchEntity : Entity<PunchEntity>(){
-    companion object: Factory<PunchEntity>()
+interface PunchEntity :Entity<PunchEntity>, BaseEntity{
+    companion object: Entity.Factory<PunchEntity>()
+
 }
 
-object PunchTable : Table<PunchEntity>("bot_punch") {
-}
+//object PunchTable : BaseTable<PunchEntity>("bot_punch") {
+//    override val id = entityId("id", long("id")
+//        .bindTo { id = it!! })
+//}

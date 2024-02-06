@@ -27,6 +27,13 @@ object MinioUtil {
         return uploadWithSize(file.originalFilename, bucketName, file.contentType, file.size, file.inputStream)
     }
 
+    fun upload(bucketName: String = "public",
+               fileName: String,
+               contentType: String,
+               inputStream: InputStream): String {
+        return uploadWithSize(fileName, bucketName, contentType, 67108864, inputStream)
+    }
+
     fun uploadWithSize(
         bucketName: String = "public",
         fileName: String,

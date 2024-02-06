@@ -6,12 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @ConfigurationProperties(prefix = "bot")
-object BotInfoProperty {
+open class BotInfoProperty {
     lateinit var id: String
     lateinit var pw: String
-
-    fun initBots() {
-        BotInitializer.start(id.toLong(), pw)
-    }
-
 }
