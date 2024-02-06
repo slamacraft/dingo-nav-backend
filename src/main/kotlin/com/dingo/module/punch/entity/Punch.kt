@@ -1,9 +1,7 @@
 package com.dingo.module.punch.entity
 
 import com.dingo.core.module.BaseEntity
-import com.dingo.core.module.BaseTable
 import com.dingo.core.module.Entity
-import com.dingo.core.module.Table
 
 interface PunchEntity :Entity<PunchEntity>, BaseEntity{
     companion object: Entity.Factory<PunchEntity>()

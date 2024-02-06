@@ -4,27 +4,23 @@ package com.dingo.core.module
 
 import com.dingo.util.underlineToCamelCase
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.LongIdTable
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.FieldSet
+import org.jetbrains.exposed.sql.Query
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.javatime.datetime
-import org.jetbrains.exposed.sql.statements.InsertStatement
-import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.selectAll
 import java.time.LocalDateTime
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
-import kotlin.reflect.jvm.reflect
 
 
 open abstract class Table<E : Entity<E>>(tableName: String) : LongIdTable(tableName), TypeReference {
-    //    private val bingMap: MutableMap<Column<*>, E.() -> Any?> = mutableMapOf()
     private val referencedKotlinType: KType by lazy { findSuperclassTypeArgument(javaClass.kotlin) }
 
-
-    fun FieldSet.getByIdOrNull(pid: Long): E? =
-        Query(this, null)
-            .where { id eq pid }
-            .one()
+    fun FieldSet.getById(pid: Long): E? = selectAll()
+        .where { id eq pid }
+        .one()
 
     fun Query.one(): E? = firstOrNull()?.let {
         mapResultToEntity(it)

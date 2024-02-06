@@ -1,13 +1,13 @@
 package com.dingo.core.msgHandle
 
-import com.dingo.core.mirai.BotInitializer
 import com.dingo.context.UserContext
 import com.dingo.core.dfa.UserStage
+import com.dingo.core.mirai.BotInitializer
 import com.dingo.enums.UserStageEnum
+import jakarta.annotation.PostConstruct
 import net.mamoe.mirai.event.events.MessageEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import jakarta.annotation.PostConstruct
 
 @Component
 class StageDistributor {

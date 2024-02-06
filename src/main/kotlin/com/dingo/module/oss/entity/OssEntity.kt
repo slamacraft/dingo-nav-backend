@@ -3,10 +3,6 @@ package com.dingo.module.oss.entity
 import com.dingo.core.module.BaseEntity
 import com.dingo.core.module.BaseTable
 import com.dingo.core.module.Entity
-import com.dingo.core.module.Table
-import com.fasterxml.jackson.databind.ser.Serializers.Base
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.Column
 
 interface OssEntity : Entity<OssEntity>, BaseEntity {
     companion object : Entity.Factory<OssEntity>()

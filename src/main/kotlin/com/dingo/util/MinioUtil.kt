@@ -2,13 +2,16 @@ package com.dingo.util
 
 import cn.hutool.core.net.URLDecoder
 import com.dingo.config.cfg.MinioCfg
-import io.minio.*
+import io.minio.BucketExistsArgs
+import io.minio.GetPresignedObjectUrlArgs
+import io.minio.MakeBucketArgs
+import io.minio.PutObjectArgs
 import io.minio.http.Method
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
 import java.nio.charset.Charset
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 object MinioUtil {
 

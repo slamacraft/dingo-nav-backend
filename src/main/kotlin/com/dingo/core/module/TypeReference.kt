@@ -4,7 +4,6 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.full.createInstance
 import kotlin.reflect.jvm.jvmErasure
 
 open interface TypeReference {
