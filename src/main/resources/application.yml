@@ -1,22 +1,7 @@
-# =============================== 核心配置 ================================
-# ----------------- bot -------------------
-bot:
-  id: 123456
-  pw: 654321
-
-# ----------------- sizhi -----------------
-sizhi:
-  appId: "appid"
-
-# ----------------- minio --------------------
-minio:
-  key: 123
-  secret: 123
-  url: 123123123
 
 # --------------- spring ---------------
 server:
-  port: 8081
+  port: 18081
 
 spring:
   profiles:
@@ -27,14 +12,32 @@ spring:
   # ----------------- mysql ------------------
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST:192.168.110.206:3306}/${DATABASE:bot_dev}?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-    username: ${DB_USERNAME:slamacraft}
-    password: ${DB_PASSWORD:13574159100Q}
+    url: jdbc:mysql://${DB_HOST}/${DATABASE}?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     filters: stat,wall,log4j
   data:
     redis:
       password:
       database: 0
-      host: localhost
+      host: ${REDIS_HOST}
       port: 6379
       timeout: 1000
+
+# ----------------- minio --------------------
+minio:
+  key: ${MINIO_KEY}
+  secret: ${MINIO_SECRET}
+  url: ${MINIO_URL}
+
+# =============================== 核心配置 ================================
+# ----------------- bot -------------------
+bot:
+  id: 123456
+  pw: 654321
+
+# ----------------- dify ------------------
+dify:
+  url: ${DIFY_URL}
+  port: 80
+  app-key: ${DIFY_APP_KEY}

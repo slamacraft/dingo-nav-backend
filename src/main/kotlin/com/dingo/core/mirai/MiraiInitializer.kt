@@ -1,6 +1,7 @@
 package com.dingo.core.mirai
 
-import com.dingo.core.app.MsgHandlerRouter
+import com.dingo.config.properties.BotInfoProperty
+import com.dingo.core.dify.DifyMsgSender
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.mamoe.mirai.Bot
@@ -9,6 +10,11 @@ import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.message.data.At
+import net.mamoe.mirai.message.data.MessageSource
+import net.mamoe.mirai.message.data.MessageSource.Key.quote
+import net.mamoe.mirai.message.data.sendTo
+import net.mamoe.mirai.message.data.toMessageChain
 import net.mamoe.mirai.utils.BotConfiguration
 
 /**
@@ -17,7 +23,7 @@ import net.mamoe.mirai.utils.BotConfiguration
  * @since JDK 1.8
  * @version 1.0
  */
-object BotInitializer {
+object MiraiInitializer {
 
     private lateinit var bot: Bot
 
@@ -27,12 +33,24 @@ object BotInitializer {
     private suspend fun botLogin(id: Long, pw: String) {
         val bot = BotFactory.newBot(id, pw) {
             fileBasedDeviceInfo()
-            protocol = BotConfiguration.MiraiProtocol.ANDROID_PAD
+            protocol = BotConfiguration.MiraiProtocol.MACOS
         }
         bot.alsoLogin()
-        BotInitializer.bot = bot
-        registeredGroupMsgEvent { MsgHandlerRouter.handle(it) }
-        registeredFriendMsgEvent { MsgHandlerRouter.handle(it) }
+        MiraiInitializer.bot = bot
+        registeredGroupMsgEvent {
+            val atBot = it.message.firstOrNull { msg->
+                msg is At && msg.target == it.bot.id
+            }
+            if(atBot != null){
+                val atBotMsg = it.message
+                    .filter { msg -> msg !is At }
+                    .toMessageChain().contentToString()
+                val respMsg = DifyMsgSender.sendMsg(atBotMsg, it.sender.id)
+                val replyMsg = it.message[MessageSource]!!.quote() + respMsg
+                replyMsg.sendTo(it.group)
+            }
+        }
+//        registeredFriendMsgEvent { MsgHandlerRouter.handle(it) }
     }
 
 
@@ -55,9 +73,10 @@ object BotInitializer {
     }
 
 
-    fun start(id: Long, pw: String) {
+    fun start() {
+        val infoProperty = BotInfoProperty.instance
         GlobalScope.launch {
-            botLogin(id, pw)
+            botLogin(infoProperty.id, infoProperty.pw)
         }
     }
 

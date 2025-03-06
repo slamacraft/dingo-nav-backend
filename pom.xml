@@ -53,27 +53,6 @@
             <version>${hutool.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.hankcs</groupId>
-            <artifactId>hanlp</artifactId>
-            <version>portable-1.7.8</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.boot</groupId>-->
-        <!--            <artifactId>spring-boot-starter-aop</artifactId>-->
-        <!--            <version>2.1.8.RELEASE</version>-->
-        <!--        </dependency>-->
-
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis-reactive -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -94,13 +73,6 @@
             </exclusions>
         </dependency>
 
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.logging.log4j</groupId>-->
-        <!--            <artifactId>log4j-api</artifactId>-->
-        <!--            <version>2.16.0</version>-->
-        <!--        </dependency>-->
-
         <!-- Minio 文件存储 -->
         <dependency>
             <groupId>io.minio</groupId>
@@ -118,13 +90,6 @@
             <artifactId>exposed-java-time</artifactId>
             <version>0.47.0</version>
         </dependency>
-
-        <!--        es客户端-->
-        <!--        <dependency>-->
-        <!--            <groupId>co.elastic.clients</groupId>-->
-        <!--            <artifactId>elasticsearch-java</artifactId>-->
-        <!--            <version>7.16.1</version>-->
-        <!--        </dependency>-->
 
     </dependencies>
 

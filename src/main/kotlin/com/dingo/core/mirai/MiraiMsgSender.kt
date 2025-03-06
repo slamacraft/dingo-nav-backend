@@ -10,7 +10,7 @@ import net.mamoe.mirai.message.data.Message
 import java.io.File
 
 
-object MsgSender {
+object MiraiMsgSender {
 
     fun sendMsg(target: Contact, message: Message) {
         GlobalScope.launch(Dispatchers.Default) {
