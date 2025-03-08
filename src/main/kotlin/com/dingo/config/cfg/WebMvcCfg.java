@@ -33,13 +33,13 @@ public class WebMvcCfg implements WebMvcConfigurer {
     @Bean
     public RestTemplate restTemplate() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-//        requestFactory.setConnectTimeout(10 * 1000);// 设置超时
-//        requestFactory.setReadTimeout(10 * 1000);
+        requestFactory.setConnectTimeout(100 * 1000);// 设置超时
+        requestFactory.setReadTimeout(100 * 1000);
         return new RestTemplate(requestFactory);
     }
 
     @Bean
-    public ApplicationRunListener applicationStartListener(){
+    public ApplicationRunListener applicationStartListener() {
         return new ApplicationRunListener();
     }
 }

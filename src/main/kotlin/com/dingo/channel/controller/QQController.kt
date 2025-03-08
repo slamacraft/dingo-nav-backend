@@ -5,6 +5,7 @@ import com.dingo.channel.model.QQModel
 import com.dingo.channel.model.VerifyDto
 import com.dingo.channel.model.VerifyVo
 import com.dingo.channel.service.QQService
+import com.dingo.common.expand.castTo
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -25,12 +26,12 @@ open class QQController(
         request: HttpServletRequest, @RequestBody dto: QQModel
     ): VerifyVo {
         // 判断消息是否重复
-        if(cacheMsgIds.contains(dto.id)){
+        if (cacheMsgIds.contains(dto.id)) {
             // 重复了，直接返回
             return VerifyVo("", "")
-        }else{
+        } else {
             // 否则在缓存这个msgId
-            if(cacheMsgIds.size >= cacheMaxSize){
+            if (cacheMsgIds.size >= cacheMaxSize) {
                 cacheMsgIds.removeAt(cacheMsgIds.size - 1)
             }
             cacheMsgIds.add(0, dto.id)
@@ -38,32 +39,16 @@ open class QQController(
 
         val data = dto.d
         when (dto.op) {
-            13L -> return qqService.verify(mapToBean(data, VerifyDto::class.java))
+            13L -> return qqService.verify(data.castTo(VerifyDto::class))
             0L -> when (dto.t) {
-                "AT_MESSAGE_CREATE" -> qqService.recallChannelAtMsg(mapToBean(data, ChannelDto::class.java))
-                "DIRECT_MESSAGE_CREATE" -> qqService.recallChannelPrivateMsg(mapToBean(data, ChannelDto::class.java))
+                // 频道at消息
+                "AT_MESSAGE_CREATE" -> qqService.recallChannelAtMsg(data.castTo(ChannelDto::class))
+                // 频道私聊消息
+                "DIRECT_MESSAGE_CREATE" -> qqService.recallChannelPrivateMsg(data.castTo(ChannelDto::class))
             }
         }
         return VerifyVo("", "")
     }
 }
 
-private fun <T> mapToBean(data: Map<String, Any?>, clazz: Class<T>): T {
-    val bean = clazz.constructors[0].newInstance() as T
-    for ((key, value) in data) {
-        try {
-            val field = clazz.getDeclaredField(key)
-            field.isAccessible = true
-            if(value is Map<*, *>){
-                field[bean] = mapToBean(value as Map<String, Any?>, field.type)
-            }else if(value is Boolean){
-                field[bean] = value
-            } else{
-                field[bean] = field.type.cast(value)
-            }
-        } catch (e: NoSuchFieldException) {
-            // 如果没有这个字段就跳过
-        }
-    }
-    return bean
-}
+

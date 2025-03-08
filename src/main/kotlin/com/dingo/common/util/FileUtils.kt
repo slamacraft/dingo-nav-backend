@@ -1,4 +1,4 @@
-package com.dingo.common
+package com.dingo.common.util
 
 import cn.hutool.core.util.StrUtil
 import org.springframework.boot.system.ApplicationHome

@@ -1,8 +1,5 @@
 package com.dingo.channel.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import java.time.LocalDateTime
-
 class QQModel {
     lateinit var id: String  // 事件id
     var op: Long = 0 // 指的是 opcode，参考连接维护

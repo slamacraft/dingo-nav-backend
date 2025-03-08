@@ -8,30 +8,21 @@
         <version>3.1.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>springboot-webjar</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>org.slamacraft</groupId>
+    <artifactId>qq-bot</artifactId>
+    <version>1.0.0-BETA</version>
     <name>demo</name>
-    <description>Demo project for Spring Boot</description>
+    <description>QQ机器人后台</description>
 
     <properties>
         <java.version>17</java.version>
         <spring-boot.version>3.1.0</spring-boot.version>
         <kotlin.version>2.0.0</kotlin.version>
-        <!--        <kotlin-coroutines.version>1.8</kotlin-coroutines.version>-->
         <scala.version>2.12.12</scala.version>
         <hutool.version>5.7.17</hutool.version>
-        <mirai.version>2.16.0</mirai.version>
-        <elasticsearch.version>7.16.0</elasticsearch.version>
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/net.mamoe/mirai-core-jvm -->
-        <dependency>
-            <groupId>net.mamoe</groupId>
-            <artifactId>mirai-core-jvm</artifactId>
-            <version>${mirai.version}</version>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
         <dependency>
@@ -74,10 +65,16 @@
         </dependency>
 
         <!-- Minio 文件存储 -->
+<!--        <dependency>-->
+<!--            <groupId>io.minio</groupId>-->
+<!--            <artifactId>minio</artifactId>-->
+<!--            <version>8.2.1</version>-->
+<!--        </dependency>-->
+        <!-- ok的Http连接池 -->
         <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
-            <version>8.2.1</version>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
         </dependency>
 
         <dependency>

@@ -3,8 +3,6 @@ package com.dingo.core.qq
 import com.dingo.config.post
 import com.dingo.config.properties.QQProperty
 import com.dingo.config.sendRequestThenGetResp
-import com.dingo.core.dify.DifyResp
-import net.mamoe.mirai.internal.deps.io.ktor.util.Hash
 import okhttp3.Request
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

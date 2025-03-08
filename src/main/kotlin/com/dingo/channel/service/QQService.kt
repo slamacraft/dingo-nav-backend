@@ -23,14 +23,9 @@ open class QQService {
     @Autowired
     lateinit var qqProperty: QQProperty
 
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
-
-    @PostConstruct
-    fun init() {
-        Security.addProvider(EdDSASecurityProvider())
-    }
-
+    /**
+     * 校验qq报文
+     */
     fun verify(dto: VerifyDto): VerifyVo {
         var seed = qqProperty.secret
 
@@ -59,7 +54,9 @@ open class QQService {
         )
     }
 
-
+    /**
+     * 回复频道at消息
+     */
     fun recallChannelAtMsg(dto: ChannelDto) {
         val answer = DifyMsgSender.sendMsg(dto.content, dto.author.id)
         QQMsgSender.recallChannelAtMsg(
@@ -67,6 +64,9 @@ open class QQService {
         )
     }
 
+    /**
+     * 回复频道私聊消息
+     */
     fun recallChannelPrivateMsg(dto: ChannelDto) {
         val answer = DifyMsgSender.sendMsg(dto.content, dto.author.id)
         QQMsgSender.recallChannelPrivateMsg(

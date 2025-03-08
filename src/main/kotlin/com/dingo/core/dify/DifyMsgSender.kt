@@ -5,7 +5,6 @@ import com.dingo.config.post
 import com.dingo.config.properties.DifyProperty
 import com.dingo.config.sendRequestThenGetResp
 import com.fasterxml.jackson.annotation.JsonProperty
-import kotlinx.serialization.Serializable
 import okhttp3.Request
 
 
@@ -35,7 +34,6 @@ object DifyMsgSender {
 
 }
 
-@Serializable
 data class DifyReq(
     val query: String,
     val user: String = "system",
@@ -46,7 +44,6 @@ data class DifyReq(
     val responseMode: String = "blocking",  // 默认为阻塞模式
 )
 
-@Serializable
 class DifyResp {
     @JsonProperty("message_id")
     var messageId: String = ""

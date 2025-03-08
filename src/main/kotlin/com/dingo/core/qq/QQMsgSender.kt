@@ -1,14 +1,22 @@
 package com.dingo.core.qq
 
-import cn.hutool.core.io.IoUtil
 import com.dingo.config.post
 import com.dingo.config.sendRequest
 import okhttp3.Request
 
+/**
+ * 发送消息的基础地址
+ */
 private const val baseUrl = "https://api.sgroup.qq.com"
 
 object QQMsgSender {
 
+    /**
+     * 发送频道at消息
+     * @param channelId 频道id
+     * @param msgId 消息id，用于回复消息，如果不传这个会视为主动发送消息，每天发送的消息数量就会有限制
+     * @param content 消息内容
+     */
     fun recallChannelAtMsg(
         channelId: String,
         msgId: String,
@@ -24,6 +32,12 @@ object QQMsgSender {
         "/channels/${channelId}/messages".buildRequest(body).sendRequest()
     }
 
+    /**
+     * 发送频道私聊消息
+     * @param guildId 私聊窗口id
+     * @param msgId 消息id，用于回复消息，如果不传这个会视为主动发送消息，每天发送的消息数量就会有限制
+     * @param content 消息内容
+     */
     fun recallChannelPrivateMsg(
         guildId: String,
         msgId: String,
@@ -36,16 +50,13 @@ object QQMsgSender {
                 "message_id" to msgId
             )
         )
-        val response = "/dms/${guildId}/messages".buildRequest(body).sendRequest()
-        val bodyStr = IoUtil.read(response.body!!.byteStream(), Charsets.UTF_8)
-        println(bodyStr)
+        "/dms/${guildId}/messages".buildRequest(body).sendRequest()
     }
 }
 
-class
-
-private
-
+/**
+ * 将String视为一个url地址构建请求
+ */
 fun String.buildRequest(body: Any): Request {
     return Request.Builder()
         .url("$baseUrl$this")

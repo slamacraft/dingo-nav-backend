@@ -1,6 +1,5 @@
 package com.dingo
 
-import com.dingo.core.mirai.MiraiInitializer
 import org.jetbrains.exposed.spring.autoconfigure.ExposedAutoConfiguration
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration
@@ -13,7 +12,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 open class RobotApplication
 
 fun main(args: Array<String>) {
-
     val springApplication = SpringApplication(RobotApplication::class.java)
     springApplication.run(*args)
 }
