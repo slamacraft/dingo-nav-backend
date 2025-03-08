@@ -1,4 +1,4 @@
-package com.dingo.config.cfg;
+package com.dingo.config;
 
 import com.dingo.config.interceptor.WhiteIpInterceptor;
 import com.dingo.config.listener.ApplicationRunListener;
@@ -37,7 +37,8 @@ public class WebMvcCfg implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(whiteIpInterceptor);
+        // 因为经过内网穿透后访问ip都是本机，所以没有用到白名单拦截
+//        registry.addInterceptor(whiteIpInterceptor);
     }
 
     @Bean

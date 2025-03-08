@@ -3,13 +3,15 @@ package com.dingo.core.qq
 import com.dingo.config.post
 import com.dingo.config.sendRequest
 import okhttp3.Request
+import org.springframework.stereotype.Component
 
 /**
  * 发送消息的基础地址
  */
 private const val baseUrl = "https://api.sgroup.qq.com"
 
-object QQMsgSender {
+@Component
+open class QQMsgSender {
 
     /**
      * 发送频道at消息

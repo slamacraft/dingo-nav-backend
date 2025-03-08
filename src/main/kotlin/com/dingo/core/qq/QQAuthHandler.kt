@@ -28,6 +28,9 @@ open class QQAuthHandler {
         instance = this
     }
 
+    /**
+     * 获取accessToken
+     */
     fun getAccessToken(): String {
         if (StringUtils.hasText(assessToken)
             && LocalDateTime.now().isBefore(expiresIn)

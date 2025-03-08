@@ -19,6 +19,12 @@ open class QQService {
     @Autowired
     lateinit var qqProperty: QQProperty
 
+    @Autowired
+    lateinit var difyMsgSender: DifyMsgSender
+
+    @Autowired
+    lateinit var qqMsgSender: QQMsgSender
+
     /**
      * 校验qq报文
      */
@@ -54,8 +60,11 @@ open class QQService {
      * 回复频道at消息
      */
     fun recallChannelAtMsg(dto: ChannelDto) {
-        val answer = DifyMsgSender.sendMsg(dto.content, dto.author.id)
-        QQMsgSender.recallChannelAtMsg(
+        val content = "@${dto.author.username} 对你说：${dto.content}"
+        val answer = sendChannelMsg(dto, content) {
+            this["is_group_chat"] = "true"
+        }
+        qqMsgSender.recallChannelAtMsg(
             dto.channel_id, dto.id, answer
         )
     }
@@ -64,9 +73,23 @@ open class QQService {
      * 回复频道私聊消息
      */
     fun recallChannelPrivateMsg(dto: ChannelDto) {
-        val answer = DifyMsgSender.sendMsg(dto.content, dto.author.id)
-        QQMsgSender.recallChannelPrivateMsg(
+        val answer = sendChannelMsg(dto)
+        qqMsgSender.recallChannelPrivateMsg(
             dto.guild_id, dto.id, answer
+        )
+    }
+
+    /**
+     * 回复频道里的消息
+     */
+    fun sendChannelMsg(
+        dto: ChannelDto, content: String = dto.content,
+        inputs: MutableMap<String, Any>.() -> Unit = {}
+    ): String {
+        return difyMsgSender.sendChannelMsg(
+            content, dto.author.username,
+            dto.channel_id, dto.guild_id,
+            inputs
         )
     }
 
