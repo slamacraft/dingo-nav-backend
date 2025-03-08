@@ -1,5 +1,6 @@
 package com.dingo.config.resp
 
+import com.dingo.channel.model.VerifyVo
 import org.springframework.core.MethodParameter
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
@@ -12,7 +13,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 @RestControllerAdvice("com.dingo.channel")
 class RespAdvice : ResponseBodyAdvice<Any> {
     override fun supports(returnType: MethodParameter, converterType: Class<out HttpMessageConverter<*>>): Boolean {
-        return true
+        val returnClass: Class<out MethodParameter?> = returnType.javaClass
+        val field = returnClass
+            .getDeclaredField("returnValueType")
+        field.isAccessible = true
+        val clz =  field[returnType] as Class<*>
+        return !VerifyVo::class.java.isAssignableFrom(clz)
     }
 
     override fun beforeBodyWrite(

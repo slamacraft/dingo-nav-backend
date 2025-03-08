@@ -16,5 +16,4 @@ fun main(args: Array<String>) {
 
     val springApplication = SpringApplication(RobotApplication::class.java)
     springApplication.run(*args)
-    MiraiInitializer.start()
 }

@@ -91,6 +91,13 @@
             <version>0.47.0</version>
         </dependency>
 
+        <!--        加密工具-->
+        <dependency>
+            <groupId>net.i2p.crypto</groupId>
+            <artifactId>eddsa</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

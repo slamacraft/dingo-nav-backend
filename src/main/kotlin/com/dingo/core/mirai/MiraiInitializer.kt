@@ -1,6 +1,6 @@
 package com.dingo.core.mirai
 
-import com.dingo.config.properties.BotInfoProperty
+import com.dingo.config.properties.MiraiProperty
 import com.dingo.core.dify.DifyMsgSender
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -10,11 +10,8 @@ import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
-import net.mamoe.mirai.message.data.At
-import net.mamoe.mirai.message.data.MessageSource
+import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.MessageSource.Key.quote
-import net.mamoe.mirai.message.data.sendTo
-import net.mamoe.mirai.message.data.toMessageChain
 import net.mamoe.mirai.utils.BotConfiguration
 
 /**
@@ -33,7 +30,7 @@ object MiraiInitializer {
     private suspend fun botLogin(id: Long, pw: String) {
         val bot = BotFactory.newBot(id, pw) {
             fileBasedDeviceInfo()
-            protocol = BotConfiguration.MiraiProtocol.MACOS
+            protocol = BotConfiguration.MiraiProtocol.ANDROID_PAD
         }
         bot.alsoLogin()
         MiraiInitializer.bot = bot
@@ -45,7 +42,7 @@ object MiraiInitializer {
                 val atBotMsg = it.message
                     .filter { msg -> msg !is At }
                     .toMessageChain().contentToString()
-                val respMsg = DifyMsgSender.sendMsg(atBotMsg, it.sender.id)
+                val respMsg = DifyMsgSender.sendMsg(atBotMsg, it.sender.id.toString())
                 val replyMsg = it.message[MessageSource]!!.quote() + respMsg
                 replyMsg.sendTo(it.group)
             }
@@ -74,7 +71,7 @@ object MiraiInitializer {
 
 
     fun start() {
-        val infoProperty = BotInfoProperty.instance
+        val infoProperty = MiraiProperty.instance
         GlobalScope.launch {
             botLogin(infoProperty.id, infoProperty.pw)
         }
