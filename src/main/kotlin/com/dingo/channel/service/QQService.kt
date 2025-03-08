@@ -7,16 +7,12 @@ import com.dingo.channel.model.VerifyVo
 import com.dingo.config.properties.QQProperty
 import com.dingo.core.dify.DifyMsgSender
 import com.dingo.core.qq.QQMsgSender
-import com.fasterxml.jackson.databind.ObjectMapper
-import jakarta.annotation.PostConstruct
 import net.i2p.crypto.eddsa.EdDSAEngine
 import net.i2p.crypto.eddsa.EdDSAPrivateKey
-import net.i2p.crypto.eddsa.EdDSASecurityProvider
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import java.security.Security
 
 @Component
 open class QQService {

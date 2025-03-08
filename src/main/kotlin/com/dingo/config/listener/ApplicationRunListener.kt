@@ -1,6 +1,5 @@
 package com.dingo.config.listener
 
-import com.dingo.config.properties.MiraiProperty
 import com.dingo.context.SpringContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationListener
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Component
 
 @Component
 open class ApplicationRunListener : ApplicationListener<ContextRefreshedEvent> {
-    @Autowired
-    lateinit var miraiProperty: MiraiProperty
 
     override fun onApplicationEvent(event: ContextRefreshedEvent) {
         println("================= 容器初始化完毕 ================")

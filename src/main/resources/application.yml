@@ -43,3 +43,7 @@ qq:
   app-id:
   token:
   secret:
+
+# ----------------- 白名单 -----------------
+security:
+  white-ip:

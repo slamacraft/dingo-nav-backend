@@ -37,10 +37,10 @@
             <version>2.9.8</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/cn.hutool/hutool-all &ndash;&gt;-->
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
+            <artifactId>hutool-core</artifactId>
             <version>${hutool.version}</version>
         </dependency>
 
@@ -64,12 +64,6 @@
             </exclusions>
         </dependency>
 
-        <!-- Minio 文件存储 -->
-<!--        <dependency>-->
-<!--            <groupId>io.minio</groupId>-->
-<!--            <artifactId>minio</artifactId>-->
-<!--            <version>8.2.1</version>-->
-<!--        </dependency>-->
         <!-- ok的Http连接池 -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

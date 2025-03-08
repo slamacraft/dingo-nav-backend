@@ -1,10 +1,13 @@
 package com.dingo.config.cfg;
 
+import com.dingo.config.interceptor.WhiteIpInterceptor;
 import com.dingo.config.listener.ApplicationRunListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -16,6 +19,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebMvcCfg implements WebMvcConfigurer {
+    @Autowired
+    private WhiteIpInterceptor whiteIpInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -28,6 +33,11 @@ public class WebMvcCfg implements WebMvcConfigurer {
 
         //        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
 //        registry.addResourceHandler("/**").addResourceLocations("file:C://Users/Administrator/Desktop/");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(whiteIpInterceptor);
     }
 
     @Bean
