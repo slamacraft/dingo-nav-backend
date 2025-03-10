@@ -1,9 +1,10 @@
 package com.dingo.core.dify
 
-import com.dingo.config.post
+import com.dingo.common.expand.post
+import com.dingo.common.expand.sendRequestThenGetResp
 import com.dingo.config.properties.DifyProperty
-import com.dingo.config.sendRequestThenGetResp
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.dingo.core.dify.model.Answer
+import com.dingo.core.dify.model.DifyResp
 import okhttp3.Request
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -44,7 +45,7 @@ open class DifyMsgSender {
             .url("http://${host}:${port}/v1/chat-messages")
             .header("Authorization", "Bearer $appKey")
             .post(body).build()
-            .sendRequestThenGetResp(DifyResp::class.java)
+            .sendRequestThenGetResp(DifyResp::class)
         return Answer(
             difyResp.answer,
             difyResp.conversationId
@@ -52,17 +53,3 @@ open class DifyMsgSender {
     }
 
 }
-
-class DifyResp {
-    @JsonProperty("message_id")
-    var messageId: String = ""
-
-    @JsonProperty("conversation_id")
-    var conversationId: String = ""
-    var answer: String = ""  // 完整回复内容
-}
-
-data class Answer(
-    val content: String,
-    val conversationId: String,
-)

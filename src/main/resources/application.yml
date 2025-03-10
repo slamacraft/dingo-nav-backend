@@ -16,13 +16,6 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     filters: stat,wall,log4j
-  data:
-    redis:
-      password:
-      database: 0
-      host: ${REDIS_HOST}
-      port: 6379
-      timeout: 1000
 
 # ----------------- minio --------------------
 minio:

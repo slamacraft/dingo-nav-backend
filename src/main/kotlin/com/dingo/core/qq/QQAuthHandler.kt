@@ -1,8 +1,9 @@
 package com.dingo.core.qq
 
-import com.dingo.config.post
+import com.dingo.common.expand.post
+import com.dingo.common.expand.sendRequestThenGetResp
 import com.dingo.config.properties.QQProperty
-import com.dingo.config.sendRequestThenGetResp
+import com.dingo.core.qq.model.AssessTokenResp
 import okhttp3.Request
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -13,10 +14,8 @@ import java.time.LocalDateTime
 open class QQAuthHandler {
     @Autowired
     private lateinit var qqProperty: QQProperty
-
     // token
     private var assessToken: String = ""
-
     // 过期时间
     private var expiresIn: LocalDateTime = LocalDateTime.now()
 
@@ -46,7 +45,7 @@ open class QQAuthHandler {
         val difyResp = Request.Builder()
             .url("https://bots.qq.com/app/getAppAccessToken")
             .post(body).build()
-            .sendRequestThenGetResp(AssessTokenResp::class.java)
+            .sendRequestThenGetResp(AssessTokenResp::class)
 
         assessToken = difyResp.access_token
         expiresIn = LocalDateTime.now().plusSeconds(difyResp.expires_in.toLong())
@@ -54,9 +53,4 @@ open class QQAuthHandler {
         return assessToken
     }
 
-}
-
-class AssessTokenResp {
-    var access_token: String = ""
-    var expires_in: String = ""
 }

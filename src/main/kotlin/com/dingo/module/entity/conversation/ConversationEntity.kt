@@ -17,7 +17,7 @@ interface ConversationEntity : Entity<ConversationEntity>, BaseEntity {
 }
 
 
-object ConversationTable : BaseTable<ConversationEntity>("bot_oss") {
+object ConversationTable : BaseTable<ConversationEntity>("bot_conversation") {
     val channelId = varchar("channel_id", 128)
     val guideId = varchar("guide_id", 128)
     val conversationId = varchar("conversation_id", 128).default("")

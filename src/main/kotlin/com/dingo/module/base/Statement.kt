@@ -1,7 +1,7 @@
 package com.dingo.module.base
 
-import com.dingo.module.entity.oss.OssTable.id
 import com.dingo.common.util.underlineToCamelCase
+import com.dingo.module.entity.oss.OssTable.id
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
@@ -22,7 +22,6 @@ open class EntityInsertStatement(
             it.setValue(values, entity, table)
         }
         execute(TransactionManager.current())
-        entity.toSet("id", get(id).value)
         return entity
     }
 

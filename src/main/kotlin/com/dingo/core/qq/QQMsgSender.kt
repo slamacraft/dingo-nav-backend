@@ -1,17 +1,25 @@
 package com.dingo.core.qq
 
-import com.dingo.config.post
-import com.dingo.config.sendRequest
-import okhttp3.Request
+import com.dingo.common.expand.sendRequest
+import com.dingo.config.properties.QQProperty
+import com.dingo.core.qq.util.postRequest
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-/**
- * 发送消息的基础地址
- */
-private const val baseUrl = "https://api.sgroup.qq.com"
 
 @Component
 open class QQMsgSender {
+    @Autowired
+    lateinit var qqProperty: QQProperty
+
+    init {
+        instance = this
+    }
+
+    companion object{
+        lateinit var instance: QQMsgSender
+    }
+
 
     /**
      * 发送频道at消息
@@ -31,7 +39,7 @@ open class QQMsgSender {
                 "message_id" to msgId
             )
         )
-        "/channels/${channelId}/messages".buildRequest(body).sendRequest()
+        "/channels/${channelId}/messages".postRequest(body).sendRequest()
     }
 
     /**
@@ -52,17 +60,7 @@ open class QQMsgSender {
                 "message_id" to msgId
             )
         )
-        "/dms/${guildId}/messages".buildRequest(body).sendRequest()
+        "/dms/${guildId}/messages".postRequest(body).sendRequest()
     }
 }
 
-/**
- * 将String视为一个url地址构建请求
- */
-fun String.buildRequest(body: Any): Request {
-    return Request.Builder()
-        .url("$baseUrl$this")
-        .addHeader("Authorization", "QQBot ${QQAuthHandler.instance.getAccessToken()}")
-        .post(body)
-        .build()
-}

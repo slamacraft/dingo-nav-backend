@@ -118,7 +118,6 @@ open abstract class Table<E : Entity<E>>(tableName: String) : LongIdTable(tableN
 
 open abstract class BaseTable<E>(tableName: String) : Table<E>(tableName)
         where E : BaseEntity, E : Entity<E> {
-
     val createBy = long("create_by")
         .default(1114951452)
 
