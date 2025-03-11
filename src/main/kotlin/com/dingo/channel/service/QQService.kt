@@ -5,7 +5,6 @@ import com.dingo.channel.model.ChannelDto
 import com.dingo.channel.model.VerifyDto
 import com.dingo.channel.model.VerifyVo
 import com.dingo.config.properties.QQProperty
-import com.dingo.core.qq.QQMsgSender
 import net.i2p.crypto.eddsa.EdDSAEngine
 import net.i2p.crypto.eddsa.EdDSAPrivateKey
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable
@@ -21,7 +20,7 @@ open class QQService {
     lateinit var difyService: DifyService
     @Autowired
     lateinit var instructionsService: InstructionsService
-
+    private val atMsgPattern = Regex("<@!?(\\d+)>\\s")
 
     /**
      * 校验qq报文
@@ -58,6 +57,7 @@ open class QQService {
      * 回复频道at消息
      */
     fun recallChannelAtMsg(dto: ChannelDto) {
+        dto.content = dto.content.replace(atMsgPattern, "")
         if(dto.content.startsWith("/")){
             instructionsService.recallChannelAtMsg(dto)
         }else{
@@ -75,5 +75,4 @@ open class QQService {
             difyService.recallChannelPrivateMsg(dto)
         }
     }
-
 }
