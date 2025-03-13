@@ -1,4 +1,4 @@
-package com.dingo.channel.service
+package com.dingo.channel.service.qq
 
 import com.dingo.channel.model.ChannelDto
 import com.dingo.core.dify.DifyMsgSender
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
  * 用于处理向Dify AI发送的请求
  */
 @Component
-open class DifyService{
+open class QQDifyService{
 //    @Autowired
 //    lateinit var qqMsgSender: QQMsgSender
     @Autowired
@@ -23,25 +23,17 @@ open class DifyService{
     /**
      * 回复频道at消息
      */
-    fun recallChannelAtMsg(dto: ChannelDto) {
+    fun recallChannelAtMsg(dto: ChannelDto):String {
         val content = "@${dto.author.username} 对你说：${dto.content}"
-        val answer = sendChannelMsg(dto, content) {
+        return sendChannelMsg(dto, content) {
             this["is_group_chat"] = "true"
         }
-        QQMsgSender.instance.recallChannelAtMsg(
-            dto.channel_id, dto.id, answer
-        )
     }
 
     /**
      * 回复频道私聊消息
      */
-    fun recallChannelPrivateMsg(dto: ChannelDto) {
-        val answer = sendChannelMsg(dto)
-        QQMsgSender.instance.recallChannelPrivateMsg(
-            dto.guild_id, dto.id, answer
-        )
-    }
+    fun recallChannelPrivateMsg(dto: ChannelDto):String = sendChannelMsg(dto)
 
     /**
      * 回复频道里的消息

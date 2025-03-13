@@ -1,4 +1,4 @@
-package com.dingo.channel.service
+package com.dingo.channel.service.common
 
 import com.dingo.channel.model.ChannelDto
 import com.dingo.core.qq.QQMsgSender
@@ -11,16 +11,15 @@ import org.springframework.stereotype.Component
  * 指令Service，用于处理以/开头的消息
  */
 @Component
-class InstructionsService :ApplicationContextAware{
-    @Autowired
-    lateinit var qqMsgSender: QQMsgSender
+class InstructionsService : ApplicationContextAware {
     private val instructionMap = mutableMapOf<String, Instructions>()
 
     init {
         instance = this
     }
-    companion object{
-        lateinit var instance:InstructionsService
+
+    companion object {
+        lateinit var instance: InstructionsService
     }
 
     override fun setApplicationContext(applicationContext: ApplicationContext) {
@@ -29,36 +28,28 @@ class InstructionsService :ApplicationContextAware{
                 instructionMap.merge(bean.keyword(), bean) { _, _ ->
                     throw SecurityException("存在多个${bean.keyword()}指令服务")
                 }
-        }
+            }
     }
 
-    fun recallChannelAtMsg(dto: ChannelDto){
+    fun recallChannelAtMsg(dto: ChannelDto): String {
         val instructionBean = getInstructionBean(dto.content)
-        if(instructionBean == null){
-            qqMsgSender.recallChannelAtMsg(dto.channel_id, dto.id, "指令不完整，详情请输入 /帮助")
-        }else{
-            instructionBean.recallChannelAtMsg(dto)
-        }
+        return instructionBean?.recallChannelPrivateMsg(dto) ?: "指令不完整，详情请查看 /帮助"
     }
 
-    fun recallChannelPrivateMsg(dto: ChannelDto){
+    fun recallChannelPrivateMsg(dto: ChannelDto): String {
         val instructionBean = getInstructionBean(dto.content)
-        if(instructionBean == null){
-            qqMsgSender.recallChannelPrivateMsg(dto.guild_id, dto.id, "指令不完整，详情请查看 /帮助")
-        }else{
-            instructionBean.recallChannelPrivateMsg(dto)
-        }
+        return instructionBean?.recallChannelPrivateMsg(dto) ?: "指令不完整，详情请查看 /帮助"
     }
 
-    fun getInstructionList():List<String>{
+    fun getInstructionList(): List<String> {
         return instructionMap.values
             .map { "${it.keyword()}\t${it.desc()}" }
             .toList()
     }
 
-    private fun getInstructionBean(content:String): Instructions?{
+    private fun getInstructionBean(content: String): Instructions? {
         val split = content.split("/")
-        if(split.size <2){
+        if (split.size < 2) {
             return null
         }
         return instructionMap[split[1].trim()]
@@ -67,16 +58,16 @@ class InstructionsService :ApplicationContextAware{
 
 }
 
-interface Instructions{
+interface Instructions {
     /**
      * 指令关键字
      */
-    fun keyword():String
+    fun keyword(): String
 
     /**
      * 指令描述
      */
-    fun desc():String
-    fun recallChannelAtMsg(dto: ChannelDto)
-    fun recallChannelPrivateMsg(dto: ChannelDto)
+    fun desc(): String
+    fun recallChannelAtMsg(dto: ChannelDto):String
+    fun recallChannelPrivateMsg(dto: ChannelDto):String
 }

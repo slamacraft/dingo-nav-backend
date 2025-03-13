@@ -4,7 +4,7 @@ import com.dingo.channel.model.ChannelDto
 import com.dingo.channel.model.QQModel
 import com.dingo.channel.model.VerifyDto
 import com.dingo.channel.model.VerifyVo
-import com.dingo.channel.service.QQService
+import com.dingo.channel.service.qq.QQService
 import com.dingo.common.collection.ConcurrentFixedQueue
 import com.dingo.common.expand.castTo
 import jakarta.servlet.http.HttpServletRequest
@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ * 腾讯官方qq机器人的回调controller
+ */
 @RestController
 @RequestMapping("/qq")
 open class QQController(

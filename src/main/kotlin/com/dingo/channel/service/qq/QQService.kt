@@ -1,10 +1,12 @@
-package com.dingo.channel.service
+package com.dingo.channel.service.qq
 
 import cn.hutool.core.util.HexUtil
 import com.dingo.channel.model.ChannelDto
 import com.dingo.channel.model.VerifyDto
 import com.dingo.channel.model.VerifyVo
+import com.dingo.channel.service.common.InstructionsService
 import com.dingo.config.properties.QQProperty
+import com.dingo.core.qq.QQMsgSender
 import net.i2p.crypto.eddsa.EdDSAEngine
 import net.i2p.crypto.eddsa.EdDSAPrivateKey
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable
@@ -16,8 +18,13 @@ import org.springframework.stereotype.Component
 open class QQService {
     @Autowired
     lateinit var qqProperty: QQProperty
+
     @Autowired
-    lateinit var difyService: DifyService
+    lateinit var qqDifyService: QQDifyService
+
+    @Autowired
+    lateinit var qqMsgSender: QQMsgSender
+
     @Autowired
     lateinit var instructionsService: InstructionsService
     private val atMsgPattern = Regex("<@!?(\\d+)>\\s")
@@ -58,21 +65,27 @@ open class QQService {
      */
     fun recallChannelAtMsg(dto: ChannelDto) {
         dto.content = dto.content.replace(atMsgPattern, "")
-        if(dto.content.startsWith("/")){
+        val answer = if (dto.content.startsWith("/")) {
             instructionsService.recallChannelAtMsg(dto)
-        }else{
-            difyService.recallChannelAtMsg(dto)
+        } else {
+            qqDifyService.recallChannelAtMsg(dto)
         }
+        qqMsgSender.recallChannelAtMsg(
+            dto.channel_id, dto.id, answer
+        )
     }
 
     /**
      * 回复频道私聊消息
      */
     fun recallChannelPrivateMsg(dto: ChannelDto) {
-        if(dto.content.startsWith("/")){
+        val answer = if (dto.content.startsWith("/")) {
             instructionsService.recallChannelPrivateMsg(dto)
-        }else{
-            difyService.recallChannelPrivateMsg(dto)
+        } else {
+            qqDifyService.recallChannelPrivateMsg(dto)
         }
+        qqMsgSender.recallChannelAtMsg(
+            dto.channel_id, dto.id, answer
+        )
     }
 }
