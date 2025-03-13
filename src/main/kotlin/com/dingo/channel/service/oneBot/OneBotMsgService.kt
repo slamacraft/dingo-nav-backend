@@ -57,7 +57,7 @@ open class OneBotMsgService {
         val text = Text()
         text.text = answer.content
         result.reply = listOf(MsgVo(text))
-        result.at_sender = true
+        result.at_sender = false
         return result
     }
 
